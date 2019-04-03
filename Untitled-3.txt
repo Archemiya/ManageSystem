@@ -1,0 +1,44 @@
+ echo $_SESSION['user_id'];
+ echo $_SESSION['user_name'];
+ echo $_POST['student_id'];
+ echo $_POST['student_name'];
+ echo $_POST['topic_id'];
+ echo $_POST['topic_name'];
+ echo $topic_main; 
+ echo $topic_schedule; 
+ echo $topic_ref; 
+ echo $topic_machine; 
+ echo $topic_space;
+ echo $topic_timetable;
+
+
+ $sql = "INSERT INTO `task_book` 
+(`id`,
+ `teacher_id`, 
+ `teacher_name`, 
+ `student_id`,
+ `student_name`,
+ `topic_id`, 
+ `topic_name`, 
+ `topic_main`,
+ `topic_schedule`,
+ `topic_ref`,
+ `topic_machine`,
+ `topic_space`,
+ `topic_timetable`,
+ `create_time_stamp`) 
+ VALUES 
+ (NULL, 
+ '{$_SESSION['user_id']}',
+ '{$_SESSION['user_name']}',
+ '{$_POST['student_id']}',
+ '{$_POST['student_name']}',
+ '{$_POST['topic_id']}',
+ '{$_POST['topic_name']}',
+ '{$topic_main}', 
+ '{$topic_schedule}', 
+ '{$topic_ref}', 
+ '{$topic_machine}', 
+ '{$topic_space}',
+ '{$topic_timetable}', 
+ '1')";

@@ -1,0 +1,95 @@
+body {
+  overflow: hidden;
+  background-color: #eee;
+}
+
+.background {
+  width: 100%;
+  height: 100%;
+}
+
+#particles-js {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #eee;
+}
+
+.login-wrapper {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  margin-top: 10%;
+  padding: 2em 2em;
+  background: rgba(73, 125, 184, 0.1);
+  border-radius: 6px;
+}
+
+.login-title {
+  color: rgb(73, 125, 184);
+  margin-left: 5px;
+  margin-bottom: 10px;
+  font-weight: normal;
+  font-size: 20px;
+}
+
+.form {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-bottom: 20px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.photo {
+  width: 528px;
+  height: 221px;
+  margin-top: 5%;
+  background: url("../images/motto.png") no-repeat;
+}
+
+.form-signin {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 330px;
+  padding: 15px;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+  font-weight: normal;
+}
+
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+
+.form-signin  {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}

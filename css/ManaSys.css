@@ -1,0 +1,122 @@
+* {
+	font-family: "微软雅黑";
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+.content {
+	padding-bottom: 0px;
+	width: 100%;
+}
+
+.homehead {
+	width: 100%;
+	background-color: #FFFFFF;
+	overflow: hidden;
+}
+
+.centered {
+	width: 80%;
+	margin: 0px auto;
+}
+
+.centeredalter {
+	width: 95%;
+	height: 100%;
+	margin: 0px auto;
+}
+
+.piclef {
+	float: left;
+}
+
+.logo {
+	background: url(../images/realtitle.png) no-repeat;
+	width: 330px;
+	height: 79px;
+	float: left;
+}
+
+.spacingline {
+	float: left;
+	background: url(../images/shu_03.png) no-repeat;
+	width: 1px;
+	height: 79px;
+}
+
+p.systemname {
+	font-size: 20px;
+	color: rgba(51, 122, 183, 1);
+	text-indent: 15px;
+	line-height: 79px;
+}
+
+.topbar {
+	position: fixed;
+	top: 16px;
+	right: 10%;
+}
+
+.shadow {
+	background: url(../images/bg_10.png) repeat-x;
+	height: 12px;
+	width: 100%;
+}
+
+.bg-primary {
+	color: #fff;
+	background-color: #337ab7;
+}
+
+.tip-wrapper {
+	text-align: center;
+	color: #fff;
+	height: 30px;
+	/* padding: 2em 2em; */
+	background-color: rgba(51, 122, 183, 1);
+	border-radius: 3px;
+}
+
+.th-title-1 {
+	width: 350px;
+}
+
+.th-title-2 {
+	width: 131px;
+}
+
+.td-height {
+	height: 59px;
+}
+
+.th-title-center, .td-title-center {
+	text-align: center;
+}
+
+.th-title-small {
+	width: 10%;
+}
+
+.th-title-normal {
+	width: 16%;
+}
+
+.th-title-normalfix {
+	widows: 13%;
+}
+
+.th-title-large {
+	width: 48%;
+}
+
+.th-title-topic-chs {
+	width: 25%;
+}
+
+.th-title-topic-stu {
+	width: 15%;
+}
+
