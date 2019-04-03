@@ -4,7 +4,7 @@ $user_id = $_POST['account'];
 $user_oldpasswd = $_POST['oldpasswd'];
 $user_newpasswd = $_POST['newpasswd'];
 $user_newpasswd2 = $_POST['newpasswd2'];
-$link = mysqli_connect("localhost", "root", "123456", "manasystem");
+include "link.php";
 $sql = "SELECT * FROM `user` WHERE `id` = \"{$user_id}\" AND `password` = \"{$user_oldpasswd}\" ";
 $result = mysqli_query($link, $sql);
 if($user_oldpasswd == $user_newpasswd){

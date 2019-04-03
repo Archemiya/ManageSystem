@@ -5,7 +5,7 @@ $psw = $_POST['passwd'];
 if (!isset($user) || !isset($psw)) {
     echo "<script>alert('请输入用户名或密码！'); history.go(-1);</script>";
 } else {
-    $link = mysqli_connect("localhost", "root", "123456", "manasystem");
+    include "link.php";
     $sql = "SELECT * FROM `user` WHERE `id` = \"{$user}\" AND `password` = \"{$psw}\" ";
     $result = mysqli_query($link, $sql);
     if ($result && mysqli_num_rows($result)) {

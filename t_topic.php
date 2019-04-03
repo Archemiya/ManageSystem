@@ -1,5 +1,5 @@
 <?php
-$link = mysqli_connect("localhost", "root", "123456", "manasystem");
+include "link.php";
 $sql = "SELECT * FROM `topic`";
 $result = mysqli_query($link, $sql);
 ?>

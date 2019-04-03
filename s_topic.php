@@ -1,5 +1,5 @@
 <?php
-$link = mysqli_connect("localhost", "root", "123456", "manasystem");
+include "link.php";
 $sql = "SELECT * FROM `topic`"; //查询全部课题
 $sql_chose_record_stu = "SELECT * FROM `chose_topic_record` WHERE `chose_topic_record`.`student_id` = '{$_SESSION['user_id']}'"; //查询当前学生的选课记录
 $sql_chose_record_stu_final = "SELECT * FROM `chose_topic_record` WHERE `chose_topic_record`.`student_id` = '{$_SESSION['user_id']}' AND `final_flag` = 1"; //查询当前学生是否存在确定课题

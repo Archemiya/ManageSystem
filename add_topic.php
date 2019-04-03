@@ -14,7 +14,7 @@ $topic_other = $_POST['topic_other'];
 $topic_chosemode = $_POST['topic_chosemode'];
 $topic_app = $_POST['topic_app'];
 $topic_workload = $_POST['topic_workload'];
-$link = mysqli_connect("localhost", "root", "123456", "manasystem");
+include "link.php";
 $sql = "INSERT INTO `topic` (`id`, 
 `name`, 
 `topic_type`, 

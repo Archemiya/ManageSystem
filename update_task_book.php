@@ -1,6 +1,6 @@
 <?php
 session_start();
-$link = mysqli_connect("localhost", "root", "123456", "manasystem");
+include "link.php";
 date_default_timezone_set('Asia/Shanghai');
 $topic_main = $_POST['topic_main'];
 $topic_schedule = $_POST['topic_schedule'];

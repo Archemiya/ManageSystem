@@ -1,5 +1,5 @@
 <?php
-$link = mysqli_connect("localhost", "root", "123456", "manasystem");
+include "link.php";
 if (isset($_GET["id"])) {
     $get = $_GET["id"];
 }

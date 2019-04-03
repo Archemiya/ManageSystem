@@ -1,6 +1,6 @@
 <?php
 session_start();
-$link = mysqli_connect("localhost", "root", "123456", "manasystem");
+include "link.php";
 if (isset($_GET["func"])) {
     $get = $_GET["func"];
 }
