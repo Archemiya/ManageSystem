@@ -86,7 +86,7 @@ include 'header.php';
                     }
                         break;
                     case "task_book":
-                        include "task_book.php";
+                        include "task_book_detail.php";
                         break;
                     case "first_report":
                     case "paper_review":

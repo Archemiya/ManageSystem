@@ -41,18 +41,28 @@ Archemiya;
             <td class="td-height td-title-center">          
 Archemiya;
             $sql_task_book = "SELECT * FROM `task_book` WHERE `student_id` = '{$row_chose_final_flag['student_id']}' AND `topic_id` = '{$row['id']}'";
-            $result_task_book = mysqli_query($link,$sql_task_book);
+            $result_task_book = mysqli_query($link, $sql_task_book);
             $num_task_book = mysqli_num_rows($result_task_book);
+            $row_task_book = mysqli_fetch_array($result_task_book, MYSQLI_BOTH);
             if ($num_task_book) {
-                echo <<< Archemiya
+                if ($row_task_book['islook_flag']) {
+                    echo <<< Archemiya
                 <a href="tutor.php?func=task_book&id={$row['id']} " class="btn btn-success " role= "button">
                 查看任务书
                 </a>
                 </td>
 Archemiya;
+                } else {
+                    echo <<< Archemiya
+                <a href="tutor.php?func=task_book&id={$row['id']} " class="btn btn-warning " role= "button">
+                查看任务书
+                </a>
+                </td>
+Archemiya;
+                }
             } else {
                 echo <<< Archemiya
-                <button type="button" class="btn btn-warning " data-toggle="modal" data-target="#$i">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#$i">
                 下达任务书
                 </button>
                 </td>
@@ -105,7 +115,8 @@ Archemiya;
         WHERE `teacher_id` = '{$_SESSION['user_id']}' AND `topic_id` = '{$row['id']}' AND `final_flag` = 1";
         $result_chose_final_flag = mysqli_query($link, $sql_chose_final_flag);
         $num_chose_final_flag = mysqli_num_rows($result_chose_final_flag);
-        if (!$num_chose_final_flag) { } else {
+        if (!$num_chose_final_flag) {
+        } else {
             $row_chose_final_flag = mysqli_fetch_array($result_chose_final_flag, MYSQLI_BOTH);
             echo <<< archemiya
             <div class="modal fade " id="$i" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
