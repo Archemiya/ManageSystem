@@ -62,13 +62,9 @@ archemiya;
         echo "</div>";
     }else{
         echo <<< archemiya
-    <div class="alert alert-info" role="alert">
+        <div class="alert alert-info" role="alert">
         <strong>提示：</strong>
-        <a class="btn btn-danger" role="button">查看课题详情</a><strong>表示教务处未提出修改建议的课题</strong>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-warning" role="button">查看修改建议</a><strong>表示教务处已发出修改建议但您未进行修改的课题</strong><br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a class="btn btn-warning" role="button">查看课题详情</a><strong>表示您已提交修改但教务处未审核的课题</strong>
-        <a class="btn btn-success" role="button">查看过审课题</a><strong>表示教务处审核通过的课题</strong>
+        <strong>红色查看课题详情</strong>按钮表示教务处未提出修改建议的课题，<strong>橙色查看修改建议按钮</strong>表示教务处已发出修改建议但您未进行修改的课题，<strong>橙色查看课题详情</strong>按钮表示您已提交修改但教务处未审核的课题，<strong>绿色查看过审课题</strong>按钮表示教务处审核通过的课题</strong>
         
     </div>
     <div class="table-responsive">

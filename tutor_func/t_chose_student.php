@@ -77,6 +77,11 @@ Archemiya;
         echo "</div>";
     }else{
         echo <<< archemiya
+        <div class="alert alert-info" role="alert">
+        <strong>提示：</strong>
+        <strong>蓝色学生</strong>按钮表示尚未选择学生，<strong>绿色学生</strong>按钮表示您选择的学生，<strong>红色学生</strong>按钮表示您拒绝的学生
+        
+    </div>
     <div class="table-responsive">
         <table data-toggle="table" data-toolbar="#toolbar" data-pagination="true" data-page-list="[10, 25, 50, 100, 200, All]" data-show-refresh="true">
             <thead>

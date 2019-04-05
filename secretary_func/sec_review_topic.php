@@ -32,16 +32,19 @@ archemiya;
     >
     审核课题</a>
     </td> 
-    <td>
 archemiya;
     if($row['topic_ispass']==1){
-        echo "<button class='btn btn-success' disabled>课题已审核</button>";
+        echo "<td class=\" td-title-center alert alert-info\" >";
+        echo "课题已审核";
     }else if($row['topic_ispass']==2){
-        echo "<button class='btn btn-warning' disabled>意见已发送</button>";
+        echo "<td class=\"td-title-center alert alert-warning\" >";
+        echo "意见已发送";
     }else if($row['topic_ispass']==3){
-        echo "<button class='btn btn-warning' disabled>课题已修改</button>";
+        echo "<td class=\" td-title-center alert alert-warning\" >";
+        echo "课题已修改";
     }else {
-        echo "<button class='btn btn-danger' disabled>课题未审核</button>";
+        echo "<td class=\"td-title-center alert alert-danger\" >";
+        echo "课题未审核";
     }
     echo <<< archemiya
     </td>

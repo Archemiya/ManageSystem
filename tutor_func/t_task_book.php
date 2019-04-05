@@ -92,6 +92,11 @@ Archemiya;
         echo "</div>";
     }else{
         echo <<< archemiya
+        <div class="alert alert-info" role="alert">
+        <strong>提示：</strong>
+        <strong>蓝色</strong>按钮表示尚未下达任务书，<strong>橙色</strong>按钮表示您已下达任务书但学生尚未确认，<strong>绿色</strong>按钮表示学生已确认您下达的任务书
+        
+    </div>
     <div class="table-responsive">
         <table data-toggle="table" data-toolbar="#toolbar" data-pagination="true" data-page-list="[10, 25, 50, 100, 200, All]" data-show-refresh="true">
             <thead>
