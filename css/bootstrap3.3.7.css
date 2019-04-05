@@ -1700,7 +1700,7 @@ a.text-primary:focus {
 }
 
 .text-success {
-    color: #3c763d;
+    color: #28a745;
 }
 
 a.text-success:hover,
@@ -1709,7 +1709,7 @@ a.text-success:focus {
 }
 
 .text-info {
-    color: #31708f;
+    color: #17a2b8;
 }
 
 a.text-info:hover,
@@ -1718,7 +1718,7 @@ a.text-info:focus {
 }
 
 .text-warning {
-    color: #8a6d3b;
+    color: #ffc107;
 }
 
 a.text-warning:hover,
@@ -1727,7 +1727,7 @@ a.text-warning:focus {
 }
 
 .text-danger {
-    color: #a94442;
+    color: #d9534f;
 }
 
 a.text-danger:hover,

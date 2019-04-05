@@ -78,7 +78,9 @@ Archemiya;
         echo <<< archemiya
         <div class="alert alert-info" role="alert">
         <strong>提示：</strong>
-        <strong>蓝色学生</strong>按钮表示尚未选择学生，<strong>绿色学生</strong>按钮表示您选择的学生，<strong>红色学生</strong>按钮表示您拒绝的学生
+        <strong>蓝色学生</strong>按钮表示尚未选择学生，
+        <span class="text-success"><strong>绿色学生</strong></span>按钮表示您选择的学生，
+        <span class="text-danger"><strong>红色学生</strong></span>按钮表示您拒绝的学生
         
     </div>
     <div class="table-responsive">

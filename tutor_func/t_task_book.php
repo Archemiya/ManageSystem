@@ -94,7 +94,9 @@ Archemiya;
         echo <<< archemiya
         <div class="alert alert-info" role="alert">
         <strong>提示：</strong>
-        <strong>蓝色</strong>按钮表示尚未下达任务书，<strong>橙色</strong>按钮表示您已下达任务书但学生尚未确认，<strong>绿色</strong>按钮表示学生已确认您下达的任务书
+        <strong>蓝色按钮</strong>表示尚未下达任务书，
+        <span class="text-warning"><strong>橙色按钮</strong></span>表示您已下达任务书但学生尚未确认，
+        <span class="text-success"><strong>绿色按钮</strong></span>表示学生已确认您下达的任务书
         
     </div>
     <div class="table-responsive">

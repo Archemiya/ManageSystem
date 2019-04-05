@@ -64,7 +64,10 @@ archemiya;
         echo <<< archemiya
         <div class="alert alert-info" role="alert">
         <strong>提示：</strong>
-        <strong>红色查看课题详情</strong>按钮表示教务处未提出修改建议的课题，<strong>橙色查看修改建议按钮</strong>表示教务处已发出修改建议但您未进行修改的课题，<strong>橙色查看课题详情</strong>按钮表示您已提交修改但教务处未审核的课题，<strong>绿色查看过审课题</strong>按钮表示教务处审核通过的课题</strong>
+        <span class="text-danger"><strong>红色按钮</strong></span>查看课题详情表示教务处未提出修改建议的课题，
+        <span class="text-warning"><strong>橙色按钮</strong></span>查看修改建议表示教务处已发出修改建议但您未进行修改的课题，
+        <span class="text-warning"><strong>橙色按钮</strong></span>查看课题详情表示您已提交修改但教务处未审核的课题，
+        <span class="text-success"><strong>绿色按钮</strong></span>查看过审课题表示教务处审核通过的课题
         
     </div>
     <div class="table-responsive">

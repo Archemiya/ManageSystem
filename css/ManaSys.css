@@ -2,7 +2,12 @@
 	font-family: "微软雅黑";
 }
 
-html, body {
+p {
+	white-space: nowrap;
+}
+
+html,
+body {
 	width: 100%;
 	height: 100%;
 }
@@ -92,7 +97,8 @@ p.systemname {
 	height: 59px;
 }
 
-.th-title-center, .td-title-center {
+.th-title-center,
+.td-title-center {
 	text-align: center;
 }
 
@@ -119,4 +125,3 @@ p.systemname {
 .th-title-topic-stu {
 	width: 15%;
 }
-
