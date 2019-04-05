@@ -22,31 +22,31 @@ function topic_table_echo($result, $link)
     <td> {$row['teacher_name']} </td>
     <td >
 archemiya;
-    echo "<a class=\"btn btn-primary\" role=\"button\" ";
-    if($row['topic_ispass']==1){
-        echo "disabled";
-    }else{
-        echo "href=\"./secretary.php?func=review_topic&id={$row['id']}\" ";
-    }
-    echo <<< archemiya
+        echo "<a class=\"btn btn-primary\" role=\"button\" ";
+        if ($row['topic_ispass'] == 1) {
+            echo "disabled";
+        } else {
+            echo "href=\"./secretary.php?func=review_topic&id={$row['id']}\" ";
+        }
+        echo <<< archemiya
     >
     审核课题</a>
     </td> 
 archemiya;
-    if($row['topic_ispass']==1){
-        echo "<td class=\" td-title-center alert alert-info\" >";
-        echo "课题已审核";
-    }else if($row['topic_ispass']==2){
-        echo "<td class=\"td-title-center alert alert-warning\" >";
-        echo "意见已发送";
-    }else if($row['topic_ispass']==3){
-        echo "<td class=\" td-title-center alert alert-warning\" >";
-        echo "课题已修改";
-    }else {
-        echo "<td class=\"td-title-center alert alert-danger\" >";
-        echo "课题未审核";
-    }
-    echo <<< archemiya
+        if ($row['topic_ispass'] == 1) {
+            echo "<td class=\" td-title-center alert alert-info\" >";
+            echo "课题已审核";
+        } else if ($row['topic_ispass'] == 2) {
+            echo "<td class=\"td-title-center alert alert-warning\" >";
+            echo "意见已发送";
+        } else if ($row['topic_ispass'] == 3) {
+            echo "<td class=\" td-title-center alert alert-warning\" >";
+            echo "课题已修改";
+        } else {
+            echo "<td class=\"td-title-center alert alert-danger\" >";
+            echo "课题未审核";
+        }
+        echo <<< archemiya
     </td>
     </tr>
 archemiya;
@@ -64,12 +64,12 @@ archemiya;
 
 <body>
     <?php
-    if($num==0){
+    if ($num == 0) {
         echo "<br/>";
         echo "<div class='alert alert-danger'>";
         echo "<strong>当前尚无老师提交课题！</strong>";
         echo "</div>";
-    }else{
+    } else {
         echo <<< archemiya
     <div class="table-responsive">
         <table data-toggle="table" data-toolbar="#toolbar" data-pagination="true"

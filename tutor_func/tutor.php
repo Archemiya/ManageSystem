@@ -14,20 +14,20 @@ include '../header.php';
         <div class="col-sm-sidebar-left  sidebar">
             <ul class="nav nav-sidebar">
                 <li><a href="./tutor.php?func=topic" method="GET" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "topic") {
-    echo "class=active";
-} ?>><i class="glyphicon glyphicon-list-alt">
+                                                                        echo "class=active";
+                                                                    } ?>><i class="glyphicon glyphicon-list-alt">
                             论文选题</i><span class="sr-only">(current)</span></a></li>
 
 
                 <li><a href="./tutor.php?func=chose_student" method="GET" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "chose_student") {
-    echo "class=active";
-} ?>><i class="glyphicon glyphicon-user">
+                                                                                echo "class=active";
+                                                                            } ?>><i class="glyphicon glyphicon-user">
                             指导学生</i><span class="sr-only">(current)</span></a></li>
 
 
                 <li><a href="./tutor.php?func=task_book" method="GET" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "task_book") || (isset($_GET["func"]) && ($_GET["func"]) == "write_task_book")) {
-    echo "class=active";
-} ?>><i class="glyphicon glyphicon-file">
+                                                                            echo "class=active";
+                                                                        } ?>><i class="glyphicon glyphicon-file">
                             任务书</i><span class="sr-only">(current)</span></a></li>
 
                 <br />
@@ -114,4 +114,5 @@ include '../header.php';
             </div>
         </div>
 
-    </div> 
+    </div>
+</div>

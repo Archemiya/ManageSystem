@@ -10,7 +10,7 @@ $num_chose_num = mysqli_num_rows($result_chose_num);
 function chose_topic_table_echo($result, $link)
 {
     $height = mysqli_num_rows($result);
-    for ($i=0; $i<$height; $i++) {
+    for ($i = 0; $i < $height; $i++) {
         $row = mysqli_fetch_array($result, MYSQLI_BOTH);
         echo <<< Archemiya
         <tr>
@@ -40,15 +40,14 @@ Archemiya;
             } else {
                 $row_chose_record = mysqli_fetch_array($result_chose_record, MYSQLI_BOTH);
                 echo "<td>";
-                if($row_chose_record['final_flag']==1){
-                    
+                if ($row_chose_record['final_flag'] == 1) {
+
                     echo "<button class=\"btn btn-success\" disabled>
                     {$row_chose_record['student_id']}{$row_chose_record['student_name']}
                     </button>";
-                    
-                }else if(!isset($row_chose_record['student_id'])){
+                } else if (!isset($row_chose_record['student_id'])) {
                     echo '';
-                }else{
+                } else {
                     echo "<button class=\"btn btn-danger\" disabled>
                     {$row_chose_record['student_id']}{$row_chose_record['student_name']}
                     </button>";
@@ -70,12 +69,12 @@ Archemiya;
 
 <body>
     <?php
-    if($num_chose_num==0){
+    if ($num_chose_num == 0) {
         echo "<br/>";
         echo "<div class=\"alert alert-danger\" role=\"alert\">";
         echo "<strong>尚无学生选课！</strong>";
         echo "</div>";
-    }else{
+    } else {
         echo <<< archemiya
         <div class="alert alert-info" role="alert">
         <strong>提示：</strong>
@@ -114,4 +113,4 @@ archemiya;
     ?>
 </body>
 
-</html> 
+</html>

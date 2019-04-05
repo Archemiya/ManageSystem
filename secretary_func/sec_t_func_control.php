@@ -22,32 +22,32 @@ include "sec_query_t_control.php";
                 </div>
                 <tr>
                     <td class="col-xs-5 th-title-center">论文选题</td>
-                    
+
                     <?php
-                    if($row_control['topic']==0){
+                    if ($row_control['topic'] == 0) {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-danger\"> 请根据学校安排准时开启老师论文选题流程！</td>";
-                    }else if($row_control['topic']==1){
+                    } else if ($row_control['topic'] == 1) {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-info\">已开启老师论文选题流程</td>";
-                    }                         
+                    }
                     ?>
-                    
+
 
                     <td class="col-xs-2 th-title-center">
                         <?php
-                            
-                            if ($row_control['topic']==0) {
-                                echo "<a href='sec_chang_t_control_value.php?func=topic' 
+
+                        if ($row_control['topic'] == 0) {
+                            echo "<a href='sec_chang_t_control_value.php?func=topic' 
                                 class='btn btn-primary' role='button'
                                 onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启选题</a>";
-                            } else if($row_control['topic']==1){
-                                echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
-                            } 
+                        } else if ($row_control['topic'] == 1) {
+                            echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
+                        }
                         ?>
                     </td>
 
 
                 </tr>
-                
+
             </tbody>
         </table>
 

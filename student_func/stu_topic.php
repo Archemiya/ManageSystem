@@ -126,12 +126,12 @@ function table_echo($length, $result, $link, $num_chose_record_stu_final, $row_c
 <body>
     <div class="table-responsive">
         <?php
-        if($row_control['topic']==0){
+        if ($row_control['topic'] == 0) {
             echo "<br/>";
             echo "<div class='alert alert-danger'>";
             echo "<strong>当前选题功能未开放！</strong>";
             echo "</div>";
-        }else{
+        } else {
             echo <<< archemiya
             <table data-toggle="table" 
             data-toolbar="#toolbar" 
@@ -140,10 +140,9 @@ function table_echo($length, $result, $link, $num_chose_record_stu_final, $row_c
             data-page-list="[10, 25, 50, 100, 200, All]" 
             data-show-refresh="true"
 archemiya;
-            if (!$num_chose_record_stu || $num_chose_record_stu == $final_not_this_stu) {                        
-            } else {
-            echo "data-sort-name=\"option\" ";
-            echo "data-sort-order=\"desc\" ";
+            if (!$num_chose_record_stu || $num_chose_record_stu == $final_not_this_stu) { } else {
+                echo "data-sort-name=\"option\" ";
+                echo "data-sort-order=\"desc\" ";
             }
             echo ">";
             echo <<< archemiya
@@ -156,45 +155,44 @@ archemiya;
                     <th class="col-xs-2 th-title-center">选项</th>
                     <th class="col-xs-1 th-title-center" data-field="option" 
 archemiya;
-                    if (!$num_chose_record_stu || $num_chose_record_stu == $final_not_this_stu) {                        
-                    } else {
-                    echo "data-sortable=\"true\"";
-                    }
-                    echo <<< archemiya
+            if (!$num_chose_record_stu || $num_chose_record_stu == $final_not_this_stu) { } else {
+                echo "data-sortable=\"true\"";
+            }
+            echo <<< archemiya
                     >
                     操作/状态</th>
                 </tr>
             </thead>
             <tbody>
 archemiya;
-                echo "<div id=\"toolbar\">";
-                if (!$num_chose_record_stu) {
-                    echo "<button id=\"未选题\" class=\"btn btn-danger\" disabled>";
-                    echo "<i class=\"glyphicon glyphicon-warning-sign\"></i>";
-                    echo " 未选题";
-                } else if ($num_chose_record_stu_final) {
-                    echo "<button id=\"已确认\" class=\"btn btn-success\" disabled>";
-                    echo "<i class=\"glyphicon glyphicon-ok\"></i>";
-                    echo " 已选题";
-                } elseif ($num_chose_record_stu == $final_not_this_stu) {
-                    echo "<button id=\"等待中\" class=\"btn btn-danger\" disabled>";
-                    echo "<i class=\"glyphicon glyphicon-warning-sign\"></i>";
-                    echo " 请重新选题";
-                } else {
-                    echo "<button id=\"等待中\" class=\"btn btn-warning\" disabled>";
-                    echo "<i class=\"glyphicon glyphicon-refresh\"></i>";
-                    echo " 导师确认中";
-                }
-                echo "</button>";
-                echo "</div>";
-                table_echo($length, $result, $link, $num_chose_record_stu_final, $row_chose_record_stu_final, $num_chose_record_stu, $result_chose_record_stu, $final_not_this_stu);
-            
+            echo "<div id=\"toolbar\">";
+            if (!$num_chose_record_stu) {
+                echo "<button id=\"未选题\" class=\"btn btn-danger\" disabled>";
+                echo "<i class=\"glyphicon glyphicon-warning-sign\"></i>";
+                echo " 未选题";
+            } else if ($num_chose_record_stu_final) {
+                echo "<button id=\"已确认\" class=\"btn btn-success\" disabled>";
+                echo "<i class=\"glyphicon glyphicon-ok\"></i>";
+                echo " 已选题";
+            } elseif ($num_chose_record_stu == $final_not_this_stu) {
+                echo "<button id=\"等待中\" class=\"btn btn-danger\" disabled>";
+                echo "<i class=\"glyphicon glyphicon-warning-sign\"></i>";
+                echo " 请重新选题";
+            } else {
+                echo "<button id=\"等待中\" class=\"btn btn-warning\" disabled>";
+                echo "<i class=\"glyphicon glyphicon-refresh\"></i>";
+                echo " 导师确认中";
+            }
+            echo "</button>";
+            echo "</div>";
+            table_echo($length, $result, $link, $num_chose_record_stu_final, $row_chose_record_stu_final, $num_chose_record_stu, $result_chose_record_stu, $final_not_this_stu);
+
             echo "</tbody>";
 
-        echo "</table>";
+            echo "</table>";
         }
         ?>
     </div>
 </body>
 
-</html> 
+</html>

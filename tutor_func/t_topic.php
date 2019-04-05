@@ -2,13 +2,13 @@
 include "../link.php";
 include "../secretary_func/sec_query_t_control.php";
 $sql = "SELECT * FROM `topic`";
-$sql_passed_me_topic = "SELECT * FROM `topic` WHERE `teacher_id`='{$_SESSION['user_id']}' OR `topic_ispass`= 1";//此处为教师课题展示界面，需要展示的只有自己的课题和其他老师已经过审的课题
+$sql_passed_me_topic = "SELECT * FROM `topic` WHERE `teacher_id`='{$_SESSION['user_id']}' OR `topic_ispass`= 1"; //此处为教师课题展示界面，需要展示的只有自己的课题和其他老师已经过审的课题
 $result = mysqli_query($link, $sql);
 $result_passed_me_topic = mysqli_query($link, $sql_passed_me_topic);
 $length = mysqli_num_rows($result_passed_me_topic);
 function table_echo($result, $result_passed_me_topic, $link, $length)
 {
-    for ($i = 0;$i <$length;$i++) {
+    for ($i = 0; $i < $length; $i++) {
         $row = mysqli_fetch_array($result);
         $row_passed_me_topic = mysqli_fetch_array($result_passed_me_topic);
         $sql_chose_recode_topic = "SELECT * FROM `chose_topic_record` WHERE `chose_topic_record`.`topic_id` = '{$row['id']}'";
@@ -28,13 +28,13 @@ archemiya;
         <td> {$num_chose_record_topic} / 5</td>
         <td >
 archemiya;
-        if (($row_passed_me_topic['topic_ispass']==2) && ($row_passed_me_topic['teacher_id'] == $_SESSION['user_id'])) {
+        if (($row_passed_me_topic['topic_ispass'] == 2) && ($row_passed_me_topic['teacher_id'] == $_SESSION['user_id'])) {
             echo "<a href=\"./tutor.php?func=topic&cid={$row_passed_me_topic['id']}\" class=\"btn btn-warning\" role=\"button\">查看修改建议</a>";
-        } elseif (($row_passed_me_topic['topic_ispass']==0) && ($row_passed_me_topic['teacher_id'] == $_SESSION['user_id'])) {
+        } elseif (($row_passed_me_topic['topic_ispass'] == 0) && ($row_passed_me_topic['teacher_id'] == $_SESSION['user_id'])) {
             echo "<a href=\"./tutor.php?func=topic&id={$row_passed_me_topic['id']}\" class=\"btn btn-danger\" role=\"button\">查看课题详情</a>";
-        } elseif (($row_passed_me_topic['topic_ispass']==1) ) {
+        } elseif (($row_passed_me_topic['topic_ispass'] == 1)) {
             echo "<a href=\"./tutor.php?func=topic&id={$row_passed_me_topic['id']}\" class=\"btn btn-success\" role=\"button\">查看过审课题</a>";
-        } elseif (($row_passed_me_topic['topic_ispass']==3) && ($row_passed_me_topic['teacher_id'] == $_SESSION['user_id'])) {
+        } elseif (($row_passed_me_topic['topic_ispass'] == 3) && ($row_passed_me_topic['teacher_id'] == $_SESSION['user_id'])) {
             echo "<a href=\"./tutor.php?func=topic&id={$row_passed_me_topic['id']}\" class=\"btn btn-warning\" role=\"button\">查看课题详情</a>";
         }
         echo <<< archemiya
@@ -55,12 +55,12 @@ archemiya;
 
 <body>
     <?php
-    if($row_control['topic']==0){
+    if ($row_control['topic'] == 0) {
         echo "<br/>";
         echo "<div class=\"alert alert-danger\" role=\"alert\">";
         echo "<strong>尚未开启选题功能！请等待教务处开启</strong>";
         echo "</div>";
-    }else{
+    } else {
         echo <<< archemiya
         <div class="alert alert-info" role="alert">
         <strong>提示：</strong>
@@ -95,8 +95,7 @@ archemiya;
     }
     ?>
     </div>
-    <div class="modal fade " id="topicTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
+    <div class="modal fade " id="topicTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="chose-student-dialog">
             <div class="modal-content">
                 <div class="modal-header">

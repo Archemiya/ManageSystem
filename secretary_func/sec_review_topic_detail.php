@@ -104,8 +104,7 @@ $result = mysqli_query($link, $sql);
 
         <button type="button" class="btn btn-primary" onclick="JavaScript:history.go(-1)">返回</button>
     </div>
-    <div class="modal fade " id="suggestionTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
+    <div class="modal fade " id="suggestionTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="chose-student-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -120,7 +119,7 @@ $result = mysqli_query($link, $sql);
                     <div class="form-group">
                         <label for="inputTopicName" class="col-sm-2 control-label">主要修改意见</label>
                         <div class="col-sm-8">
-                            <textarea name="topic_suggestion" class="form-control" rows="20"><?php echo $row['topic_suggestion'];?></textarea>
+                            <textarea name="topic_suggestion" class="form-control" rows="20"><?php echo $row['topic_suggestion']; ?></textarea>
                         </div>
                     </div>
 

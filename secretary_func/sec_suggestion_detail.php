@@ -16,19 +16,18 @@ $result = mysqli_query($link, $sql);
 
 <body>
     <?php
-        $row = mysqli_fetch_array($result, MYSQLI_BOTH);
-        echo "<br/>";
-        echo "<div class=\"alert alert-info\" role=\"alert\">";
-        echo "<strong>主要修改意见: <br/></strong>";
-        echo nl2br($row['topic_suggestion']);
-        echo " </div>";
+    $row = mysqli_fetch_array($result, MYSQLI_BOTH);
+    echo "<br/>";
+    echo "<div class=\"alert alert-info\" role=\"alert\">";
+    echo "<strong>主要修改意见: <br/></strong>";
+    echo nl2br($row['topic_suggestion']);
+    echo " </div>";
     ?>
 
     <br />
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chsugTable">修改课题</button>
     <button type="button" class="btn btn-primary" onclick="JavaScript:history.go(-1)">返回</button>
-    <div class="modal fade " id="chsugTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
+    <div class="modal fade " id="chsugTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="chose-student-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -58,7 +57,7 @@ archemiya;
                                     <option>
 archemiya;
                     echo $row['topic_type'];
-echo <<< archemiya
+                    echo <<< archemiya
                                     </option>
                                     <option>毕业设计</option>
                                     <option>毕业论文</option>
@@ -70,7 +69,7 @@ echo <<< archemiya
                                     <option>
 archemiya;
                     echo $row['topic_nature'];
-echo <<< archemiya
+                    echo <<< archemiya
                                     </option>
                                     <option>工程实践</option>
                                 </select>
@@ -83,7 +82,7 @@ echo <<< archemiya
                                     <option>
 archemiya;
                     echo $row['topic_source'];
-echo <<< archemiya
+                    echo <<< archemiya
                                     </option>
                                     <option>自拟</option>
                                     <option>校外立项科研</option>
@@ -96,7 +95,7 @@ echo <<< archemiya
                                     <option>
 archemiya;
                     echo $row['topic_difficulty'];
-echo <<< archemiya
+                    echo <<< archemiya
                                     </option>
                                     <option>易</option>
                                     <option>一般</option>
@@ -110,7 +109,7 @@ echo <<< archemiya
                                 <textarea type="topicIntro" name="topic_intro" class="form-control" rows="3">
 archemiya;
                     echo $row['introduction'];
-echo <<< archemiya
+                    echo <<< archemiya
                                 </textarea>
                             </div>
                         </div>
@@ -120,7 +119,7 @@ echo <<< archemiya
                                 <textarea type="topicReq" name="topic_request" class="form-control" rows="3">
 archemiya;
                     echo $row['topic_request'];
-echo <<< archemiya
+                    echo <<< archemiya
                                 </textarea>
                             </div>
                         </div>
@@ -130,7 +129,7 @@ echo <<< archemiya
                                 <textarea type="topicRef" name="topic_ref" class="form-control" rows="3">
 archemiya;
                     echo $row['topic_reference'];
-echo <<< archemiya
+                    echo <<< archemiya
                                 </textarea>
                             </div>
                         </div>
@@ -140,7 +139,7 @@ echo <<< archemiya
                                 <input type="topicOth" name="topic_other" class="form-control" value="
 archemiya;
                     echo $row['topic_otherteacher'];
-echo <<< archemiya
+                    echo <<< archemiya
                                 ">
                             </div>
                             <label for="inputTopicChoseMode" class="col-sm-2 control-label">课题选择模式</label>
@@ -149,7 +148,7 @@ echo <<< archemiya
                                     <option>
 archemiya;
                     echo $row['topic_chosemode'];
-echo <<< archemiya
+                    echo <<< archemiya
                                     </option>
                                     <option>自由选择</option>
                                 </select>
@@ -162,7 +161,7 @@ echo <<< archemiya
                                     <option>
 archemiya;
                     echo $row['topic_application'];
-echo <<< archemiya
+                    echo <<< archemiya
                                     </option>
                                     <option>保密管理</option>
                                 </select>
@@ -188,7 +187,7 @@ archemiya;
                         </div>
                     </form>
 archemiya;
-                ?>
+                    ?>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

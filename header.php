@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="../css/bootstrap3.3.7.css">
     <!-- <link rel="stylesheet" href="../css/bootstrap4.3.1.css" > -->
     <link rel="stylesheet" type="text/css" href="../css/dashboard.css">
-    <link rel="stylesheet" type="text/css" href="../css/form_login.css"> 
+    <link rel="stylesheet" type="text/css" href="../css/form_login.css">
     <link rel="stylesheet" href="../css/bootstrap-table.css">
     <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="../js/popper.min.js"></script>
@@ -51,8 +51,7 @@
 
         <div class="shadow"></div>
     </div>
-    <div class="modal fade " id="modalTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
+    <div class="modal fade " id="modalTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -63,21 +62,17 @@
                 <div class="modal-body ">
                     <form action="chpasswd.php" method="POST" class="form-signin row">
                         <label for="inputAccountnumber" class="sr-only">账号</label>
-                        <input type="account" name="account" id="inputAccountnumber" class="form-control" 
-                        placeholder="账号" autocomplete="off" required="">
-                        <br/>
+                        <input type="account" name="account" id="inputAccountnumber" class="form-control" placeholder="账号" autocomplete="off" required="">
+                        <br />
                         <label for="inputPassword" class="sr-only">原密码</label>
-                        <input type="password" name="oldpasswd" id="inputOldPassword" class="form-control" 
-                        placeholder="原密码" autocomplete="off" required="">
-                        <br/>
+                        <input type="password" name="oldpasswd" id="inputOldPassword" class="form-control" placeholder="原密码" autocomplete="off" required="">
+                        <br />
                         <label for="inputPassword" class="sr-only">新密码</label>
-                        <input type="password" name="newpasswd" id="inputNewPassword" class="form-control" 
-                        placeholder="新密码" autocomplete="off" required="">
-                        <br/>
+                        <input type="password" name="newpasswd" id="inputNewPassword" class="form-control" placeholder="新密码" autocomplete="off" required="">
+                        <br />
                         <label for="inputPassword" class="sr-only">确认新密码</label>
-                        <input type="password" name="newpasswd2" id="inputNewPassword2" class="form-control" 
-                        placeholder="确认新密码" autocomplete="off" required="">
-                        <br/>
+                        <input type="password" name="newpasswd2" id="inputNewPassword2" class="form-control" placeholder="确认新密码" autocomplete="off" required="">
+                        <br />
                         <button class="btn btn-lg btn-primary btn-block" type="submit">确认修改</button>
                     </form>
                 </div>

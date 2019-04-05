@@ -73,7 +73,7 @@ Archemiya;
         echo "</tr>";
     }
 }
-        
+
 ?>
 
 <html>
@@ -85,12 +85,12 @@ Archemiya;
 
 <body>
     <?php
-    if($num_chose_num==0){
+    if ($num_chose_num == 0) {
         echo "<br/>";
         echo "<div class=\"alert alert-danger\" role=\"alert\">";
         echo "<strong>尚无学生选课！</strong>";
         echo "</div>";
-    }else{
+    } else {
         echo <<< archemiya
         <div class="alert alert-info" role="alert">
         <strong>提示：</strong>
@@ -123,15 +123,14 @@ archemiya;
 
     $result = mysqli_query($link, $sql);
     $height = mysqli_num_rows($result);
-    
+
     for ($i = 0; $i < $height; $i++) {
         $row = mysqli_fetch_array($result, MYSQLI_BOTH);
         $sql_chose_final_flag = "SELECT * FROM `chose_topic_record` 
         WHERE `teacher_id` = '{$_SESSION['user_id']}' AND `topic_id` = '{$row['id']}' AND `final_flag` = 1";
         $result_chose_final_flag = mysqli_query($link, $sql_chose_final_flag);
         $num_chose_final_flag = mysqli_num_rows($result_chose_final_flag);
-        if (!$num_chose_final_flag) {
-        } else {
+        if (!$num_chose_final_flag) { } else {
             $row_chose_final_flag = mysqli_fetch_array($result_chose_final_flag, MYSQLI_BOTH);
             echo <<< archemiya
             <div class="modal fade " id="$i" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -205,4 +204,4 @@ archemiya;
     ?>
 </body>
 
-</html> 
+</html>
