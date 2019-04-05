@@ -1,9 +1,10 @@
 <?php
-include "link.php";
+include "../link.php";
 $sql = "SELECT * FROM `topic` WHERE `topic`.`teacher_id` = '{$_SESSION['user_id']}'";
-
+$sql_chose_num = "SELECT * FROM `chose_topic_record` WHERE `chose_topic_record`.`teacher_id` = '{$_SESSION['user_id']}'";
 $result = mysqli_query($link, $sql);
-
+$result_chose_num = mysqli_query($link, $sql_chose_num);
+$num_chose_num = mysqli_num_rows($result_chose_num);
 ?>
 <?php
 function chose_topic_table_echo($result, $link)
@@ -27,7 +28,7 @@ Archemiya;
                 $row_chose_record = mysqli_fetch_array($result_chose_record, MYSQLI_BOTH);
                 echo "<td>";
                 if (isset($row_chose_record['student_id'])) {
-                    echo "<a href=\"./determine_student.php?topic={$row_chose_record['topic_id']}&id={$row_chose_record['student_id']}\" 
+                    echo "<a href=\"./t_determine_student.php?topic={$row_chose_record['topic_id']}&id={$row_chose_record['student_id']}\" 
                 onclick=\"JavaScript:return confirm('确定选择此学生么？');\" 
                 class=\"btn btn-primary\"
                 role=\"button\"> 
@@ -68,6 +69,14 @@ Archemiya;
 </head>
 
 <body>
+    <?php
+    if($num_chose_num==0){
+        echo "<br/>";
+        echo "<div class=\"alert alert-danger\" role=\"alert\">";
+        echo "<strong>尚无学生选课！</strong>";
+        echo "</div>";
+    }else{
+        echo <<< archemiya
     <div class="table-responsive">
         <table data-toggle="table" data-toolbar="#toolbar" data-pagination="true" data-page-list="[10, 25, 50, 100, 200, All]" data-show-refresh="true">
             <thead>
@@ -86,16 +95,18 @@ Archemiya;
                 </tr>
             </thead>
             <tbody>
-                <?php
-                chose_topic_table_echo($result, $link);
-                ?>
+archemiya;
+        chose_topic_table_echo($result, $link);
+        echo <<< archemiya
             </tbody>
 
 
 
         </table>
     </div>
-
+archemiya;
+    }
+    ?>
 </body>
 
 </html> 

@@ -7,19 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>毕业设计教学管理系统</title>
-    <link rel="stylesheet" type="text/css" href="./css/ManaSys.css">
-    <link rel="stylesheet" type="text/css" href="./css/bootstrap3.3.7.css">
-    <!-- <link rel="stylesheet" href="./css/bootstrap4.3.1.css" > -->
-    <link rel="stylesheet" type="text/css" href="./css/dashboard.css">
-    <link rel="stylesheet" type="text/css" href="./css/form_login.css"> 
-    <link rel="stylesheet" href="./css/bootstrap-table.css">
-    <script type="text/javascript" src="./js/jquery-3.3.1.js"></script>
-    <script type="text/javascript" src="./js/popper.min.js"></script>
-    <script type="text/javascript" src="./js/bootstrap3.3.7.min.js"></script>
-    <script type="text/javascript" src="./js/bootstrap-table.js"></script>
-    <script type="text/javascript" src="./js/bootstrap-table-zh-CN.min.js"></script>
-    <script type="text/javascript" src="./js/dashboard4.3.1.js"></script>
-    <link rel="icon" href="./images/besti.ico">
+    <link rel="stylesheet" type="text/css" href="../css/ManaSys.css">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap3.3.7.css">
+    <!-- <link rel="stylesheet" href="../css/bootstrap4.3.1.css" > -->
+    <link rel="stylesheet" type="text/css" href="../css/dashboard.css">
+    <link rel="stylesheet" type="text/css" href="../css/form_login.css"> 
+    <link rel="stylesheet" href="../css/bootstrap-table.css">
+    <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="../js/popper.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap3.3.7.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="../js/dashboard4.3.1.js"></script>
+    <link rel="icon" href="../images/besti.ico">
 </head>
 
 <body>
@@ -42,7 +42,7 @@
                             echo "</i></a></li>";
                             ?>
                             <li><a href="" data-toggle="modal" data-target="#modalTable"><i class="glyphicon glyphicon-cog">修改密码</i></a></li>
-                            <li><a href="logout.php"><i class="glyphicon glyphicon-log-out">登出</i></a></li>
+                            <li><a href="../logout.php"><i class="glyphicon glyphicon-log-out">登出</i></a></li>
                         </ul>
                     </div>
                 </nav>

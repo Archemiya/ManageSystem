@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "link.php";
+include "../link.php";
 date_default_timezone_set('Asia/Shanghai');
 $topic_main = $_POST['topic_main'];
 $topic_schedule = $_POST['topic_schedule'];

@@ -14,7 +14,7 @@ $topic_other = $_POST['topic_other'];
 $topic_chosemode = $_POST['topic_chosemode'];
 $topic_app = $_POST['topic_app'];
 $topic_workload = $_POST['topic_workload'];
-include "link.php";
+include "../link.php";
 $sql = "INSERT INTO `topic` (`id`, 
 `name`, 
 `topic_type`, 
@@ -33,7 +33,7 @@ $sql = "INSERT INTO `topic` (`id`,
 `topic_otherteacher`, 
 `topic_chosemode`, 
 `topic_application`, 
-`topic_chosen`) 
+`topic_ispass`) 
 VALUES (NULL, 
 '{$topic_name}', 
 '{$topic_type}', 

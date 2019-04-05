@@ -1,39 +1,47 @@
 <?php
-include "link.php";
+include "../link.php";
+include "../secretary_func/sec_query_t_control.php";
 $sql = "SELECT * FROM `topic`";
+$sql_passed_me_topic = "SELECT * FROM `topic` WHERE `teacher_id`='{$_SESSION['user_id']}' OR `topic_ispass`= 1";//此处为教师课题展示界面，需要展示的只有自己的课题和其他老师已经过审的课题
 $result = mysqli_query($link, $sql);
-?>
-<?php
-function table_echo($result, $link)
+$result_passed_me_topic = mysqli_query($link, $sql_passed_me_topic);
+$length = mysqli_num_rows($result_passed_me_topic);
+function table_echo($result, $result_passed_me_topic, $link, $length)
 {
-    $length = mysqli_num_rows($result);
-    $i = 0;
-    while ($i < $length) {
+    for ($i = 0;$i <$length;$i++) {
         $row = mysqli_fetch_array($result);
+        $row_passed_me_topic = mysqli_fetch_array($result_passed_me_topic);
         $sql_chose_recode_topic = "SELECT * FROM `chose_topic_record` WHERE `chose_topic_record`.`topic_id` = '{$row['id']}'";
         $result_chose_record_topic = mysqli_query($link, $sql_chose_recode_topic);
-        $row_chose_record_topic = mysqli_fetch_array($result_chose_record_topic, MYSQLI_BOTH);
         $num_chose_record_topic = mysqli_num_rows($result_chose_record_topic);
         echo <<< archemiya
-    <tr>
-    <td> {$row['id']} </td>
-    <td> {$row['name']} </td>
+        <tr>
+        <td> {$row_passed_me_topic['id']} </td>
+        <td> {$row_passed_me_topic['name']} </td>
 archemiya;
         if ($row['teacher_name'] == $_SESSION['user_name']) {
-            echo "<td > {$row['teacher_name']} </td>";
+            echo "<td > {$row_passed_me_topic['teacher_name']} </td>";
         } else {
-            echo "<td > &nbsp;{$row['teacher_name']} </td>";
+            echo "<td > &nbsp;{$row_passed_me_topic['teacher_name']} </td>";
         }
-    
         echo <<< archemiya
-    <td> {$num_chose_record_topic} / 5</td>
-    <td >
-    <a href="./tutor.php?func=topic&id={$row['id']}" class="btn btn-primary" role="button">查看课题详情</a>
-    </td> 
-    </td>
-    </tr>
+        <td> {$num_chose_record_topic} / 5</td>
+        <td >
 archemiya;
-        $i++;
+        if (($row_passed_me_topic['topic_ispass']==2) && ($row_passed_me_topic['teacher_id'] == $_SESSION['user_id'])) {
+            echo "<a href=\"./tutor.php?func=topic&cid={$row_passed_me_topic['id']}\" class=\"btn btn-warning\" role=\"button\">查看修改建议</a>";
+        } elseif (($row_passed_me_topic['topic_ispass']==0) && ($row_passed_me_topic['teacher_id'] == $_SESSION['user_id'])) {
+            echo "<a href=\"./tutor.php?func=topic&id={$row_passed_me_topic['id']}\" class=\"btn btn-danger\" role=\"button\">查看课题详情</a>";
+        } elseif (($row_passed_me_topic['topic_ispass']==1) ) {
+            echo "<a href=\"./tutor.php?func=topic&id={$row_passed_me_topic['id']}\" class=\"btn btn-success\" role=\"button\">查看过审课题</a>";
+        } elseif (($row_passed_me_topic['topic_ispass']==3) && ($row_passed_me_topic['teacher_id'] == $_SESSION['user_id'])) {
+            echo "<a href=\"./tutor.php?func=topic&id={$row_passed_me_topic['id']}\" class=\"btn btn-warning\" role=\"button\">查看课题详情</a>";
+        }
+        echo <<< archemiya
+        </td> 
+        </td>
+        </tr>
+archemiya;
     }
 }
 ?>
@@ -46,15 +54,32 @@ archemiya;
 </head>
 
 <body>
+    <?php
+    if($row_control['topic']==0){
+        echo "<br/>";
+        echo "<div class=\"alert alert-danger\" role=\"alert\">";
+        echo "<strong>尚未开启选题功能！请等待教务处开启</strong>";
+        echo "</div>";
+    }else{
+        echo <<< archemiya
+    <div class="alert alert-info" role="alert">
+        <strong>提示：</strong>
+        <a class="btn btn-danger" role="button">查看课题详情</a><strong>表示教务处未提出修改建议的课题</strong>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-warning" role="button">查看修改建议</a><strong>表示教务处已发出修改建议但您未进行修改的课题</strong><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a class="btn btn-warning" role="button">查看课题详情</a><strong>表示您已提交修改但教务处未审核的课题</strong>
+        <a class="btn btn-success" role="button">查看过审课题</a><strong>表示教务处审核通过的课题</strong>
+        
+    </div>
     <div class="table-responsive">
-
+            
         <table data-toggle="table" data-toolbar="#toolbar" data-pagination="true" data-search="true"
             data-page-list="[10, 25, 50, 100, 200, All]" data-sort-name="name" data-sort-order="desc"
-            data-show-refresh="true">
+            data-show-refresh="true" >
             <thead>
                 <tr>
                     <th class="th-title-small th-title-center" data-sortable="true">课题号</th>
-                    <th class="th-title-large"> 选题名称</th>
+                    <th class="th-title-large"> 课题名称</th>
                     <th class="th-title-normalfix th-title-center" data-field="name" data-sortable="true">教师名称</th>
                     <th class="th-title-normalfix th-title-center" data-sortable="true">选课人数</th>
                     <th class=" th-title-normal th-title-center">选项</th>
@@ -65,12 +90,14 @@ archemiya;
                     <button type="button" class="btn btn-primary" data-toggle="modal"
                         data-target="#topicTable">创建课题</button>
                 </div>
-                <?php
-                table_echo($result, $link);
-                ?>
+archemiya;
+        table_echo($result, $result_passed_me_topic, $link, $length);
+        echo <<< archemiya
             </tbody>
-
         </table>
+archemiya;
+    }
+    ?>
     </div>
     <div class="modal fade " id="topicTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
         aria-hidden="true">
@@ -83,7 +110,7 @@ archemiya;
                 </div>
                 <div class="modal-body">
 
-                    <form action="add_topic.php" method="POST" class="form-horizontal">
+                    <form action="t_add_topic.php" method="POST" class="form-horizontal">
                         <div class="form-group">
                             <label for="inputTopicName" class="col-sm-3 control-label">课题名称</label>
                             <div class="col-sm-8">
@@ -122,7 +149,7 @@ archemiya;
                             <div class="col-sm-3">
                                 <select type="topicEase" name="topic_ease" class="form-control">
                                     <option></option>
-                                    <option>易</option>
+                                    <option>容易</option>
                                     <option>一般</option>
                                     <option>难</option>
                                 </select>
@@ -131,22 +158,19 @@ archemiya;
                         <div class="form-group">
                             <label for="inputTopicIntro" class="col-sm-3 control-label">题目简介</label>
                             <div class="col-sm-8">
-                            <textarea type="topicIntro" name="topic_intro" class="form-control" rows="3"></textarea>
-                                <!-- <input type="topicIntro" class="form-control"> -->
+                                <textarea type="topicIntro" name="topic_intro" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputTopicReq" class="col-sm-3 control-label">毕业设计(论文)要求</label>
                             <div class="col-sm-8">
-                            <textarea type="topicReq"  name="topic_request" class="form-control" rows="3"></textarea>
-                                <!-- <input type="topicReq" class="form-control"> -->
+                                <textarea type="topicReq" name="topic_request" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputTopicRef" class="col-sm-3 control-label">主要参考资料</label>
                             <div class="col-sm-8">
-                            <textarea type="topicRef" name="topic_ref" class="form-control" rows="3"></textarea>
-                                <!-- <input type="topicRef" class="form-control"> -->
+                                <textarea type="topicRef" name="topic_ref" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
@@ -165,7 +189,7 @@ archemiya;
                         <div class="form-group">
                             <label for="inputTopicApp" class="col-sm-3 control-label">课题适用专业</label>
                             <div class="col-sm-3">
-                            <select type="topicApp" name="topic_app" class="form-control">
+                                <select type="topicApp" name="topic_app" class="form-control">
                                     <option></option>
                                     <option>保密管理</option>
                                 </select>
@@ -195,13 +219,13 @@ archemiya;
     </div>
 
     <script>
-    var $table = $('#table')
+        var $table = $('#table')
 
-    $(function() {
-        $('#topicTable').on('shown.bs.modal', function() {
-            $table.bootstrapTable('resetView')
+        $(function() {
+            $('#topicTable').on('shown.bs.modal', function() {
+                $table.bootstrapTable('resetView')
+            })
         })
-    })
     </script>
 </body>
 

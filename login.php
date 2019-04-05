@@ -11,18 +11,18 @@ if (!isset($user) || !isset($psw)) {
     if ($result && mysqli_num_rows($result)) {
         $row = mysqli_fetch_array($result, MYSQLI_BOTH);
         $_SESSION['user_permission'] = $row['permission'];
-        $_SESSION['user_special']= $_row['special'];
+        $_SESSION['user_special']= $row['special'];
         $_SESSION['user_id'] = $row['id'];
         $_SESSION['user_name'] = $row['name'];
         switch ($row["permission"]) {
             case "student":
-                header("Location: ./student.php");
+                header("Location: student_func/student.php");
                 break;
             case "tutor":
-                header("Location: ./tutor.php");
+                header("Location: tutor_func/tutor.php");
                 break;
             case "secretary":
-                header("Location: ./secretary.php");
+                header("Location: secretary_func/secretary.php");
                 break;
             case "supermanager":
                 header("Location: ./supermanager.php");

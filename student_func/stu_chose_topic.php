@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "link.php";
+include "../link.php";
 if (isset($_GET["func"])) {
     $get = $_GET["func"];
 }

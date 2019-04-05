@@ -2,10 +2,10 @@
 session_start();
 if (!isset($_SESSION['user_id']) || ($_SESSION['user_permission']!='student')) {
     // 不存在session用户id，退出
-    echo "<script>alert('请先登录'); window.location.href=\"login.html\";</script>";
+    echo "<script>alert('请先登录'); window.location.href=\"../login.html\";</script>";
     exit;
 }
-include 'header.php';
+include '../header.php';
 ?>
 
 <!--主体-->
@@ -80,13 +80,13 @@ include 'header.php';
                 switch ($result) {
                     case "topic":
                     if (isset($_GET["id"])) {
-                        include "topic_detail.php";
+                        include "../tutor_func/t_topic_detail.php";
                     } else {
-                        include "s_topic.php";
+                        include "stu_topic.php";
                     }
                         break;
                     case "task_book":
-                        include "task_book_detail.php";
+                        include "stu_task_book_detail.php";
                         break;
                     case "first_report":
                     case "paper_review":

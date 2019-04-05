@@ -2345,10 +2345,10 @@ pre code {
         width: 8.33333333%;
     }
     .col-sm-sidebar-left {
-        width: 10%;
+        width: 11%;
     }
     .col-sm-sidebar-right {
-        width: 90%;
+        width: 89%;
     }
     .col-sm-pull-12 {
         right: 100%;
@@ -2468,7 +2468,7 @@ pre code {
         margin-left: 0;
     }
     .col-sm-offset-right {
-        margin-left: 10%;
+        margin-left: 11%;
     }
 }
 

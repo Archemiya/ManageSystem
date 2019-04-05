@@ -1,9 +1,10 @@
 <?php
-include "link.php";
+include "../link.php";
 $sql = "SELECT * FROM `topic` WHERE `topic`.`teacher_id` = '{$_SESSION['user_id']}'";
-
+$sql_chose_num = "SELECT * FROM `chose_topic_record` WHERE `chose_topic_record`.`teacher_id` = '{$_SESSION['user_id']}'";
 $result = mysqli_query($link, $sql);
-
+$result_chose_num = mysqli_query($link, $sql_chose_num);
+$num_chose_num = mysqli_num_rows($result_chose_num);
 ?>
 <?php
 function task_book_table_echo($result, $link)
@@ -83,6 +84,14 @@ Archemiya;
 </head>
 
 <body>
+    <?php
+    if($num_chose_num==0){
+        echo "<br/>";
+        echo "<div class=\"alert alert-danger\" role=\"alert\">";
+        echo "<strong>尚无学生选课！</strong>";
+        echo "</div>";
+    }else{
+        echo <<< archemiya
     <div class="table-responsive">
         <table data-toggle="table" data-toolbar="#toolbar" data-pagination="true" data-page-list="[10, 25, 50, 100, 200, All]" data-show-refresh="true">
             <thead>
@@ -94,21 +103,22 @@ Archemiya;
                 </tr>
             </thead>
             <tbody>
-                <?php
-                task_book_table_echo($result, $link);
-                ?>
+archemiya;
+        task_book_table_echo($result, $link);
+        echo <<< archemiya
             </tbody>
-
-
-
         </table>
     </div>
+archemiya;
+    }
+    ?>
     <?php
     $link = mysqli_connect("localhost", "root", "123456", "manasystem");
     $sql = "SELECT * FROM `topic` WHERE `topic`.`teacher_id` = '{$_SESSION['user_id']}'";
 
     $result = mysqli_query($link, $sql);
     $height = mysqli_num_rows($result);
+    
     for ($i = 0; $i < $height; $i++) {
         $row = mysqli_fetch_array($result, MYSQLI_BOTH);
         $sql_chose_final_flag = "SELECT * FROM `chose_topic_record` 
@@ -129,7 +139,7 @@ Archemiya;
                 </div>
                 <div class="modal-body">
 
-                    <form action="update_task_book.php" method="POST" class="form-horizontal">
+                    <form action="t_update_task_book.php" method="POST" class="form-horizontal">
                         <div class="form-group">
                             <label for="inputTopicIntro" class="col-sm-3 control-label">主要内容和要求</label>
                             <div class="col-sm-8">

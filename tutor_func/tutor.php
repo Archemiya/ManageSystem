@@ -2,10 +2,10 @@
 session_start();
 if (!isset($_SESSION['user_id']) || ($_SESSION['user_permission'] != 'tutor')) {
     // 不存在session用户id，退出
-    echo "<script>alert('请先登录'); window.location.href=\"login.html\";</script>";
+    echo "<script>alert('请先登录'); window.location.href=\"../login.html\";</script>";
     exit;
 }
-include 'header.php';
+include '../header.php';
 ?>
 
 <!--主体-->
@@ -14,20 +14,20 @@ include 'header.php';
         <div class="col-sm-sidebar-left  sidebar">
             <ul class="nav nav-sidebar">
                 <li><a href="./tutor.php?func=topic" method="GET" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "topic") {
-                                                                        echo "class=active";
-                                                                    } ?>><i class="glyphicon glyphicon-list-alt">
+    echo "class=active";
+} ?>><i class="glyphicon glyphicon-list-alt">
                             论文选题</i><span class="sr-only">(current)</span></a></li>
 
 
                 <li><a href="./tutor.php?func=chose_student" method="GET" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "chose_student") {
-                                                                                echo "class=active";
-                                                                            } ?>><i class="glyphicon glyphicon-user">
+    echo "class=active";
+} ?>><i class="glyphicon glyphicon-user">
                             指导学生</i><span class="sr-only">(current)</span></a></li>
 
 
                 <li><a href="./tutor.php?func=task_book" method="GET" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "task_book") || (isset($_GET["func"]) && ($_GET["func"]) == "write_task_book")) {
-                                                                            echo "class=active";
-                                                                        } ?>><i class="glyphicon glyphicon-file">
+    echo "class=active";
+} ?>><i class="glyphicon glyphicon-file">
                             任务书</i><span class="sr-only">(current)</span></a></li>
 
                 <br />
@@ -80,17 +80,19 @@ include 'header.php';
                     switch ($result) {
                         case "topic":
                             if (isset($_GET["id"])) {
-                                include "topic_detail.php";
+                                include "t_topic_detail.php";
+                            } elseif (isset($_GET['cid'])) {
+                                include "../secretary_func/sec_suggestion_detail.php";
                             } else {
                                 include "t_topic.php";
                             }
                             break;
                         case "chose_student":
-                            include "chose_student.php";
+                            include "t_chose_student.php";
                             break;
                         case "task_book":
                             if (isset($_GET["id"])) {
-                                include "task_book_detail.php";
+                                include "../student_func/stu_task_book_detail.php";
                             } else {
                                 include "t_task_book.php";
                             }

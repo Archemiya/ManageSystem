@@ -1,5 +1,6 @@
 <?php
-include "link.php";
+include "../link.php";
+include "../secretary_func/sec_query_stu_control.php";
 $sql = "SELECT * FROM `topic`"; //查询全部课题
 $sql_chose_record_stu = "SELECT * FROM `chose_topic_record` WHERE `chose_topic_record`.`student_id` = '{$_SESSION['user_id']}'"; //查询当前学生的选课记录
 $sql_chose_record_stu_final = "SELECT * FROM `chose_topic_record` WHERE `chose_topic_record`.`student_id` = '{$_SESSION['user_id']}' AND `final_flag` = 1"; //查询当前学生是否存在确定课题
@@ -67,29 +68,29 @@ function table_echo($length, $result, $link, $num_chose_record_stu_final, $row_c
                 echo "<button type=\"button\" class=\"btn btn-danger\" disabled>";
                 echo "课题已锁";
             } else {
-                echo "<a href=\"./chose_topic.php?func={$row['id']}\" 
+                echo "<a href=\"./stu_chose_topic.php?func={$row['id']}\" 
                 onclick=\"JavaScript:return confirm('确定选择此课题么？');\"
                 class=\"btn btn-primary\" role=\"button\"
                 > 确认选题</a>";
             }
-        } else if ($num_chose_record_stu >= 1 && $num_chose_record_stu_final == 0) { //该学生进行过选题操作但未被选上（包括被拒未选题和选题未被确定两种状态）
+        } else if ($num_chose_record_stu >= 1 && $num_chose_record_stu_final == 0) { //该学生进行过选题操作但未被选上（包括 被拒绝但还未重新选题 和 选题但老师还未被确定学生 两种状态）
             /*此处需先进行学生是否处于被拒状态的判断：
             1. 当学生处于被拒状态时，判断条件为，学生所选课题数 = 学生所有选择课题被确定状态下，所属学生不为该学生的数量。
             2. 当学生处于未被选上状态，判断条件为，存在一个未被确认的课题，即final全部为0的课题
-            综上我们选择从第二种情况入手。
+            综上，配合上述求得的$final_not_this_stu数目，我们选择从第一种情况入手。
             */
             if ($num_chose_record_stu == $final_not_this_stu) { //该学生处于被拒绝状态
                 if (($num_chose_record_stu_topic == 1) && ($num_chose_record_topic_final == 1)) { //该学生选择了当前课题，当前课题已被确认（由于前面已经判断过学生被选中的情况，所以这里是未被选中的情况）即当前课题被拒绝
                     echo "<button type=\"button\" class=\"btn btn-danger\" disabled>";
                     echo "课题被拒";
-                } else if (($num_chose_record_stu_topic == 1) && ($num_chose_record_topic_final == 0)) { //该学生选择了当前课题，当前课题未被确认
-                    echo "<button type=\"button\" class=\"btn btn-warning\" disabled>";
-                    echo "已选课题";
+                } else if (($num_chose_record_stu_topic == 0) && ($num_chose_record_topic_final == 1)) { //该学生未选择当前课题，当前课题已被确认
+                    echo "<button type=\"button\" class=\"btn btn-danger\" disabled>";
+                    echo "课题已锁";
                 } else if (($row_chose_record_stu2['topic_id'] != $row['id']) && ($num_chose_record_topic == 5)) { //该学生未选择当前课题，但当前课题已达最大选题人数
                     echo "<button type=\"button\" class=\"btn btn-danger\" disabled>";
                     echo "课题已满";
                 } else {
-                    echo "<a href=\"./chose_topic.php?func={$row['id']}\" 
+                    echo "<a href=\"./stu_chose_topic.php?func={$row['id']}\" 
                 onclick=\"JavaScript:return confirm('确定选择此课题么？');\"
                 class=\"btn btn-primary\" role=\"button\"
                 > 确认选题</a>";
@@ -124,15 +125,28 @@ function table_echo($length, $result, $link, $num_chose_record_stu_final, $row_c
 
 <body>
     <div class="table-responsive">
-
-        <table data-toggle="table" 
-        data-toolbar="#toolbar" 
-        data-pagination="true" 
-        data-search="true" 
-        data-page-list="[10, 25, 50, 100, 200, All]" 
-        data-show-refresh="true" 
-        data-sort-name="option" 
-        data-sort-order="desc">
+        <?php
+        if($row_control['topic']==0){
+            echo "<br/>";
+            echo "<div class='alert alert-danger'>";
+            echo "<strong>当前选题功能未开放！</strong>";
+            echo "</div>";
+        }else{
+            echo <<< archemiya
+            <table data-toggle="table" 
+            data-toolbar="#toolbar" 
+            data-pagination="true" 
+            data-search="true" 
+            data-page-list="[10, 25, 50, 100, 200, All]" 
+            data-show-refresh="true"
+archemiya;
+            if (!$num_chose_record_stu || $num_chose_record_stu == $final_not_this_stu) {                        
+            } else {
+            echo "data-sort-name=\"option\" ";
+            echo "data-sort-order=\"desc\" ";
+            }
+            echo ">";
+            echo <<< archemiya
             <thead>
                 <tr>
                     <th class="col-xs-1 th-title-center" data-sortable="true">课题号</th>
@@ -140,11 +154,19 @@ function table_echo($length, $result, $link, $num_chose_record_stu_final, $row_c
                     <th class="col-xs-1 th-title-center">教师名称</th>
                     <th class="col-xs-2 th-title-center" data-sortable="true">选课人数</th>
                     <th class="col-xs-2 th-title-center">选项</th>
-                    <th class="col-xs-1 th-title-center" data-field="option" data-sortable="true">操作/状态</th>
+                    <th class="col-xs-1 th-title-center" data-field="option" 
+archemiya;
+                    if (!$num_chose_record_stu || $num_chose_record_stu == $final_not_this_stu) {                        
+                    } else {
+                    echo "data-sortable=\"true\"";
+                    }
+                    echo <<< archemiya
+                    >
+                    操作/状态</th>
                 </tr>
             </thead>
             <tbody>
-                <?php
+archemiya;
                 echo "<div id=\"toolbar\">";
                 if (!$num_chose_record_stu) {
                     echo "<button id=\"未选题\" class=\"btn btn-danger\" disabled>";
@@ -166,10 +188,12 @@ function table_echo($length, $result, $link, $num_chose_record_stu_final, $row_c
                 echo "</button>";
                 echo "</div>";
                 table_echo($length, $result, $link, $num_chose_record_stu_final, $row_chose_record_stu_final, $num_chose_record_stu, $result_chose_record_stu, $final_not_this_stu);
-                ?>
-            </tbody>
+            
+            echo "</tbody>";
 
-        </table>
+        echo "</table>";
+        }
+        ?>
     </div>
 </body>
 
