@@ -24,7 +24,9 @@ include '../header.php';
                         <i class="glyphicon glyphicon-file"> 任务书</i><span class="sr-only">(current)</span></a></li>
                 <br />
 
-                <li><a href="./student.php?func=first_report"><i class="glyphicon glyphicon-file"> 开题报告</i><span class="sr-only">(current)</span></a></li>
+                <li><a href="./student.php?func=first_report" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "first_report") {
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-file"> 开题报告</i><span class="sr-only">(current)</span></a></li>
 
 
                 <li><a href="./student.php?func=midterm_report"><i class="glyphicon glyphicon-file"> 中期报告</i><span class="sr-only">(current)</span></a></li>
@@ -81,6 +83,8 @@ include '../header.php';
                             include "stu_task_book_detail.php";
                             break;
                         case "first_report":
+                            include "stu_first_report.php";
+                            break;
                         case "paper_review":
                         case "answer_information":
                         case "deferred_reply":

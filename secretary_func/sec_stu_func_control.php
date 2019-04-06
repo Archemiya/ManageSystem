@@ -58,7 +58,7 @@ include "sec_query_stu_control.php";
 
 
                 </tr>
-
+                
             </tbody>
         </table>
 

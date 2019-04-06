@@ -197,3 +197,19 @@ Stack trace:
 [05-Apr-2019 21:05:53 PRC] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in C:\Users\smile\Desktop\Code\Html\ManaSystem\student_func\stu_task_book_detail.php on line 28
 [05-Apr-2019 21:06:42 PRC] PHP Notice:  Undefined variable: result_final in C:\Users\smile\Desktop\Code\Html\ManaSystem\student_func\stu_task_book_detail.php on line 28
 [05-Apr-2019 21:06:42 PRC] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in C:\Users\smile\Desktop\Code\Html\ManaSystem\student_func\stu_task_book_detail.php on line 28
+[06-Apr-2019 17:11:32 PRC] PHP Notice:  Undefined variable: num_chose_num in C:\Users\smile\Desktop\Code\Html\ManaSystem\tutor_func\t_first_report.php on line 86
+[06-Apr-2019 17:12:31 PRC] PHP Notice:  Undefined variable: num_chose_num in C:\Users\smile\Desktop\Code\Html\ManaSystem\tutor_func\t_first_report.php on line 86
+[06-Apr-2019 17:13:44 PRC] PHP Fatal error:  Uncaught Error: Call to undefined function task_book_table_echo() in C:\Users\smile\Desktop\Code\Html\ManaSystem\tutor_func\t_first_report.php:104
+Stack trace:
+#0 C:\Users\smile\Desktop\Code\Html\ManaSystem\tutor_func\tutor.php(106): include()
+#1 {main}
+  thrown in C:\Users\smile\Desktop\Code\Html\ManaSystem\tutor_func\t_first_report.php on line 104
+[06-Apr-2019 17:14:47 PRC] PHP Fatal error:  Uncaught Error: Call to undefined function task_book_table_echo() in C:\Users\smile\Desktop\Code\Html\ManaSystem\tutor_func\t_first_report.php:104
+Stack trace:
+#0 C:\Users\smile\Desktop\Code\Html\ManaSystem\tutor_func\tutor.php(106): include()
+#1 {main}
+  thrown in C:\Users\smile\Desktop\Code\Html\ManaSystem\tutor_func\t_first_report.php on line 104
+[06-Apr-2019 17:17:09 PRC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in C:\Users\smile\Desktop\Code\Html\ManaSystem\tutor_func\t_first_report.php on line 64
+[06-Apr-2019 17:17:10 PRC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in C:\Users\smile\Desktop\Code\Html\ManaSystem\tutor_func\t_first_report.php on line 64
+[06-Apr-2019 18:36:43 PRC] PHP Warning:  basename() expects parameter 1 to be string, array given in C:\Users\smile\Desktop\Code\Html\ManaSystem\file-upload.php on line 4
+[06-Apr-2019 18:36:43 PRC] PHP Warning:  move_uploaded_file() expects parameter 1 to be string, array given in C:\Users\smile\Desktop\Code\Html\ManaSystem\file-upload.php on line 7

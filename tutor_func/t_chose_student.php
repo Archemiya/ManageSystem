@@ -84,7 +84,7 @@ Archemiya;
         
     </div>
     <div class="table-responsive">
-        <table data-toggle="table" data-toolbar="#toolbar" data-pagination="true" data-page-list="[10, 25, 50, 100, 200, All]" data-show-refresh="true">
+        <table data-toggle="table" data-toolbar="#toolbar" data-pagination="true" data-page-list="[10, 25, 50, 100, 200, All]" >
             <thead>
                 <tr>
                     <th class="th-title-topic-chs">课题名称</th>
