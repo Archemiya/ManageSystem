@@ -29,9 +29,12 @@ include "sec_query_stu_control.php";
                     $result_passed_topic = mysqli_query($link, $sql_passed_topic);
                     $num_topic = mysqli_num_rows($result_topic);
                     $num_passed_topic = mysqli_num_rows($result_passed_topic);
-                    if (($num_passed_topic == $num_topic) && ($num_topic != 0)) {
+                    if (($num_passed_topic == $num_topic) && ($row_control['topic'] == 0) && ($num_topic != 0)) {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
                         echo "当前课题审核已全部完成，可以开启学生选题流程";
+                    } else if(($num_passed_topic == $num_topic) && ($row_control['topic'] == 1)){
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
+                        echo "已开启学生选题流程";
                     } else {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-danger\">";
                         echo "当前课题审核尚未全部完成，不可开启学生选题流程";
