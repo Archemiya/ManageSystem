@@ -1,18 +1,13 @@
 <?php
 
-$uploaddir = './uploaded_file';
+$uploaddir = './uploaded_file/';
 $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
 
-echo '<pre>';
+
 if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
-    echo "File is valid, and was successfully uploaded.\n";
+    echo "<script>alert('文件上传成功！');history.go(-1)</script>";
 } else {
-    echo "Possible file upload attack!\n";
+    echo "<script>alert('文件上传失败！请重新上传')</script>";
 }
-
-echo 'Here is some more debugging info:';
-print_r($_FILES);
-
-print "</pre>";
 
 ?>
