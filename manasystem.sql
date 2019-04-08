@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： 127.0.0.1
--- 生成日期： 2019-04-05 22:41:08
+-- 生成日期： 2019-04-08 22:57:55
 -- 服务器版本： 10.1.38-MariaDB
 -- PHP 版本： 7.3.2
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `chose_topic_record` (
-  `recode_id` int(32) NOT NULL,
+  `record_id` int(32) NOT NULL,
   `topic_id` int(32) DEFAULT NULL,
   `topic_name` varchar(32) COLLATE utf8_bin DEFAULT NULL,
   `teacher_id` int(32) DEFAULT NULL,
@@ -43,12 +43,114 @@ CREATE TABLE `chose_topic_record` (
 -- 转存表中的数据 `chose_topic_record`
 --
 
-INSERT INTO `chose_topic_record` (`recode_id`, `topic_id`, `topic_name`, `teacher_id`, `teacher_name`, `student_id`, `student_name`, `final_flag`) VALUES
+INSERT INTO `chose_topic_record` (`record_id`, `topic_id`, `topic_name`, `teacher_id`, `teacher_name`, `student_id`, `student_name`, `final_flag`) VALUES
 (1, 1, '基于OpenDNSSEC的DNSSEC安全认证技术的仿真与实现', 1007, '许盛伟', 20189219, '黄俊豪', 0),
 (2, 1, '基于OpenDNSSEC的DNSSEC安全认证技术的仿真与实现', 1007, '许盛伟', 20189230, '杨静怡', 1),
 (3, 2, '大数据平台授权模型与访问控制技术研究与实现', 1007, '许盛伟', 20189218, '冯乾', 1),
 (4, 3, '基于ISSE工程建设中的安全管理策略研究', 1007, '许盛伟', 20189203, '邸梓航', 1),
 (5, 2, '大数据平台授权模型与访问控制技术研究与实现', 1007, '许盛伟', 20189216, '鲍政李', 0);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `final_paper`
+--
+
+CREATE TABLE `final_paper` (
+  `topic_id` int(32) NOT NULL,
+  `topic_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `student_id` int(32) NOT NULL,
+  `student_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `teacher_id` int(32) NOT NULL,
+  `teacher_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `backup` varchar(32) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `first_paper`
+--
+
+CREATE TABLE `first_paper` (
+  `topic_id` int(32) NOT NULL,
+  `topic_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `student_id` int(32) NOT NULL,
+  `student_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `teacher_id` int(32) NOT NULL,
+  `teacher_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `backup` varchar(32) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `first_report`
+--
+
+CREATE TABLE `first_report` (
+  `topic_id` int(32) NOT NULL,
+  `topic_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `student_id` int(32) NOT NULL,
+  `student_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `teacher_id` int(32) NOT NULL,
+  `teacher_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `topic_source` varchar(1024) COLLATE utf8_bin NOT NULL,
+  `topic_purpose` varchar(1024) COLLATE utf8_bin NOT NULL,
+  `topic_research_status` varchar(1024) COLLATE utf8_bin NOT NULL,
+  `topic_main` varchar(1024) COLLATE utf8_bin NOT NULL,
+  `topic_difficulty` varchar(1024) COLLATE utf8_bin NOT NULL,
+  `topic_schedule` varchar(1024) COLLATE utf8_bin NOT NULL,
+  `topic_ref` varchar(1024) COLLATE utf8_bin NOT NULL,
+  `first_report_annex_name` varchar(32) COLLATE utf8_bin NOT NULL DEFAULT '0',
+  `modify_suggestion` varchar(1024) COLLATE utf8_bin DEFAULT NULL,
+  `final_flag` tinyint(8) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `guidance_record`
+--
+
+CREATE TABLE `guidance_record` (
+  `topic_id` int(32) NOT NULL,
+  `topic_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `student_id` int(32) NOT NULL,
+  `student_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `teacher_id` int(32) NOT NULL,
+  `teacher_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `backup` varchar(32) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `midterm_report`
+--
+
+CREATE TABLE `midterm_report` (
+  `topic_id` int(32) NOT NULL,
+  `topic_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `student_id` int(32) NOT NULL,
+  `student_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `teacher_id` int(32) NOT NULL,
+  `teacher_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `backup` varchar(32) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `student_grade`
+--
+
+CREATE TABLE `student_grade` (
+  `id` int(32) NOT NULL,
+  `student_id` int(32) NOT NULL,
+  `student_name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `student_grade` int(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -59,7 +161,6 @@ INSERT INTO `chose_topic_record` (`recode_id`, `topic_id`, `topic_name`, `teache
 CREATE TABLE `stu_func_control` (
   `id` int(11) NOT NULL,
   `topic` int(8) NOT NULL DEFAULT '0',
-  `task_book` int(8) NOT NULL DEFAULT '0',
   `first_report` int(8) NOT NULL DEFAULT '0',
   `midterm_report` int(8) NOT NULL DEFAULT '0',
   `guidance_record` int(8) NOT NULL DEFAULT '0',
@@ -78,8 +179,8 @@ CREATE TABLE `stu_func_control` (
 -- 转存表中的数据 `stu_func_control`
 --
 
-INSERT INTO `stu_func_control` (`id`, `topic`, `task_book`, `first_report`, `midterm_report`, `guidance_record`, `first_draft`, `paper_review`, `answer_information`, `deferred_reply`, `second_reply`, `reply_record`, `final_draft`, `inquiry_result`, `excellent_paper`) VALUES
-(1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `stu_func_control` (`id`, `topic`, `first_report`, `midterm_report`, `guidance_record`, `first_draft`, `paper_review`, `answer_information`, `deferred_reply`, `second_reply`, `reply_record`, `final_draft`, `inquiry_result`, `excellent_paper`) VALUES
+(1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -111,7 +212,7 @@ CREATE TABLE `task_book` (
 
 INSERT INTO `task_book` (`id`, `teacher_id`, `teacher_name`, `student_id`, `student_name`, `topic_id`, `topic_name`, `topic_main`, `topic_schedule`, `topic_ref`, `topic_machine`, `topic_space`, `topic_timetable`, `create_time_stamp`, `islook_flag`) VALUES
 (2, 1007, '许盛伟', 20189218, '冯乾', 2, '大数据平台授权模型与访问控制技术研究与实现', '主要内容：为解决Hadoop大数据平台组件的统一授权管理与访问控制问题，本课题设计实现面向Hadoop平台的授权管理与访问控制组件，研究基于策略和用户身份的大数据组件访问权限模型，为Hadoop平台的HDFS、YARN、HBase等大数据平台组件提供一个集中的权限管理机制，通过配置策略来控制用户访问HDFS文件夹、HDFS文件、数据库、表、字段的细粒度权限，支持基于LDAP、文件的用户同步机制，且可扩展，同时权限可与hadoop无缝对接，为大数据平台的安全提供重要支撑。 \r\n主要要求：本文要求在充分调研分析国内外有关大数据平台授权模型与访问控制技术研究现状基础上，研究设计Hadoop大数据平台组件的统一授权管理与访问控制，采用Ranger、Eagle等开源框架研究实现Hadoop平台的授权管理、访问控制与行为审计等功能。 ', '（1）资料收集与开题准备：2018.12-2019.2\r\n（2）开题答辩与方案完善：2019.2-2019.3\r\n（3）技术研究与总体设计：2019.3-2019.4  \r\n（4）系统开发与测试：2019.4-2019.5 \r\n（5）撰写学位论文与准备答辩：2019.5-2019.6', '《GB/T xxxx大数据安全管理指南》\r\n《GB/T xxxx信息安全技术 数据交易服务安全要求》\r\n《GBT 35274-2017 信息安全技术 大数据服务安全能力要求》\r\n《信息安全技术 数据安全能力成熟度模型》\r\n《GBT 7027-2002 信息分类和编码的基本原则与方法》\r\n《GBT 19715.1-2005 信息技术信息技术安全管理指南第1部分：信息技术安全概念和模型》\r\n政务大数据安全组件设计方案', '高性能计算机2台及互联网环境', '具备互联网和局域网环境的实验室', '每周一、二、三、四、五下午14:00至17:00', '2019-04-05', '1'),
-(3, 1007, '许盛伟', 20189230, '杨静怡', 1, '基于OpenDNSSEC的DNSSEC安全认证技术的仿真与实现', '主要内容：为解决Hadoop大数据平台组件的统一授权管理与访问控制问题，本课题设计实现面向Hadoop平台的授权管理与访问控制组件，研究基于策略和用户身份的大数据组件访问权限模型，为Hadoop平台的HDFS、YARN、HBase等大数据平台组件提供一个集中的权限管理机制，通过配置策略来控制用户访问HDFS文件夹、HDFS文件、数据库、表、字段的细粒度权限，支持基于LDAP、文件的用户同步机制，且可扩展，同时权限可与hadoop无缝对接，为大数据平台的安全提供重要支撑。 \r\n主要要求：本文要求在充分调研分析国内外有关大数据平台授权模型与访问控制技术研究现状基础上，研究设计Hadoop大数据平台组件的统一授权管理与访问控制，采用Ranger、Eagle等开源框架研究实现Hadoop平台的授权管理、访问控制与行为审计等功能。 ', '（1）资料收集与开题准备：2018.12-2019.2\r\n（2）开题答辩与方案完善：2019.2-2019.3\r\n（3）技术研究与总体设计：2019.3-2019.4  \r\n（4）系统开发与测试：2019.4-2019.5 \r\n（5）撰写学位论文与准备答辩：2019.5-2019.6', '《GB/T xxxx大数据安全管理指南》\r\n《GB/T xxxx信息安全技术 数据交易服务安全要求》\r\n《GBT 35274-2017 信息安全技术 大数据服务安全能力要求》\r\n《信息安全技术 数据安全能力成熟度模型》\r\n《GBT 7027-2002 信息分类和编码的基本原则与方法》\r\n《GBT 19715.1-2005 信息技术信息技术安全管理指南第1部分：信息技术安全概念和模型》\r\n政务大数据安全组件设计方案', '高性能计算机2台及互联网环境', '具备互联网和局域网环境的实验室', '每周一、二、三、四、五下午14:00至17:00', '2019-04-05', '0');
+(3, 1007, '许盛伟', 20189230, '杨静怡', 1, '基于OpenDNSSEC的DNSSEC安全认证技术的仿真与实现', '主要内容：为解决Hadoop大数据平台组件的统一授权管理与访问控制问题，本课题设计实现面向Hadoop平台的授权管理与访问控制组件，研究基于策略和用户身份的大数据组件访问权限模型，为Hadoop平台的HDFS、YARN、HBase等大数据平台组件提供一个集中的权限管理机制，通过配置策略来控制用户访问HDFS文件夹、HDFS文件、数据库、表、字段的细粒度权限，支持基于LDAP、文件的用户同步机制，且可扩展，同时权限可与hadoop无缝对接，为大数据平台的安全提供重要支撑。 \r\n主要要求：本文要求在充分调研分析国内外有关大数据平台授权模型与访问控制技术研究现状基础上，研究设计Hadoop大数据平台组件的统一授权管理与访问控制，采用Ranger、Eagle等开源框架研究实现Hadoop平台的授权管理、访问控制与行为审计等功能。 ', '（1）资料收集与开题准备：2018.12-2019.2\r\n（2）开题答辩与方案完善：2019.2-2019.3\r\n（3）技术研究与总体设计：2019.3-2019.4  \r\n（4）系统开发与测试：2019.4-2019.5 \r\n（5）撰写学位论文与准备答辩：2019.5-2019.6', '《GB/T xxxx大数据安全管理指南》\r\n《GB/T xxxx信息安全技术 数据交易服务安全要求》\r\n《GBT 35274-2017 信息安全技术 大数据服务安全能力要求》\r\n《信息安全技术 数据安全能力成熟度模型》\r\n《GBT 7027-2002 信息分类和编码的基本原则与方法》\r\n《GBT 19715.1-2005 信息技术信息技术安全管理指南第1部分：信息技术安全概念和模型》\r\n政务大数据安全组件设计方案', '高性能计算机2台及互联网环境', '具备互联网和局域网环境的实验室', '每周一、二、三、四、五下午14:00至17:00', '2019-04-05', '1');
 
 -- --------------------------------------------------------
 
@@ -166,16 +267,15 @@ INSERT INTO `topic` (`id`, `name`, `topic_type`, `topic_nature`, `topic_source`,
 
 CREATE TABLE `t_func_control` (
   `id` int(8) NOT NULL,
-  `topic` int(8) NOT NULL DEFAULT '0',
-  `task_book` int(8) NOT NULL DEFAULT '0'
+  `topic` int(8) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- 转存表中的数据 `t_func_control`
 --
 
-INSERT INTO `t_func_control` (`id`, `topic`, `task_book`) VALUES
-(1, 1, 0);
+INSERT INTO `t_func_control` (`id`, `topic`) VALUES
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -222,7 +322,43 @@ INSERT INTO `user` (`id`, `name`, `password`, `gender`, `grade`, `class`, `major
 -- 表的索引 `chose_topic_record`
 --
 ALTER TABLE `chose_topic_record`
-  ADD PRIMARY KEY (`recode_id`);
+  ADD PRIMARY KEY (`record_id`);
+
+--
+-- 表的索引 `final_paper`
+--
+ALTER TABLE `final_paper`
+  ADD PRIMARY KEY (`topic_id`);
+
+--
+-- 表的索引 `first_paper`
+--
+ALTER TABLE `first_paper`
+  ADD PRIMARY KEY (`topic_id`);
+
+--
+-- 表的索引 `first_report`
+--
+ALTER TABLE `first_report`
+  ADD PRIMARY KEY (`topic_id`);
+
+--
+-- 表的索引 `guidance_record`
+--
+ALTER TABLE `guidance_record`
+  ADD PRIMARY KEY (`topic_id`);
+
+--
+-- 表的索引 `midterm_report`
+--
+ALTER TABLE `midterm_report`
+  ADD PRIMARY KEY (`topic_id`);
+
+--
+-- 表的索引 `student_grade`
+--
+ALTER TABLE `student_grade`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `stu_func_control`
@@ -263,7 +399,7 @@ ALTER TABLE `user`
 -- 使用表AUTO_INCREMENT `chose_topic_record`
 --
 ALTER TABLE `chose_topic_record`
-  MODIFY `recode_id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `record_id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `task_book`
