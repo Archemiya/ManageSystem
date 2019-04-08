@@ -125,3 +125,10 @@ p.systemname {
 .th-title-topic-stu {
 	width: 15%;
 }
+
+.input-file{
+	display: block;
+	margin-top: auto;
+	margin-bottom: auto;
+	
+}
