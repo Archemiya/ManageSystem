@@ -126,3 +126,6 @@ archemiya;
                                     <option>    
 archemiya;
                                     echo $row['topic_workload'];
+
+
+删除mysqli_close
