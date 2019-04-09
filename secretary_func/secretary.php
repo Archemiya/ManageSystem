@@ -58,8 +58,8 @@ include '../header.php';
                             include "sec_review_topic.php";
                         }
                         break;
-                    case "chose_student":
-                        include "chose_student.php";
+                    case "lesson_record":
+                        include "sec_test_2.php";
                         break;
                     case "reply_schedule":
                         include "sec_reply_schedule.php";
