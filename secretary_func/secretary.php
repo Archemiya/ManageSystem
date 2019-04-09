@@ -25,7 +25,7 @@ include '../header.php';
                             指导记录</i><span class="sr-only">(current)</span></a></li>
 
 
-                <li><a href="./secretary.php?func=task_book" method="GET" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "task_book") || (isset($_GET["func"]) && ($_GET["func"]) == "write_task_book")) {
+                <li><a href="./secretary.php?func=reply_schedule" method="GET" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "reply_schedule") {
                                                                                 echo "class=active";
                                                                             } ?>><i class="glyphicon glyphicon-sort-by-alphabet">
                             答辩安排</i><span class="sr-only">(current)</span></a></li>
@@ -61,8 +61,8 @@ include '../header.php';
                     case "chose_student":
                         include "chose_student.php";
                         break;
-                    case "task_book":
-
+                    case "reply_schedule":
+                        include "sec_reply_schedule.php";
                         break;
                     case "stu_func_control":
                         include "sec_stu_func_control.php";
