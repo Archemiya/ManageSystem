@@ -1,13 +1,8 @@
-<?php
-include "../link.php";
-$sql = "SELECT * FROM `user`";
-
-?>
 <html>
 
 <head>
     <script language="javascript" type="text/javascript">
-        function showName() {
+        function showName(temp, id) {
             var xmlhttp;
             if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
                 xmlhttp = new XMLHttpRequest();
@@ -16,13 +11,14 @@ $sql = "SELECT * FROM `user`";
             }
             xmlhttp.onreadystatechange = function() {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    $('#hezi').val(xmlhttp.responseText)
-                    document.getElementById("test1").innerHTML = xmlhttp.responseText;
+                    $('#hezi' + temp).val(xmlhttp.responseText)
+                    // console.log($(#hezi2).val())
+                    // document.getElementById("test1").innerHTML = xmlhttp.responseText;
                 }
             }
-            xmlhttp.open("POST", "sec_test.php", true);
-            // xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xmlhttp.send();
+            xmlhttp.open("POST", "sec_display_name.php", true);
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send("id=" + id);
         }
         $(document).ready(function() {
             $("#number1").keypress(
@@ -32,15 +28,13 @@ $sql = "SELECT * FROM `user`";
                         //创建tr
                         $height = $("#number1").val();
                         for ($i = 0; $i < $height; $i++) {
-
+                            var t_idtemp = "id_t_" + ($i + 2)
                             var $tr = $("<tr></tr>");
                             var $li1 = "<td></td>";
-                            var $li2 = "<td> <input id=\"id_t_" + ($i + 2) + "\" name=\"t_" + ($i + 2) + "_id\" class=\"form-control\" onkeyup=\"showName()\"> </td>"
-                            //$temp = $()
-                            
-                            var $li3 = "<td> <input id=\"hezi\" name=\"t_" + ($i + 2) + "_name\" class=\"form-control\"  > </td>"
-                            //var $li3 = "<td> <input name=\"t_" + ($i + 2) + "_name\" class=\"form-control\" value=\"\" > </td>"
-                            var $li4 = "<td> <butto type=\"button\" id=\"del_t_" + ($i + 2) + "\" class=\"btn btn-default \">删除 </button></td>"
+                            var $li2 = "<td> <input id='"+t_idtemp+"' name='t_" + ($i + 2) + "_id' class='form-control' onkeyup='showName(" + ($i + 2) + "," + $('#'+t_idtemp).val() + ")' autocomplete='off'> </td>"
+                    
+                            var $li3 = "<td> <input id='hezi" + ($i + 2) + "' name='t_" + ($i + 2) + "_name' class='form-control'  disabled> </td>"
+                            var $li4 = "<td> <butto type='button' id='del_t_" + ($i + 2) + "' class='btn btn-default '>删除 </button></td>"
                             //将获取的 name Email phone 的值追加到tr中
                             $tr.append($li1, $li2, $li3, $li4);
                             //将获取的tr 追加到 table中
@@ -51,6 +45,7 @@ $sql = "SELECT * FROM `user`";
                                 $(p2).remove();
                             });
                         }
+                        console.log($("#id_t_2").val());
                     }
                 }
             );
@@ -63,9 +58,9 @@ $sql = "SELECT * FROM `user`";
                         for ($i = 0; $i < $height; $i++) {
                             var $tr = $("<tr></tr>");
                             var $li1 = "<td class='td-title-center'> No." + ($i + 2) + "</td>";
-                            var $li2 = "<td> <input name=\"stu_" + ($i + 2) + "\"class=\"form-control\"> </td>"
-                            var $li3 = "<td> <input name=\"stu_" + ($i + 2) + "_name\"class=\"form-control\"> </td>"
-                            var $li4 = "<td> <button type=\"button\" id=\"del_stu_" + ($i + 2) + "\" class=\"btn btn-default\">删除 </td>"
+                            var $li2 = "<td> <input name='stu_" + ($i + 2) + "'class='form-control' autocomplete='off'> </td>"
+                            var $li3 = "<td> <input name='stu_" + ($i + 2) + "_name'class='form-control' disabled> </td>"
+                            var $li4 = "<td> <button type='button' id='del_stu_" + ($i + 2) + "' class='btn btn-default'>删除 </td>"
                             //将获取的 name Email phone 的值追加到tr中
                             $tr.append($li1, $li2, $li3, $li4);
                             //将获取的tr 追加到 table中
@@ -149,11 +144,10 @@ $sql = "SELECT * FROM `user`";
                                                         <tr>
                                                             <td class="td-title-center">答辩组长</td>
                                                             <td>
-                                                                <input name="t_tleader_id" class="form-control" onkeyup="showName()">
+                                                                <input id="id_t_1" name="t_tleader_id" class="form-control" autocomplete="off" onkeyup="showName(1,this.value)">
                                                             </td>
                                                             <td>
-                                                                <p><span id="test" ></p>
-                                                                <!-- <input name="t_tleader_name" class="form-control"> -->
+                                                                <input id="hezi1" name="t_1_name" class="form-control">
                                                             </td>
                                                             <td>
                                                             </td>
@@ -183,10 +177,10 @@ $sql = "SELECT * FROM `user`";
                                                             No.1
                                                         </td>
                                                         <td>
-                                                            <input name="stu_1_id" class="form-control">
+                                                            <input name="stu_1_id" class="form-control" autocomplete="off">
                                                         </td>
                                                         <td>
-                                                            <input name="stu_1_name" class="form-control">
+                                                            <input name="stu_1_name" class="form-control" disabled>
                                                         </td>
                                                         <td>
                                                         </td>
@@ -220,82 +214,3 @@ $sql = "SELECT * FROM `user`";
 </body>
 
 </html>
-
-
-
-<body>
-
-
-
-</body>
-
-</html>
-
-
-<div class="modal fade" id="table" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="">第一小组</h4>
-            </div>
-            <div class="modal-body">
-                <div class="bootstrap-table">
-                    <div class="fixed-table-toolbar">
-                        <div class="bars">
-                            <div id="toolbar">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="fixed-table-container">
-                        <table id="" class="table">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <div class="th-inner">答辩组导师成员</div>
-                                    </th>
-                                    <th>
-
-                                    </th>
-                                    <th>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <td>答辩组长</td>
-                                <td>
-                                    <input class="form-control">
-                                </td>
-
-                            </tbody>
-                        </table>
-                        <br />
-                        <table id="" class="table">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>
-                                        <div class="th-inner">答辩组学生成员</div>
-                                    </th>
-                                    <th>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <td></td>
-                                <td>
-                                    <input class="form-control">
-                                </td>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">确认</button>
-            </div>
-        </div>
-    </div>
-</div>
