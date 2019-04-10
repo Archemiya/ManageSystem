@@ -2,6 +2,9 @@
 
 <head>
     <script language="javascript" type="text/javascript">
+        var t_idtemp = 1;
+        var stu_idtemp = 1;
+
         function showName(temp, id) {
             var xmlhttp;
             if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -12,8 +15,23 @@
             xmlhttp.onreadystatechange = function() {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     $('#hezi' + temp).val(xmlhttp.responseText)
-                    // console.log($(#hezi2).val())
-                    // document.getElementById("test1").innerHTML = xmlhttp.responseText;
+                }
+            }
+            xmlhttp.open("POST", "sec_display_name.php", true);
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send("id=" + id);
+        }
+
+        function showName2(temp, id) {
+            var xmlhttp;
+            if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            } else { // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    $('#hezi_stu' + temp).val(xmlhttp.responseText)
                 }
             }
             xmlhttp.open("POST", "sec_display_name.php", true);
@@ -28,24 +46,23 @@
                         //创建tr
                         $height = $("#number1").val();
                         for ($i = 0; $i < $height; $i++) {
-                            var t_idtemp = "id_t_" + ($i + 2)
+                            t_idtemp += 1;
                             var $tr = $("<tr></tr>");
-                            var $li1 = "<td></td>";
-                            var $li2 = "<td> <input id='"+t_idtemp+"' name='t_" + ($i + 2) + "_id' class='form-control' onkeyup='showName(" + ($i + 2) + "," + $('#'+t_idtemp).val() + ")' autocomplete='off'> </td>"
-                    
-                            var $li3 = "<td> <input id='hezi" + ($i + 2) + "' name='t_" + ($i + 2) + "_name' class='form-control'  disabled> </td>"
-                            var $li4 = "<td> <butto type='button' id='del_t_" + ($i + 2) + "' class='btn btn-default '>删除 </button></td>"
+                            var $li1 = "<td class='td-title-center'>答辩老师</td>";
+                            var $li2 = "<td> <input id='id_t_" + t_idtemp + "' name='t_" + t_idtemp + "_id' class='form-control' onkeyup='showName(" + t_idtemp + ",this.value)' autocomplete='off'> </td>"
+                            var $li3 = "<td> <input id='hezi" + t_idtemp + "' name='t_" + t_idtemp + "_name' class='form-control'  active> </td>"
+                            var $li4 = "<td> <butto type='button' id='del_t_" + t_idtemp + "' class='btn btn-default' autocomplete='off' onclick=''>删除 </button></td>"
                             //将获取的 name Email phone 的值追加到tr中
                             $tr.append($li1, $li2, $li3, $li4);
                             //将获取的tr 追加到 table中
                             $('#table_1_tbody').append($tr);
-                            $("#del_t_" + ($i + 2)).click(function() {
+                            $("#del_t_" + t_idtemp).click(function() {
                                 var p1 = this.parentNode;
                                 var p2 = p1.parentNode;
+                                t_idtemp -= 1;
                                 $(p2).remove();
                             });
                         }
-                        console.log($("#id_t_2").val());
                     }
                 }
             );
@@ -56,18 +73,20 @@
                         //创建tr
                         $height = $("#number2").val();
                         for ($i = 0; $i < $height; $i++) {
+                            stu_idtemp += 1;
                             var $tr = $("<tr></tr>");
-                            var $li1 = "<td class='td-title-center'> No." + ($i + 2) + "</td>";
-                            var $li2 = "<td> <input name='stu_" + ($i + 2) + "'class='form-control' autocomplete='off'> </td>"
-                            var $li3 = "<td> <input name='stu_" + ($i + 2) + "_name'class='form-control' disabled> </td>"
-                            var $li4 = "<td> <button type='button' id='del_stu_" + ($i + 2) + "' class='btn btn-default'>删除 </td>"
+                            var $li1 = "<td class='td-title-center'> No." + stu_idtemp + "</td>";
+                            var $li2 = "<td> <input id='id_stu_" + stu_idtemp + "' name='stu_" + stu_idtemp + "_id' class='form-control' onkeyup='showName2(" + stu_idtemp + ",this.value)'  autocomplete='off'> </td>"
+                            var $li3 = "<td> <input <input id='hezi_stu" + stu_idtemp + "' name='stu_" + stu_idtemp + "_name' class='form-control' active> </td>"
+                            var $li4 = "<td> <button type='button' id='del_stu_" + stu_idtemp + "' class='btn btn-default' autocomplete='off' >删除 </td>"
                             //将获取的 name Email phone 的值追加到tr中
                             $tr.append($li1, $li2, $li3, $li4);
                             //将获取的tr 追加到 table中
                             $('#table_2_tbody').append($tr);
-                            $("#del_stu_" + ($i + 2)).click(function() {
+                            $("#del_stu_" + stu_idtemp).click(function() {
                                 var p1 = this.parentNode;
                                 var p2 = p1.parentNode;
+                                stu_idtemp -= 1;
                                 $(p2).remove();
                             });
                         }
@@ -102,17 +121,19 @@
                                 <div class="bars">
                                     <div id="toolbar">
 
-                                        <table>
+                                        <table width="100%">
                                             <tbody>
                                                 <tr>
-                                                    <td width="110px" style="float: left;margin: 10px">
+                                                    <td width="110px" style="float: left;margin-right: 10px">
                                                         <input id="number1" class="form-control" autocomplete="off" placeholder="老师增加人数">
 
                                                     </td>
-                                                    <td width="110px">
+                                                    <td width="110px" style="float: left">
                                                         <input id="number2" class="form-control" autocomplete="off" placeholder="学生增加人数">
                                                     </td>
-                                                    <td></td>
+                                                    <td width="110px" style="float: right">
+                                                        <input id="number3" name="group_id" style="float:right" class="form-control" autocomplete="off" placeholder="答辩组组号" required>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -147,7 +168,7 @@
                                                                 <input id="id_t_1" name="t_tleader_id" class="form-control" autocomplete="off" onkeyup="showName(1,this.value)">
                                                             </td>
                                                             <td>
-                                                                <input id="hezi1" name="t_1_name" class="form-control">
+                                                                <input id="hezi1" name="t_tleader_name" class="form-control" autocomplete="off" active>
                                                             </td>
                                                             <td>
                                                             </td>
@@ -177,10 +198,10 @@
                                                             No.1
                                                         </td>
                                                         <td>
-                                                            <input name="stu_1_id" class="form-control" autocomplete="off">
+                                                            <input id="id_stu_1" name="stu_1_id" class="form-control" autocomplete="off" onkeyup="showName2(1,this.value)">
                                                         </td>
                                                         <td>
-                                                            <input name="stu_1_name" class="form-control" disabled>
+                                                            <input id="hezi_stu1" name="stu_1_name" class="form-control" autocomplete="off" active>
                                                         </td>
                                                         <td>
                                                         </td>
