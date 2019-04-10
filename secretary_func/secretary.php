@@ -59,7 +59,7 @@ include '../header.php';
                         }
                         break;
                     case "lesson_record":
-                        include "sec_test_2.php";
+                        include "sec_test.php";
                         break;
                     case "reply_schedule":
                         include "sec_reply_schedule.php";

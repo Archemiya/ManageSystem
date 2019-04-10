@@ -4,6 +4,25 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>无标题文档</title>
+    <script type="text/javascript">
+        function loadXMLDoc(str) {
+            var xmlhttp;
+            var number = str;
+            if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            } else { // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    document.getElementById("div_1st").innerHTML = xmlhttp.responseText;
+                }
+            }
+            xmlhttp.open("POST", "sec_test.php", true);
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send("num=" + number);
+        }
+    </script>
     <script language="javascript" type="text/javascript">
         $(document).ready(function() {
 
@@ -12,24 +31,24 @@
                 //创建tr
                 var $tr = $("<tr></tr>");
                 //创建一个a连接
-                var $bt = $("<td><a>删除</a></td>");
+                //var $bt = $("<td ><a>删除</a></td>");
                 var $li1 = "<td>" + $("#name").val() + "</td>";
                 var $li2 = "<td>" + $("#Email").val() + "</td>";
                 var $li3 = "<td>" + $("#phone").val() + "</td>";
                 //将获取的 name Email phone 的值追加到tr中
-                $tr.append($li1, $li2, $li3, $bt);
+                $tr.append($li1, $li2, $li3);
                 //将获取的tr 追加到 table中
                 $('#table1').append($tr);
                 //获取 a 连接的属性
-                $("a").attr("href", "javascript:void(0)")
-                $("a").click(function() {
-                    //定义p1 存储 td
-                    var p1 = this.parentNode;
-                    //定义p2  存储 tr
-                    var p2 = p1.parentNode;
-                    //移除 tr
-                    $(p2).remove();
-                });
+                // $("a").attr("href", "javascript:void(0)")
+                // $("a").click(function() {
+                //     //定义p1 存储 td
+                //     var p1 = this.parentNode;
+                //     //定义p2  存储 tr
+                //     var p2 = p1.parentNode;
+                //     //移除 tr
+                //     $(p2).remove();
+                // });
             });
         });
     </script>
@@ -56,7 +75,6 @@
                 <td>姓名</td>
                 <td>Email</td>
                 <td>电话</td>
-                <td>操作</td>
               </tr> 
     </table>
 </body>

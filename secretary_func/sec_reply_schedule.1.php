@@ -7,23 +7,6 @@ $sql = "SELECT * FROM `user`";
 
 <head>
     <script language="javascript" type="text/javascript">
-        function showName() {
-            var xmlhttp;
-            if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
-                xmlhttp = new XMLHttpRequest();
-            } else { // code for IE6, IE5
-                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    $('#hezi').val(xmlhttp.responseText)
-                    document.getElementById("test1").innerHTML = xmlhttp.responseText;
-                }
-            }
-            xmlhttp.open("POST", "sec_test.php", true);
-            // xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xmlhttp.send();
-        }
         $(document).ready(function() {
             $("#number1").keypress(
                 function() {
@@ -32,14 +15,28 @@ $sql = "SELECT * FROM `user`";
                         //创建tr
                         $height = $("#number1").val();
                         for ($i = 0; $i < $height; $i++) {
-
+                            function showName() {
+                                var xmlhttp;
+                                if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+                                    xmlhttp = new XMLHttpRequest();
+                                } else { // code for IE6, IE5
+                                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                                }
+                                xmlhttp.onreadystatechange = function() {
+                                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                                        document.getElementById("div_1st").innerHTML = xmlhttp.responseText;
+                                    }
+                                }
+                                xmlhttp.open("POST", "sec_test.php", true);
+                                // xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                                xmlhttp.send();
+                            }
                             var $tr = $("<tr></tr>");
                             var $li1 = "<td></td>";
                             var $li2 = "<td> <input id=\"id_t_" + ($i + 2) + "\" name=\"t_" + ($i + 2) + "_id\" class=\"form-control\" onkeyup=\"showName()\"> </td>"
                             //$temp = $()
-                            
-                            var $li3 = "<td> <input id=\"hezi\" name=\"t_" + ($i + 2) + "_name\" class=\"form-control\"  > </td>"
-                            //var $li3 = "<td> <input name=\"t_" + ($i + 2) + "_name\" class=\"form-control\" value=\"\" > </td>"
+                            var $li3 = "<td > <span id=\"div_1st\"></span> </td>"
+                            // var $li3 = "<td> <input name=\"t_" + ($i + 2) + "_name\" class=\"form-control\" value=\"\" > </td>"
                             var $li4 = "<td> <butto type=\"button\" id=\"del_t_" + ($i + 2) + "\" class=\"btn btn-default \">删除 </button></td>"
                             //将获取的 name Email phone 的值追加到tr中
                             $tr.append($li1, $li2, $li3, $li4);
@@ -149,11 +146,10 @@ $sql = "SELECT * FROM `user`";
                                                         <tr>
                                                             <td class="td-title-center">答辩组长</td>
                                                             <td>
-                                                                <input name="t_tleader_id" class="form-control" onkeyup="showName()">
+                                                                <input name="t_tleader_id" class="form-control">
                                                             </td>
                                                             <td>
-                                                                <p><span id="test" ></p>
-                                                                <!-- <input name="t_tleader_name" class="form-control"> -->
+                                                                <input name="t_tleader_name" class="form-control">
                                                             </td>
                                                             <td>
                                                             </td>
