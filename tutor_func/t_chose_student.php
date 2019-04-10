@@ -17,17 +17,17 @@ function chose_topic_table_echo($result, $link)
         <td class="td-height"> {$row['name']}</td>
 Archemiya;
 
-        $sql_chose_record = "SELECT * FROM `chose_topic_record` WHERE `teacher_id` = '{$_SESSION['user_id']}' AND `topic_id` = '{$row['id']}' ";
+        $sql_chose_record = "SELECT * FROM `chose_topic_record` WHERE `teacher_id` = '{$_SESSION['user_id']}' AND `topic_id` = '{$row['id']}' ";//查看当前老师在该课题下有哪些同学选择
         $sql_chose_final_flag = "SELECT * FROM `chose_topic_record` 
-        WHERE `teacher_id` = '{$_SESSION['user_id']}' AND `topic_id` = '{$row['id']}' AND `final_flag` = 1";
+        WHERE `teacher_id` = '{$_SESSION['user_id']}' AND `topic_id` = '{$row['id']}' AND `final_flag` = 1"; //查看当前老师该课题是否已经确定学生
         $result_chose_record = mysqli_query($link, $sql_chose_record);
         $result_chose_final_flag = mysqli_query($link, $sql_chose_final_flag);
         $num_chose_final_flag = mysqli_num_rows($result_chose_final_flag);
         for ($j = 0; $j < 5; $j++) {
-            if (!$num_chose_final_flag) {
+            if (!$num_chose_final_flag) {//如果该课题未确定
                 $row_chose_record = mysqli_fetch_array($result_chose_record, MYSQLI_BOTH);
                 echo "<td>";
-                if (isset($row_chose_record['student_id'])) {
+                if (isset($row_chose_record['student_id'])) {//如果有学生选择此课题，输出该学生学号姓名
                     echo "<a href=\"./t_determine_student.php?topic={$row_chose_record['topic_id']}&id={$row_chose_record['student_id']}\" 
                 onclick=\"JavaScript:return confirm('确定选择此学生么？');\" 
                 class=\"btn btn-primary\"

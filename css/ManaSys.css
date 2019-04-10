@@ -132,3 +132,13 @@ p.systemname {
 	margin-bottom: auto;
 	
 }
+
+td > a {
+	color: rgb(51,51,51);
+    text-decoration: none;
+}
+td > a:hover,
+td > a:focus {
+    color: #6e6e6e;
+    text-decoration:none;
+}

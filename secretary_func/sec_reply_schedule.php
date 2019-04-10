@@ -1,3 +1,79 @@
+<?php
+include "../link.php";
+function echo_reply_schedule_table($i,$link){
+    $group_id = $i+1;
+    $sql_teacher_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'tutor' ";
+    $sql_student_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'student' ";
+    $result_teacher_num = mysqli_query($link,$sql_teacher_num);
+    $result_student_num = mysqli_query($link,$sql_student_num);
+    $num_teacher = mysqli_num_rows($result_teacher_num);
+    $num_student= mysqli_num_rows($result_student_num);
+    echo <<< archemiya
+    <div class="table-responsive">
+        <table data-toggle="table" data-toolbar="#{$group_id}">
+            <thead>
+                <tr>
+                    <th class="col-md-6 th-title-center" colspan="2">导师名单</th>
+                    <th class="col-md-6 th-title-center" colspan="2">学生名单</th>
+                </tr>
+                <tr>
+                    <th class="col-md-3 th-title-center">导师姓名</th>
+                    <th class="col-md-3 th-title-center"> 导师简介</th>
+                    <th class="col-md-3 th-title-center">学生姓名</th>
+                    <th class="col-md-3 th-title-center">学生选题</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                <div id="{$group_id}">
+                    <button type="button" class="btn btn-default active" > 
+archemiya;
+                echo "第 ".$group_id." 小组";
+echo <<< archemiya
+                </button>
+                </div>
+archemiya;
+                for($i=0;$i<$num_student;$i++){      
+                    $row_teacher = mysqli_fetch_array($result_teacher_num,MYSQLI_BOTH);
+                    $row_student = mysqli_fetch_array($result_student_num,MYSQLI_BOTH);         
+                    echo "<tr>";
+
+                    echo "<td class=\"td-height th-title-center\">";
+                    echo $row_teacher['id'].$row_teacher['name'];
+                    echo "</td>";
+
+                    echo "<td class=\"td-height th-title-center\">";
+                    if(!$i){
+                        echo "答辩组长";
+                    }else if($i<$num_teacher){
+                        echo "答辩老师";
+                    }else{
+                        echo "";
+                    }
+                    echo "</td>";
+                    echo "<td class=\"td-height th-title-center\">";
+                    echo   $row_student['id'].$row_student['name'];
+                    echo "</td>";
+                    $sql_topic = "SELECT * FROM `topic`WHERE `student_id` = '{$row_student['id']}' ";
+                    $result_topic = mysqli_query($link, $sql_topic);
+                    $row_topic = mysqli_fetch_array($result_topic,MYSQLI_BOTH);
+                    echo "<td class=\"td-height th-title-center\">";
+                    echo "<a href='secretary.php?func=reply_schedule&id={$row_topic['id']} '>".$row_topic['name']."</a>";
+                    echo "</td>";
+
+                echo "</tr>";
+            }
+echo <<< archemiya
+            </tbody>
+        </table>
+
+
+
+    </div>
+archemiya;
+}
+
+?>
 <html>
 
 <head>
@@ -50,7 +126,7 @@
                             var $tr = $("<tr></tr>");
                             var $li1 = "<td class='td-title-center'>答辩老师</td>";
                             var $li2 = "<td> <input id='id_t_" + t_idtemp + "' name='t_" + t_idtemp + "_id' class='form-control' onkeyup='showName(" + t_idtemp + ",this.value)' autocomplete='off'> </td>"
-                            var $li3 = "<td> <input id='hezi" + t_idtemp + "' name='t_" + t_idtemp + "_name' class='form-control'  active> </td>"
+                            var $li3 = "<td> <input id='hezi" + t_idtemp + "' name='t_" + t_idtemp + "_name' class='form-control'  readonly> </td>"
                             var $li4 = "<td> <butto type='button' id='del_t_" + t_idtemp + "' class='btn btn-default' autocomplete='off' onclick=''>删除 </button></td>"
                             //将获取的 name Email phone 的值追加到tr中
                             $tr.append($li1, $li2, $li3, $li4);
@@ -77,7 +153,7 @@
                             var $tr = $("<tr></tr>");
                             var $li1 = "<td class='td-title-center'> No." + stu_idtemp + "</td>";
                             var $li2 = "<td> <input id='id_stu_" + stu_idtemp + "' name='stu_" + stu_idtemp + "_id' class='form-control' onkeyup='showName2(" + stu_idtemp + ",this.value)'  autocomplete='off'> </td>"
-                            var $li3 = "<td> <input <input id='hezi_stu" + stu_idtemp + "' name='stu_" + stu_idtemp + "_name' class='form-control' active> </td>"
+                            var $li3 = "<td> <input <input id='hezi_stu" + stu_idtemp + "' name='stu_" + stu_idtemp + "_name' class='form-control' readonly> </td>"
                             var $li4 = "<td> <button type='button' id='del_stu_" + stu_idtemp + "' class='btn btn-default' autocomplete='off' >删除 </td>"
                             //将获取的 name Email phone 的值追加到tr中
                             $tr.append($li1, $li2, $li3, $li4);
@@ -105,7 +181,22 @@
     <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#table">
         添加答辩小组
     </button>
-
+    <?php 
+    $group_num =0;
+    for($i=1;;$i++){//判断已有答辩组数量
+        $sql_group_num ="SELECT * FROM `reply_schedule` WHERE `group_id` = '{$i}'";
+        $result_group_num = mysqli_query($link,$sql_group_num);
+        $num_group_num = mysqli_num_rows($result_group_num);
+        if(!$num_group_num){
+            break;
+        }else{
+            $group_num += 1;
+        }
+    }
+    for($i=0;$i<$group_num;$i++){
+        echo_reply_schedule_table($i,$link);
+    }
+    ?>
     <div class="modal fade" id="table" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog-alter">
             <div class="modal-content">
@@ -168,7 +259,7 @@
                                                                 <input id="id_t_1" name="t_tleader_id" class="form-control" autocomplete="off" onkeyup="showName(1,this.value)">
                                                             </td>
                                                             <td>
-                                                                <input id="hezi1" name="t_tleader_name" class="form-control" autocomplete="off" active>
+                                                                <input id="hezi1" name="t_tleader_name" class="form-control" autocomplete="off" readonly>
                                                             </td>
                                                             <td>
                                                             </td>
@@ -201,7 +292,7 @@
                                                             <input id="id_stu_1" name="stu_1_id" class="form-control" autocomplete="off" onkeyup="showName2(1,this.value)">
                                                         </td>
                                                         <td>
-                                                            <input id="hezi_stu1" name="stu_1_name" class="form-control" autocomplete="off" active>
+                                                            <input id="hezi_stu1" name="stu_1_name" class="form-control" autocomplete="off" readonly>
                                                         </td>
                                                         <td>
                                                         </td>

@@ -29,35 +29,43 @@ $num = mysqli_fetch_array($result);
 if (!$num) {
     for ($i = 1; $i <= ($teacher_num); $i++) {
         if ($i == 1) {
-            $sql = "INSERT INTO `reply_schedule` (`id`,`name`,`major`,`group_id`,`special`) 
+            $sql = "INSERT INTO `reply_schedule` (`id`,`name`,`major`,`group_id`,`permission`,`special`) 
         VALUE (
         '{$_POST["t_tleader_id"]}',
         '{$_POST["t_tleader_name"]}',
         '计算机专业',
         '{$_POST['group_id']}',
-        NULL
+        'tutor',
+        'reviewer'
         )";
         } else {
-            $sql = "INSERT INTO `reply_schedule` (`id`,`name`,`major`,`group_id`,`special`) 
+            $sql = "INSERT INTO `reply_schedule` (`id`,`name`,`major`,`group_id`,`permission`,`special`) 
         VALUE (
         '{$_POST["t_" . $i . "_id"]}',
         '{$_POST["t_" . $i . "_name"]}',
         '计算机专业',
         '{$_POST['group_id']}',
+        'tutor',
         NULL
         )";
         }
         mysqli_query($link, $sql);
     }
     for ($i = 1; $i <= ($student_num); $i++) {
-        $sql = "INSERT INTO `reply_schedule` (`id`,`name`,`major`,`group_id`,`special`) 
+        $sql = "INSERT INTO `reply_schedule` (`id`,`name`,`major`,`group_id`,`permission`,`special`) 
         VALUE (
         '{$_POST["stu_" . $i . "_id"]}',
         '{$_POST["stu_" . $i . "_name"]}',
         '计算机专业',
         '{$_POST['group_id']}',
+        'student',
         NULL
         )";
         mysqli_query($link, $sql);
     }
+    mysqli_close($link);
+    echo "<script>alert('添加答辩小组成功！');history.go(-1)</script>";
+} else{
+    echo "<script>alert('已存在该组号，请重新分配组号！');history.go(-1)</script>";
 }
+?>

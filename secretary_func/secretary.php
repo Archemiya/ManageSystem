@@ -62,7 +62,11 @@ include '../header.php';
                         include "sec_display_name.php";
                         break;
                     case "reply_schedule":
-                        include "sec_reply_schedule.php";
+                        if(isset($_GET['id'])){
+                            include "../tutor_func/t_topic_detail.php";
+                        }else{
+                            include "sec_reply_schedule.php";
+                        }
                         break;
                     case "stu_func_control":
                         include "sec_stu_func_control.php";
