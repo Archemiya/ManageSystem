@@ -26,8 +26,8 @@ include '../header.php';
 
 
                 <li><a href="./secretary.php?func=reply_schedule" method="GET" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "reply_schedule") {
-                                                                                echo "class=active";
-                                                                            } ?>><i class="glyphicon glyphicon-sort-by-alphabet">
+                                                                                    echo "class=active";
+                                                                                } ?>><i class="glyphicon glyphicon-sort-by-alphabet">
                             答辩安排</i><span class="sr-only">(current)</span></a></li>
 
                 <br />
@@ -62,9 +62,9 @@ include '../header.php';
                         include "sec_display_name.php";
                         break;
                     case "reply_schedule":
-                        if(isset($_GET['id'])){
+                        if (isset($_GET['id'])) {
                             include "../tutor_func/t_topic_detail.php";
-                        }else{
+                        } else {
                             include "sec_reply_schedule.php";
                         }
                         break;

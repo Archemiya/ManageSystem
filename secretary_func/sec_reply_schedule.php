@@ -1,13 +1,14 @@
 <?php
 include "../link.php";
-function echo_reply_schedule_table($i,$link){
-    $group_id = $i+1;
+function echo_reply_schedule_table($i, $link)
+{
+    $group_id = $i + 1;
     $sql_teacher_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'tutor' ";
     $sql_student_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'student' ";
-    $result_teacher_num = mysqli_query($link,$sql_teacher_num);
-    $result_student_num = mysqli_query($link,$sql_student_num);
+    $result_teacher_num = mysqli_query($link, $sql_teacher_num);
+    $result_student_num = mysqli_query($link, $sql_student_num);
     $num_teacher = mysqli_num_rows($result_teacher_num);
-    $num_student= mysqli_num_rows($result_student_num);
+    $num_student = mysqli_num_rows($result_student_num);
     echo <<< archemiya
     <div class="table-responsive">
         <table data-toggle="table" data-toolbar="#{$group_id}">
@@ -28,42 +29,42 @@ function echo_reply_schedule_table($i,$link){
                 <div id="{$group_id}">
                     <button type="button" class="btn btn-default active" > 
 archemiya;
-                echo "第 ".$group_id." 小组";
-echo <<< archemiya
+    echo "第 " . $group_id . " 小组";
+    echo <<< archemiya
                 </button>
                 </div>
 archemiya;
-                for($i=0;$i<$num_student;$i++){      
-                    $row_teacher = mysqli_fetch_array($result_teacher_num,MYSQLI_BOTH);
-                    $row_student = mysqli_fetch_array($result_student_num,MYSQLI_BOTH);         
-                    echo "<tr>";
+    for ($i = 0; $i < $num_student; $i++) {
+        $row_teacher = mysqli_fetch_array($result_teacher_num, MYSQLI_BOTH);
+        $row_student = mysqli_fetch_array($result_student_num, MYSQLI_BOTH);
+        echo "<tr>";
 
-                    echo "<td class=\"td-height th-title-center\">";
-                    echo $row_teacher['id'].$row_teacher['name'];
-                    echo "</td>";
+        echo "<td class=\"td-height th-title-center\">";
+        echo $row_teacher['id'] . $row_teacher['name'];
+        echo "</td>";
 
-                    echo "<td class=\"td-height th-title-center\">";
-                    if(!$i){
-                        echo "答辩组长";
-                    }else if($i<$num_teacher){
-                        echo "答辩老师";
-                    }else{
-                        echo "";
-                    }
-                    echo "</td>";
-                    echo "<td class=\"td-height th-title-center\">";
-                    echo   $row_student['id'].$row_student['name'];
-                    echo "</td>";
-                    $sql_topic = "SELECT * FROM `topic`WHERE `student_id` = '{$row_student['id']}' ";
-                    $result_topic = mysqli_query($link, $sql_topic);
-                    $row_topic = mysqli_fetch_array($result_topic,MYSQLI_BOTH);
-                    echo "<td class=\"td-height th-title-center\">";
-                    echo "<a href='secretary.php?func=reply_schedule&id={$row_topic['id']} '>".$row_topic['name']."</a>";
-                    echo "</td>";
+        echo "<td class=\"td-height th-title-center\">";
+        if (!$i) {
+            echo "答辩组长";
+        } else if ($i < $num_teacher) {
+            echo "答辩老师";
+        } else {
+            echo "";
+        }
+        echo "</td>";
+        echo "<td class=\"td-height th-title-center\">";
+        echo   $row_student['id'] . $row_student['name'];
+        echo "</td>";
+        $sql_topic = "SELECT * FROM `topic`WHERE `student_id` = '{$row_student['id']}' ";
+        $result_topic = mysqli_query($link, $sql_topic);
+        $row_topic = mysqli_fetch_array($result_topic, MYSQLI_BOTH);
+        echo "<td class=\"td-height th-title-center\">";
+        echo "<a href='secretary.php?func=reply_schedule&id={$row_topic['id']} '>" . $row_topic['name'] . "</a>";
+        echo "</td>";
 
-                echo "</tr>";
-            }
-echo <<< archemiya
+        echo "</tr>";
+    }
+    echo <<< archemiya
             </tbody>
         </table>
 
@@ -181,20 +182,20 @@ archemiya;
     <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#table">
         添加答辩小组
     </button>
-    <?php 
-    $group_num =0;
-    for($i=1;;$i++){//判断已有答辩组数量
-        $sql_group_num ="SELECT * FROM `reply_schedule` WHERE `group_id` = '{$i}'";
-        $result_group_num = mysqli_query($link,$sql_group_num);
+    <?php
+    $group_num = 0;
+    for ($i = 1;; $i++) { //判断已有答辩组数量
+        $sql_group_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$i}'";
+        $result_group_num = mysqli_query($link, $sql_group_num);
         $num_group_num = mysqli_num_rows($result_group_num);
-        if(!$num_group_num){
+        if (!$num_group_num) {
             break;
-        }else{
+        } else {
             $group_num += 1;
         }
     }
-    for($i=0;$i<$group_num;$i++){
-        echo_reply_schedule_table($i,$link);
+    for ($i = 0; $i < $group_num; $i++) {
+        echo_reply_schedule_table($i, $link);
     }
     ?>
     <div class="modal fade" id="table" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
