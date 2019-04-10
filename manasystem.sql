@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： 127.0.0.1
--- 生成日期： 2019-04-08 22:57:55
+-- 生成日期： 2019-04-10 23:16:37
 -- 服务器版本： 10.1.38-MariaDB
 -- PHP 版本： 7.3.2
 
@@ -138,6 +138,28 @@ CREATE TABLE `midterm_report` (
   `teacher_name` varchar(32) COLLATE utf8_bin NOT NULL,
   `backup` varchar(32) COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `reply_schedule`
+--
+
+CREATE TABLE `reply_schedule` (
+  `id` int(8) NOT NULL,
+  `name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `major` varchar(32) COLLATE utf8_bin NOT NULL,
+  `group_id` int(8) NOT NULL,
+  `special` varchar(8) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- 转存表中的数据 `reply_schedule`
+--
+
+INSERT INTO `reply_schedule` (`id`, `name`, `major`, `group_id`, `special`) VALUES
+(1007, '许盛伟', '计算机专业', 1, NULL),
+(20189219, '', '计算机专业', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -355,6 +377,12 @@ ALTER TABLE `midterm_report`
   ADD PRIMARY KEY (`topic_id`);
 
 --
+-- 表的索引 `reply_schedule`
+--
+ALTER TABLE `reply_schedule`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- 表的索引 `student_grade`
 --
 ALTER TABLE `student_grade`
@@ -411,7 +439,7 @@ ALTER TABLE `task_book`
 -- 使用表AUTO_INCREMENT `topic`
 --
 ALTER TABLE `topic`
-  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- 限制导出的表
