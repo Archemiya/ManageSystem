@@ -22,13 +22,18 @@ Archemiya;
         WHERE `teacher_id` = '{$_SESSION['user_id']}' AND `topic_id` = '{$row['id']}' AND `final_flag` = 1"; //查询当前课题所选的学生信息
         $result_chose_final_flag = mysqli_query($link, $sql_chose_final_flag);
         $row_chose_final_flag = mysqli_fetch_array($result_chose_final_flag, MYSQLI_BOTH);
+        $sql_first_report = "SELECT * FROM `first_report` WHERE `topic_id` = '{$row['id']}'"; //查询当前课题学生提交的开题报告信息
+        $result_first_report = mysqli_query($link, $sql_first_report);
+        $row_first_report = mysqli_fetch_array($result_first_report, MYSQLI_BOTH);
+        $num_first_report = mysqli_num_rows($result_first_report);
         echo <<< Archemiya
             <td class="td-height td-title-center alert alert-info" role="alert">
                 {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
             </td>
-            <td class="td-height td-title-center">          
+            <td class="td-height td-title-center">     
 Archemiya;
-        
+        echo "<a href='../uploaded_file/{$row_first_report['first_report_annex_name']}' class='btn btn-default' role='button'>下载附件</a>";
+        echo "</td>";
     }
     echo "</tr>";
 }

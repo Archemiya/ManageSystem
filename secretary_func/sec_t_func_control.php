@@ -6,7 +6,11 @@ include "sec_query_t_control.php";
 ?>
 
 <body>
+    <div class="alert alert-info" role="alert">
+        <strong>提示：</strong>
+        <span><strong>开题流程</strong></span>表示导师可以对开题报告进行评分（需所有学生全部上交开题报告最终稿）
 
+    </div>
     <div class="table-responsive">
         <table data-toggle="table" data-toolbar="#toolbar">
             <thead>

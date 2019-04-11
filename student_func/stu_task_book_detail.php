@@ -48,7 +48,7 @@ if ($_SESSION['user_permission'] == 'tutor') {
             </div>";
         } else if (!$num_final) {
             echo "<div class=\"alert alert-danger\" role=\"alert\">
-            <strong>您尚未选课，请先选题！</strong>
+            <strong>您尚未选题，请先选题！</strong>
             </div>";
         } else {
             echo "<div class=\"alert alert-danger\" role=\"alert\">

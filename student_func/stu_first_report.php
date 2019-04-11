@@ -1,18 +1,21 @@
 <?php
 include "../link.php";
+//include "../secretary_func/sec_query_stu_control.php";
 $sql = "SELECT * FROM `first_report` WHERE `student_id` = '{$_SESSION['user_id']}'"; //查询该学生开题报告
 $sql_task_book = "SELECT * FROM `task_book` WHERE `student_id` = '{$_SESSION['user_id']}' ";
+$sql_topic = "SELECT * FROM `chose_topic_record` WHERE `student_id` = '{$_SESSION['user_id']}' AND `final_flag` =1 ";
 $result_task_book = mysqli_query($link, $sql_task_book);
+$result_topic = mysqli_query($link, $sql_topic);
 $result = mysqli_query($link, $sql);
 $row = mysqli_fetch_array($result, MYSQLI_BOTH);
 $num = mysqli_num_rows($result);
 $row_task_book = mysqli_fetch_array($result_task_book, MYSQLI_BOTH);
 $num_task_book = mysqli_num_rows($result_task_book);
-
-?>
-
-<body>
-  <div class="table-responsive">
+$num_topic = mysqli_num_rows($result_topic);
+function report_echo($row_task_book,$num_task_book,$row,$num)
+{
+  echo <<< archemiya
+<div class="table-responsive">
     <table data-toggle="table" data-toolbar="#toolbar">
       <thead>
         <tr>
@@ -24,54 +27,78 @@ $num_task_book = mysqli_num_rows($result_task_book);
       </thead>
       <tbody>
         <tr>
-          <td class="td-height"><?php echo $row_task_book['topic_name']; ?></td>
-          <td class="td-height td-title-center"><?php echo $row_task_book['teacher_name']; ?></td>
-
-          <?php
-          if ($num_task_book == 0) {
-            echo "<td class=\"td-height td-title-center alert alert-danger\" role='alert'>";
-            echo "导师还未下达任务书！不可填写开题报告";
-          } elseif ($row_task_book['islook_flag'] == 0) {
-            echo "<td class=\"td-height td-title-center alert alert-danger\" role='alert'>";
-            echo "您还未确认任务书！不可填写开题报告";
-          } elseif ($num_task_book && $row_task_book['islook_flag'] && !$num) {
-            echo "<td class=\"td-height td-title-center alert alert-danger\" role='alert'>";
-            echo "您还未上传开题报告，请及时上传";
-          } elseif ($num_task_book && $row_task_book['islook_flag'] && $num && ($row['final_flag'] == 0)) {
-            echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
-            echo "您已上传开题报告，请等待指导老师审核";
-          } elseif ($num_task_book && $row_task_book['islook_flag'] && $num && ($row['final_flag'] == 2)) {
-            echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
-            echo "指导老师已提交至评阅组，请等待评阅组审核";
-          } elseif ($num_task_book && $row_task_book['islook_flag'] && $num && ($row['final_flag'] == 1)) {
-            echo "<td class=\"td-height td-title-center alert alert-info\" role='alert'>";
-            echo "开题报告审核已结束";
-          }
-          ?>
+          <td class="td-height"> {$row_task_book['topic_name']}</td>
+          <td class="td-height td-title-center"> {$row_task_book['teacher_name']}</td>
+archemiya;
+  if ($num_task_book == 0) {
+    echo "<td class=\"td-height td-title-center alert alert-danger\" role='alert'>";
+    echo "导师还未下达任务书！不可填写开题报告";
+  } elseif ($row_task_book['islook_flag'] == 0) {
+    echo "<td class=\"td-height td-title-center alert alert-danger\" role='alert'>";
+    echo "您还未确认任务书！不可填写开题报告";
+  } elseif ($num_task_book && $row_task_book['islook_flag'] && !$num) {
+    echo "<td class=\"td-height td-title-center alert alert-danger\" role='alert'>";
+    echo "您还未上传开题报告，请及时上传";
+  } elseif ($num_task_book && $row_task_book['islook_flag'] && $num && ($row['final_flag'] == 0)) {//表示处于导师审核阶段
+    echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
+    echo "您已上传开题报告，请等待指导老师审核";
+  } elseif ($num_task_book && $row_task_book['islook_flag'] && $num && ($row['final_flag'] == 2)) {//表示处于评阅组审核阶段
+    echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
+    echo "您已提交至评阅组，请等待评阅组审核";
+  } elseif ($num_task_book && $row_task_book['islook_flag'] && $num && ($row['final_flag'] == 1)) {//表示审核结束（tip:实际可能需要0 1 2 3 四种状态 ）
+    echo "<td class=\"td-height td-title-center alert alert-info\" role='alert'>";
+    echo "开题报告审核已结束";
+  }
+  echo <<< archemiya
           </td>
           <td>
-            <?php
-            if ($num_task_book == 0) {
-              echo "<button class=\"btn btn-primary\" disabled >不可操作</button>";
-            } elseif ($row_task_book['islook_flag'] == 0) {
-              echo "<button class=\"btn btn-primary\" disabled >不可操作</button>";
-            } elseif ($num_task_book && $row_task_book['islook_flag'] && !$num) {
-              echo "<button class=\"btn btn-primary\" data-toggle=\"modal\" 
+archemiya;
+  if ($num_task_book == 0) {
+    echo "<button class=\"btn btn-primary\" disabled >不可操作</button>";
+  } elseif ($row_task_book['islook_flag'] == 0) {
+    echo "<button class=\"btn btn-primary\" disabled >不可操作</button>";
+  } elseif ($num_task_book && $row_task_book['islook_flag'] && !$num) {
+    echo "<button class=\"btn btn-primary\" data-toggle=\"modal\" 
             data-target=\"#firstReportTable\" >上传开题报告</button>";
-            } elseif ($num_task_book && $row_task_book['islook_flag'] && $num && ($row['final_flag'] == 0)) {
+  } elseif ($num_task_book && $row_task_book['islook_flag'] && $num && ($row['final_flag'] == 0)) { 
+    echo "<button class=\"btn btn-primary\" data-toggle=\"modal\" 
+            data-target=\"#firstReportTable\" >上传开题报告</button>";
+  } elseif ($num_task_book && $row_task_book['islook_flag'] && $num && ($row['final_flag'] == 2)) { 
+    echo "<button class=\"btn btn-primary\" disabled >审核中</button>";
+  } elseif ($num_task_book && $row_task_book['islook_flag'] && $num && ($row['final_flag'] == 1)) { 
+    echo "<button class=\"btn btn-success\" disabled >审核结束</button>";
+  }
 
-            } elseif ($num_task_book && $row_task_book['islook_flag'] && $num && ($row['final_flag'] == 2)) { 
-
-            } elseif ($num_task_book && $row_task_book['islook_flag'] && $num && ($row['final_flag'] == 1)) { 
-              
-            }
-            ?>
-
+  echo <<< archemiya
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+archemiya;
+}
+?>
+
+<body>
+  <?php
+  if (!$num_topic) {
+    echo <<< archemiya
+    <br/>
+    <div class='alert alert-danger' role='alert'>
+    <strong>您尚未选题，请先选题！</strong>
+    </div>
+archemiya;
+  } else { 
+    echo <<< archemiya
+    <br/>
+    <div class='alert alert-info' role='alert'>
+    <strong>提示：</strong>
+    请上传开题报告摘要，再上传附件！
+    </div>
+archemiya;
+    report_echo($row_task_book,$num_task_book,$row,$num);
+  }
+  ?>
 
   <div class="modal fade " id="firstReportTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="chose-student-dialog">
@@ -79,7 +106,7 @@ $num_task_book = mysqli_num_rows($result_task_book);
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title login-title">上传开题报告</h4>
+          <h4 class="modal-title login-title">上传开题报告（请先上传摘要再上传附件）</h4>
         </div>
         <div class="modal-body">
           <form action="stu_add_first_report.php" method="POST" class="form-horizontal">
