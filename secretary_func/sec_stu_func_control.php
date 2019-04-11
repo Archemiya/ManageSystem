@@ -58,7 +58,47 @@ include "sec_query_stu_control.php";
 
 
                 </tr>
-                
+                <tr>
+                    <td class="col-xs-5 th-title-center">开题</td>
+                    <?php      
+                    $sql_user = "SELECT * FROM `user` ";
+                    $sql_reply = "SELECT * FROM `reply_schedule` ";//分配至答辩小组的人数，即查看当前有多少人已分配至答辩小组
+                    $sql_stu_chosed = "SELECT * FROM `chose_topic_record` WHERE `final_flag` = 1";//查看当前完成选题的学生数量
+                    $result_user = mysqli_query($link,$sql_user);
+                    $result_reply = mysqli_query($link,$sql_reply);
+                    $result_stu_chosed = mysqli_query($link, $sql_stu_chosed);
+                    $num_user = mysqli_num_rows($result_user);
+                    $num_reply = mysqli_num_rows($result_reply);
+                    $num_stu_chosed = mysqli_num_rows($result_stu_chosed);
+                    if (($num_stu_chosed == $num_topic) && ($row_control['first_report'] == 0) && ($num_user == $num_reply)) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
+                        echo "当前学生已全部完成选题且答辩小组分配完毕，可以开启学生开题流程";
+                    } else if(($num_stu_chosed == $num_topic) && ($row_control['first_report'] == 1) && ($num_user == $num_reply) ){
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
+                        echo "已开启学生开题流程";
+                    } else {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-danger\">";
+                        echo "当前学生尚未全部完成选题或答辩小组未分配完毕，不可开启学生开题流程";
+                    }
+                    ?>
+                    </td>
+
+                    <td class="col-xs-2 th-title-center">
+                        <?php
+                        if (($num_stu_chosed == $num_topic) && ($row_control['first_report'] == 0) && ($num_user == $num_reply)) {
+                            echo "<a href='sec_chang_stu_control_value.php?func=first_report' 
+                                class='btn btn-primary' role='button'
+                                onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启选题</a>";
+                        } else if (($num_stu_chosed == $num_topic) && ($row_control['first_report'] == 1) && ($num_user == $num_reply)) {
+                            echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
+                        } else {
+                            echo "<button class='btn btn-danger' disabled>不可操作</button>";
+                        }
+                        ?>
+                    </td>
+
+
+                </tr>
             </tbody>
         </table>
 

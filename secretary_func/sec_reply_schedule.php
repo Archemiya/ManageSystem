@@ -1,5 +1,12 @@
 <?php
 include "../link.php";
+$sql_stu_chosed = "SELECT * FROM `chose_topic_record` WHERE `final_flag` = 1"; //查看当前完成选题的学生数量
+$result_stu_chosed = mysqli_query($link, $sql_stu_chosed);
+$num_stu_chosed = mysqli_num_rows($result_stu_chosed);
+$sql_topic = "SELECT * FROM `topic`";
+$result_topic = mysqli_query($link, $sql_topic);
+$num_topic = mysqli_num_rows($result_topic);
+
 function echo_reply_schedule_table($i, $link)
 {
     $group_id = $i + 1;
@@ -179,9 +186,6 @@ archemiya;
     <div class="alert alert-danger" role="alert">
         <strong>本页面为答辩组分配页面，请谨慎操作</strong>
     </div>
-    <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#table">
-        添加答辩小组
-    </button>
     <?php
     $group_num = 0;
     for ($i = 1;; $i++) { //判断已有答辩组数量
@@ -194,8 +198,93 @@ archemiya;
             $group_num += 1;
         }
     }
-    for ($i = 0; $i < $group_num; $i++) {
-        echo_reply_schedule_table($i, $link);
+    if ($num_stu_chosed != $num_topic) {
+        $sql_chose = "SELECT * FROM `user` WHERE `topic_ischose` = 1 AND `permission`='student'";
+        $sql_unchose = "SELECT * FROM `user` WHERE `topic_ischose` = 0 AND `permission`='student'";
+        $result_chose = mysqli_query($link, $sql_chose);
+        $result_unchose = mysqli_query($link, $sql_unchose);
+        $num_chose = mysqli_num_rows($result_chose);
+        $num_unchose = mysqli_num_rows($result_unchose);
+        echo <<< archemiya
+        <div class="alert alert-danger" role="alert">
+            <strong>尚有学生未完成选题，不可进行答辩小组分配</strong>
+        </div>
+        <div class="fixed-table-container">
+            <table width="100%">
+                <tr>
+                    <td width="50%" style="float: left;margin: 0px;padding: 0px;">
+                        <table id="table1" class="table col-md-6" data-toggle="table">
+                            <thead>
+                                <tr>
+                                    <th >
+                                        <div class="th-inner th-title-center" >已完成选题学生名单</div>
+                                    </th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody >
+archemiya;
+        for ($i = 0; $i < $num_chose; $i++) {
+            $row_chose = mysqli_fetch_array($result_chose, MYSQLI_BOTH);
+            echo "<tr>";
+
+            echo "<td class='alert alert-info td-title-center td-height' role='alert'>";
+            echo $row_chose['id'] . $row_chose['name'];
+            echo "</td>";
+            echo "</tr>";
+        }
+        echo <<< archemiya
+                                
+                            </tbody>
+                        </table>
+
+                    </td>
+                    <td width="50%" style="float: right;margin: 0px;padding: 0px;">
+                        <table id="table2" class="table col-md-6" data-toggle="table">
+                            <thead>
+                                <tr>
+                                    <th >
+                                        <div class="th-inner th-title-center" >未完成选题学生名单</div>
+                                    </th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody >
+archemiya;
+        for ($i = 0; $i < $num_unchose; $i++) {
+            $row_unchose = mysqli_fetch_array($result_unchose, MYSQLI_BOTH);
+            echo "<tr>";
+
+            echo "<td class='alert alert-danger td-title-center td-height' role='alert'>";
+            echo $row_unchose['id'] . $row_unchose['name'];
+            echo "</td>";
+            echo "</tr>";
+        }
+
+        echo <<< archemiya
+                                
+                            </tbody>
+                        </table>
+
+                    </td>
+
+                </tr>
+                
+               
+            </table>
+        </div>
+        
+        
+archemiya;
+    } else {
+        echo <<< archemiya
+        <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#table">
+        添加答辩小组
+        </button>
+archemiya;
+        for ($i = 0; $i < $group_num; $i++) {
+            echo_reply_schedule_table($i, $link);
+        }
     }
     ?>
     <div class="modal fade" id="table" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
