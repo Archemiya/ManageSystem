@@ -10,7 +10,7 @@ $sql_islook_task = "SELECT * FROM `task_book` WHERE `teacher_id` = '{$_SESSION['
 $result_islook_task = mysqli_query($link, $sql_islook_task);
 $num_islool_task = mysqli_num_rows($result_islook_task);
 
-function table_first_report_echo($result, $link)
+function table_first_report_echo($result, $link, $row_control)
 {
     $height = mysqli_num_rows($result);
     for ($i = 0; $i < $height; $i++) { //根据该老师的课题数进行循环输出
@@ -85,7 +85,20 @@ Archemiya;
         </td>
 Archemiya;
         } elseif ($num_first_report_record && $row_first_report_record['final_flag'] == 3 && $row_first_report_record['annex_flag'] == 1) {
-            echo <<< Archemiya
+            if ($row_control['first_report']) {
+                echo <<< Archemiya
+        <td class="td-height td-title-center alert alert-danger" role="alert">
+            {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
+        </td>
+        <td class="td-height td-title-center">     
+        <button class='btn btn-danger' disabled >未及时提交</button>
+        </td>
+        <td class="td-height td-title-center">
+        <button class='btn btn-danger' disabled >未及时提交</button>        
+        </td>
+Archemiya;
+            } else {
+                echo <<< Archemiya
         <td class="td-height td-title-center alert alert-warning" role="alert">
             {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
         </td>
@@ -96,6 +109,7 @@ Archemiya;
         <button class='btn btn-warning' disabled >已确定最终稿</button>        
         </td>
 Archemiya;
+            }
         } elseif ($num_first_report_record && $row_first_report_record['final_flag'] == 4 && $row_first_report_record['annex_flag'] == 1) {
             echo <<< Archemiya
         <td class="td-height td-title-center alert alert-warning" role="alert">
@@ -125,7 +139,7 @@ Archemiya;
     echo "</tr>";
 }
 
-function final_first_report_echo($link, $row_control)
+function final_first_report_echo($link)
 {
     //查询目前导师账号所在的答辩小组
     $sql_reply_group = "SELECT `group_id` from `reply_schedule` where `id` = '{$_SESSION['user_id']}' ";
@@ -174,7 +188,7 @@ function final_first_report_echo($link, $row_control)
             </td>
 archemiya;
 
-        if (!$num_final_first_report_record && !$num_final) {
+        if (!$num_final_first_report_record && !$num_final && !$num_isscore) {//在第三阶段开启后 未 提交最终报告摘要和附件
 
             echo <<< archemiya
             <td class="td-height td-title-center">     
@@ -184,10 +198,10 @@ archemiya;
             <button class='btn btn-danger' disabled>尚未提交附件</button>
             </td>
 archemiya;
-        } elseif ($num_final_first_report_record && $row_final_first_report_record['annex_flag'] == 0 && $row_final_first_report_record['final_flag'] != 1) {
+        } elseif ($num_final_first_report_record && $row_final_first_report_record['annex_flag'] == 0 && $row_final_first_report_record['final_flag'] != 1 && !$num_isscore) {//提交了摘要未提交附件
             echo <<< archemiya
             <td class="td-height td-title-center">     
-            <a href="tutor.php?func=first_report&fid={$row_topic['id']}" class='btn btn-warning' role='button'>尚未提交摘要</a>
+            <a href="tutor.php?func=first_report&fid={$row_topic['id']}&index=delay" class='btn btn-warning' role='button'>尚未提交摘要</a>
             </td>
             <td class="td-height td-title-center">
             <button class='btn btn-danger' disabled>尚未提交附件</button>
@@ -242,7 +256,7 @@ archemiya;
             </thead>
             <tbody>
 archemiya;
-        table_first_report_echo($result, $link);
+        table_first_report_echo($result, $link, $row_control);
         echo <<< archemiya
             </tbody>
         </table>
@@ -255,7 +269,7 @@ archemiya;
         echo "<div class=\"alert alert-danger\" role=\"alert\">";
         echo "<strong>当前答辩小组开题报告评阅功能尚未开放</strong>";
         echo "</div>";
-    } else {
+    } elseif($_SESSION['user_special']=='reviewer') {
         echo <<< archemiya
     <div class="table-responsive">
         <table data-toggle="table" data-toolbar="#toolbar" data-pagination="true" data-page-list="[10, 25, 50, 100, 200, All]" >
@@ -272,7 +286,7 @@ archemiya;
             </thead>
             <tbody>
 archemiya;
-        final_first_report_echo($link, $row_control);
+        final_first_report_echo($link);
         echo <<< archemiya
             </tbody>
         </table>

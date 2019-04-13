@@ -292,12 +292,13 @@ if (!$third) {
       && (!$num_first_report_record && ($row_first_report_record['annex_flag'] == 0))
     ) { //状态3
       echo "<button class=\"btn btn-default\" data-toggle=\"modal\" 
-            data-target=\"#firstReportAnnexTable\" >上传附件</button>";
+            data-target=\"#firstReportAnnexTable\" disabled>上传附件</button>";
     } elseif (
       $num_task_book && $row_task_book['islook_flag']
       && ($num_first_report_record && ($row_first_report_record['annex_flag'] == 0))
     ) { //状态4
-      echo "<button class=\"btn btn-warning\" disabled>不可操作</button>";
+      echo "<button class=\"btn btn-default\" data-toggle=\"modal\" 
+            data-target=\"#firstReportAnnexTable\" >上传附件</button>";
     } elseif (
       $num_task_book && $row_task_book['islook_flag']
       && $num_first_report_record && ($row_first_report_record['final_flag'] == 0)

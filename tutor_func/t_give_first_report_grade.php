@@ -31,7 +31,7 @@ $row_first_report_record = mysqli_fetch_array($result_first_report_record, MYSQL
         <strong>提示：请仔细查看学生的开题报告，并结合学生线下开题答辩时的表现给出开题报告项目的最终成绩</strong>
     </div>
     <?php
-    if ($_GET['index'] = "delay") {
+    if (isset($_GET['index']) && $_GET['index'] == "delay") {
         echo <<< archemiya
         <div class="alert alert-danger" role="alert">
         <strong>该学生未提交报告或附件，请酌情扣分</strong>

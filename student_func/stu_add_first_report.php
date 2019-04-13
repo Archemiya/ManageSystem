@@ -14,7 +14,7 @@ $topic_main = $_POST['topic_main'];
 $topic_difficulty = $_POST['topic_difficulty'];
 $topic_schedule = $_POST['topic_schedule'];
 $topic_ref = $_POST['topic_ref'];
-if ($_GET['index'] == 'final') {
+if (isset($_GET['index']) && $_GET['index'] == 'final') {
     $sql = "INSERT INTO `first_report_record` (
         `record_id`,
         `topic_id`, 
