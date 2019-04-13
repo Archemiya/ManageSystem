@@ -114,7 +114,36 @@ $today = date('Y-m-d');
             </tbody>
         </table>
     </div>
-
+    <div class="modal fade" id="deadline_setting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加最终报告提交截止时间</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="../deadline-setting.php?func=first_report " method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="dtp_input2" class="col-md-4 control-label">选择日期</label>
+                            <div class="input-group date form_date col-md-5" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                <?php
+                                echo "<input name='deadline' class=\"form-control\" size=\"16\" type=\"text\" value=\"{$today}\" readonly>";
+                                ?>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                            <input type="hidden" id="dtp_input2" value="" /><br />
+                            <button type="submit" class="col-sm-offset-4 btn btn-default" onclick="Javascript:return confirm('确定要上传么？此操作不可逆转');">确认截止时间</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="unupload_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -136,19 +165,19 @@ $today = date('Y-m-d');
                     $num_user = mysqli_num_rows($result_user);
                     echo <<< archemiya
                 <div class="fixed-table-container">
-            <table width="100%">
-                <tr>
-                    <td width="50%" style="float: left;margin: 0px;padding: 0px;">
-                        <table id="table1" class="table col-md-6" data-toggle="table">
-                            <thead>
-                                <tr>
-                                    <th >
-                                        <div class="th-inner th-title-center" >已提交学生名单</div>
-                                    </th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody >
+                <table width="100%">
+                    <tr>
+                        <td width="50%" style="float: left;margin: 0px;padding: 0px;">
+                            <table id="table1" class="table col-md-6" data-toggle="table">
+                                <thead>
+                                    <tr>
+                                        <th >
+                                            <div class="th-inner th-title-center" >已提交学生名单</div>
+                                        </th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody >
 archemiya;
                     for ($i = 0; $i < $num_do; $i++) {
                         $row_do = mysqli_fetch_array($result_do, MYSQLI_BOTH);
@@ -160,31 +189,31 @@ archemiya;
                         echo "</tr>";
                     }
                     echo <<< archemiya
-                                
-                            </tbody>
-                        </table>
-
-                    </td>
-                    <td width="50%" style="float: right;margin: 0px;padding: 0px;">
-                        <table id="table2" class="table col-md-6" data-toggle="table">
-                            <thead>
-                                <tr>
-                                    <th >
-                                        <div class="th-inner th-title-center" >未完成选题学生名单</div>
-                                    </th>
                                     
-                                </tr>
-                            </thead>
-                            <tbody >
+                                </tbody>
+                            </table>
+
+                        </td>
+                        <td width="50%" style="float: right;margin: 0px;padding: 0px;">
+                            <table id="table2" class="table col-md-6" data-toggle="table">
+                                <thead>
+                                    <tr>
+                                        <th >
+                                            <div class="th-inner th-title-center" >未完成选题学生名单</div>
+                                        </th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody >
 archemiya;
                     for ($i = 0; $i < ($num_user - $num_do); $i++) {
                         $row_user = mysqli_fetch_array($result_user, MYSQLI_BOTH);
                         for ($j = 0; $j < $num_do; $j++) {
                             $row_do_check = mysqli_fetch_array($result_do, MYSQLI_BOTH);
-                            if ($row_user['id'] == $row_do_check['student_id']) { 
+                            if ($row_user['id'] == $row_do_check['student_id']) {
                                 $i++;
                                 break;
-                            }else{
+                            } else {
                                 echo "<tr>";
 
                                 echo "<td class='alert alert-danger td-title-center td-height' role='alert'>";
@@ -196,16 +225,16 @@ archemiya;
                     }
 
 
-                    echo <<< archemiya
-                                
-                            </tbody>
+                                echo <<< archemiya
+                                            
+                                        </tbody>
+                                    </table>
+
+                                </td>
+
+                            </tr>
                         </table>
-
-                    </td>
-
-                </tr>
-            </table>
-        </div>
+                    </div>
 
 archemiya;
                     ?>
@@ -216,36 +245,7 @@ archemiya;
             </div>
         </div>
 
-        <div class="modal fade" id="deadline_setting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">添加最终报告提交截止时间</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form action="../deadline-setting.php?func=first_report " method="post" class="form-horizontal">
-                            <div class="form-group">
-                                <label for="dtp_input2" class="col-md-4 control-label">选择日期</label>
-                                <div class="input-group date form_date col-md-5" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                                    <?php
-                                    echo "<input name='deadline' class=\"form-control\" size=\"16\" type=\"text\" value=\"{$today}\" readonly>";
-                                    ?>
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                </div>
-                                <input type="hidden" id="dtp_input2" value="" /><br />
-                                <button type="submit" class="col-sm-offset-4 btn btn-default" onclick="Javascript:return confirm('确定要上传么？此操作不可逆转');">确认截止时间</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <script type="text/javascript" src="../js/bootstrap.min.js"></script>
         <script type="text/javascript" src="../js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
         <script type="text/javascript" src="../js/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
