@@ -27,11 +27,14 @@ include "sec_query_stu_control.php";
                 <tr>
                     <td class="col-xs-5 th-title-center">论文选题</td>
                     <?php
+                    //查看当前课题数量
                     $sql_topic = "SELECT * FROM `topic`";
-                    $sql_passed_topic = "SELECT * FROM `topic` WHERE `topic_ispass` = 1";
                     $result_topic = mysqli_query($link, $sql_topic);
-                    $result_passed_topic = mysqli_query($link, $sql_passed_topic);
                     $num_topic = mysqli_num_rows($result_topic);
+
+                    //查看当前过审课题数量
+                    $sql_passed_topic = "SELECT * FROM `topic` WHERE `topic_ispass` = 1";
+                    $result_passed_topic = mysqli_query($link, $sql_passed_topic);
                     $num_passed_topic = mysqli_num_rows($result_passed_topic);
                     if (($num_passed_topic == $num_topic) && ($row_control['topic'] == 0) && ($num_topic != 0)) {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
@@ -40,7 +43,7 @@ include "sec_query_stu_control.php";
                         echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
                         echo "已开启学生选题流程";
                     } else {
-                        echo "<td class=\"col-xs-5 th-title-center alert alert-danger\">";
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
                         echo "当前课题审核尚未全部完成，不可开启学生选题流程";
                     }
                     ?>
@@ -55,7 +58,7 @@ include "sec_query_stu_control.php";
                         } else if (($num_passed_topic == $num_topic) && ($row_control['topic'] == 1)) {
                             echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
                         } else {
-                            echo "<button class='btn btn-danger' disabled>不可操作</button>";
+                            echo "<button class='btn btn-danger' warning>不可操作</button>";
                         }
                         ?>
                     </td>
@@ -65,15 +68,21 @@ include "sec_query_stu_control.php";
                 <tr>
                     <td class="col-xs-5 th-title-center">开题</td>
                     <?php
-                    $sql_user = "SELECT * FROM `user` ";
-                    $sql_reply = "SELECT * FROM `reply_schedule` "; //分配至答辩小组的人数，即查看当前有多少人已分配至答辩小组
-                    $sql_stu_chosed = "SELECT * FROM `chose_topic_record` WHERE `final_flag` = 1"; //查看当前完成选题的学生数量
+                    //查看当前学生人数
+                    $sql_user = "SELECT * FROM `user` where `permission` = 'student' ";
                     $result_user = mysqli_query($link, $sql_user);
-                    $result_reply = mysqli_query($link, $sql_reply);
-                    $result_stu_chosed = mysqli_query($link, $sql_stu_chosed);
                     $num_user = mysqli_num_rows($result_user);
+
+                    //分配至答辩小组的人数，即查看当前有多少人已分配至答辩小组
+                    $sql_reply = "SELECT * FROM `reply_schedule` where `permission` = 'student' "; 
+                    $result_reply = mysqli_query($link, $sql_reply);
                     $num_reply = mysqli_num_rows($result_reply);
+                    
+                    //查看当前完成选题的学生数量
+                    $sql_stu_chosed = "SELECT * FROM `chose_topic_record` WHERE `final_flag` = 1";
+                    $result_stu_chosed = mysqli_query($link, $sql_stu_chosed);
                     $num_stu_chosed = mysqli_num_rows($result_stu_chosed);
+
                     if (($num_stu_chosed == $num_topic) && ($row_control['first_report'] == 0) && ($num_user == $num_reply)) {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
                         echo "当前学生已全部完成选题且答辩小组分配完毕，可以开启学生开题流程";
@@ -81,7 +90,7 @@ include "sec_query_stu_control.php";
                         echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
                         echo "已开启学生开题流程";
                     } else {
-                        echo "<td class=\"col-xs-5 th-title-center alert alert-danger\">";
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
                         echo "当前学生尚未全部完成选题或答辩小组未分配完毕，不可开启学生开题流程";
                     }
                     ?>
@@ -96,7 +105,7 @@ include "sec_query_stu_control.php";
                         } else if (($num_stu_chosed == $num_topic) && ($row_control['first_report'] == 1) && ($num_user == $num_reply)) {
                             echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
                         } else {
-                            echo "<button class='btn btn-danger' disabled>不可操作</button>";
+                            echo "<button class='btn btn-danger' warning>不可操作</button>";
                         }
                         ?>
                     </td>

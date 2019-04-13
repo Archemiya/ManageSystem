@@ -100,11 +100,13 @@ include '../header.php';
                             }
                             break;
                         case "first_report":
-                            // if (isset($_GET["id"])) {
-                            //     include "../student_func/stu_task_book_detail.php";
-                            // } else {
+                            if (isset($_GET["id"])) {
+                                include "../student_func/stu_first_report_detail.php";
+                            } elseif (isset($_GET["fid"])) {
+                                include "t_give_first_report_grade.php";
+                            } else {
                                 include "t_first_report.php";
-                            // }
+                            }
                             break;
                         case "paper_review":
                         case "answer_information":

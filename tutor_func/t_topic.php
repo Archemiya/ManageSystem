@@ -19,10 +19,10 @@ function table_echo($result, $result_passed_me_topic, $link, $length)
         <td> {$row_passed_me_topic['id']} </td>
         <td> {$row_passed_me_topic['name']} </td>
 archemiya;
-        if ($row['teacher_name'] == $_SESSION['user_name']) {
-            echo "<td > {$row_passed_me_topic['teacher_name']} </td>";
+        if ($row_passed_me_topic['teacher_name'] == $_SESSION['user_name']) {
+            echo "<td >{$row_passed_me_topic['teacher_name']}</td>";
         } else {
-            echo "<td > &nbsp;{$row_passed_me_topic['teacher_name']} </td>";
+            echo "<td >&nbsp;{$row_passed_me_topic['teacher_name']}</td>";
         }
         echo <<< archemiya
         <td> {$num_chose_record_topic} / 5</td>

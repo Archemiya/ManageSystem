@@ -1,8 +1,81 @@
-$sql = "INSERT INTO `reply_schedule` (`id`,`name`,`major`,`group_id`,`special`) 
-        VALUE (
-        '{$_POST["t_".$i."_id"]}',
-        '{$_POST["t_".$i."_name"]}',
-        '计算机专业',
-        '{$_POST['group_id']}',
-        NULL
-        )";
+echo <<< archemiya
+                    <form action="stu_add_first_report?id={$get}" method="POST" class="form-horizontal">
+                    echo <<< archemiya
+                    <div class="form-group">
+                        <label for="inputTopicIntro" class="col-sm-3 control-label">课题来源</label>
+                        <div class="col-sm-8">
+                            <textarea name="topic_source" class="form-control" rows="3">
+archemiya;
+                    echo $row['topic_source'];
+                    echo <<< archemiya
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTopicIntro" class="col-sm-3 control-label">课题研究的目的、意义</label>
+                        <div class="col-sm-8">
+                            <textarea name="topic_purpose" class="form-control" rows="3">
+archemiya;
+                    echo $row['topic_purpose'];
+
+                    echo <<< archemiya
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTopicIntro" class="col-sm-3 control-label">课题的国内外研究现状和发展动态</label>
+                        <div class="col-sm-8">
+                            <textarea name="topic_research_status" class="form-control" rows="3">
+archemiya;
+                    echo $row['topic_research_status'];
+
+                    echo <<< archemiya
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTopicIntro" class="col-sm-3 control-label">课题的研究内容、拟采取的技术方案或研究方法</label>
+                        <div class="col-sm-8">
+                            <textarea name="topic_main" class="form-control" rows="3">
+archemiya;
+                    echo $row['topic_main'];
+
+                    echo <<< archemiya
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTopicReq" class="col-sm-3 control-label">课题研究的重点、难点及创新点</label>
+                        <div class="col-sm-8">
+                            <textarea name="topic_difficulty" class="form-control" rows="3">
+archemiya;
+                    echo $row['topic_difficulty'];
+
+                    echo <<< archemiya
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTopicRef" class="col-sm-3 control-label">课题研究的进度安排</label>
+                        <div class="col-sm-8">
+                            <textarea name="topic_schedule" class="form-control" rows="3">
+archemiya;
+                    echo $row['topic_schedule'];
+
+                    echo <<< archemiya
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTopicRef" class="col-sm-3 control-label">主要参考文献</label>
+                        <div class="col-sm-8">
+                            <textarea name="topic_ref" class="form-control" rows="3">
+archemiya;
+                    echo $row['topic_ref'];
+
+                    echo <<< archemiya
+                            </textarea>
+                        </div>
+                    </div>
+                    </form>
+archemiya;

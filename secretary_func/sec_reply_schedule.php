@@ -1,20 +1,24 @@
+<!-- 此文件为答辩小组显示 + 分组文件 -->
 <?php
 include "../link.php";
 $sql_stu_chosed = "SELECT * FROM `chose_topic_record` WHERE `final_flag` = 1"; //查看当前完成选题的学生数量
 $result_stu_chosed = mysqli_query($link, $sql_stu_chosed);
 $num_stu_chosed = mysqli_num_rows($result_stu_chosed);
+
 $sql_topic = "SELECT * FROM `topic`";
 $result_topic = mysqli_query($link, $sql_topic);
 $num_topic = mysqli_num_rows($result_topic);
 
+//此函数输出所有已分配好的答辩小组名单
 function echo_reply_schedule_table($i, $link)
 {
     $group_id = $i + 1;
     $sql_teacher_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'tutor' ";
-    $sql_student_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'student' ";
     $result_teacher_num = mysqli_query($link, $sql_teacher_num);
-    $result_student_num = mysqli_query($link, $sql_student_num);
     $num_teacher = mysqli_num_rows($result_teacher_num);
+
+    $sql_student_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'student' ";
+    $result_student_num = mysqli_query($link, $sql_student_num);
     $num_student = mysqli_num_rows($result_student_num);
     echo <<< archemiya
     <div class="table-responsive">
@@ -32,6 +36,7 @@ function echo_reply_schedule_table($i, $link)
                 </tr>
 
             </thead>
+
             <tbody>
                 <div id="{$group_id}">
                     <button type="button" class="btn btn-default active" > 
@@ -85,6 +90,7 @@ archemiya;
 <html>
 
 <head>
+    <!-- js脚本实现答辩小组分配按钮的全部功能 -->
     <script language="javascript" type="text/javascript">
         var t_idtemp = 1;
         var stu_idtemp = 1;
@@ -187,8 +193,10 @@ archemiya;
         <strong>本页面为答辩组分配页面，请谨慎操作</strong>
     </div>
     <?php
+
     $group_num = 0;
-    for ($i = 1;; $i++) { //判断已有答辩组数量
+
+    for ($i = 1;; $i++) { //使用循环判断已有答辩组数量
         $sql_group_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$i}'";
         $result_group_num = mysqli_query($link, $sql_group_num);
         $num_group_num = mysqli_num_rows($result_group_num);
@@ -199,12 +207,15 @@ archemiya;
         }
     }
     if ($num_stu_chosed != $num_topic) {
+        //比较 选题学生数 和 全部课题数 来得出当前学生是否全部完成选题
         $sql_chose = "SELECT * FROM `user` WHERE `topic_ischose` = 1 AND `permission`='student'";
-        $sql_unchose = "SELECT * FROM `user` WHERE `topic_ischose` = 0 AND `permission`='student'";
         $result_chose = mysqli_query($link, $sql_chose);
-        $result_unchose = mysqli_query($link, $sql_unchose);
         $num_chose = mysqli_num_rows($result_chose);
+
+        $sql_unchose = "SELECT * FROM `user` WHERE `topic_ischose` = 0 AND `permission`='student'";
+        $result_unchose = mysqli_query($link, $sql_unchose);
         $num_unchose = mysqli_num_rows($result_unchose);
+
         echo <<< archemiya
         <div class="alert alert-danger" role="alert">
             <strong>尚有学生未完成选题，不可进行答辩小组分配</strong>
@@ -284,6 +295,7 @@ archemiya;
 archemiya;
         for ($i = 0; $i < $group_num; $i++) {
             echo_reply_schedule_table($i, $link);
+            echo "<br/>";
         }
     }
     ?>

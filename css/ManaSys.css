@@ -139,6 +139,6 @@ td > a {
 }
 td > a:hover,
 td > a:focus {
-    color: #6e6e6e;
+    color:rgba(51, 122, 183, 1);
     text-decoration:none;
 }

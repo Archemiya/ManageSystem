@@ -24,7 +24,7 @@ Archemiya;
         $result_chose_final_flag = mysqli_query($link, $sql_chose_final_flag);
         $num_chose_final_flag = mysqli_num_rows($result_chose_final_flag);
 
-        if (!$num_chose_final_flag) {//如果没有确定那么不输出内容，否则输出该学生的学号姓名
+        if (!$num_chose_final_flag) {//如果没有确定学生那么不输出内容，否则输出该学生的学号姓名
             echo <<< Archemiya
             <td class="td-height">
             </td>

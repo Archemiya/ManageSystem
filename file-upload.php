@@ -1,8 +1,8 @@
 <?php
 //此php为系统所有上传文件脚本，使用get方式传参，对参数进行判断后选择上传各类别文件
-$uploaddir = './uploaded_file/';
+$uploaddir = './uploaded_files/';
 $uploadfilename = basename($_FILES['file']['name']);
-$uploadfile = $uploaddir . $uploadfilename;
+
 // echo $uploadfilename;
 if ((($_FILES["file"]["type"] == "application/msword")
     || ($_FILES["file"]["type"] == "application/pdf")
@@ -19,10 +19,17 @@ if ((($_FILES["file"]["type"] == "application/msword")
         if (!$num) {
           echo "<script>alert('您还未上传开题报告！请先上传开题报告');history.go(-1)</script>";
         } else {
+          $uploadfile = $uploaddir . 'first_report_files/' . $uploadfilename;
           move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);
+          //echo $uploadfilename;
           $topic_id = $_POST['topic_id'];
-          $sql = "UPDATE `first_report` SET `first_report_annex_name` = '$uploadfilename' 
-            WHERE `topic_id` = '$topic_id'";
+
+          $sql_id = "SELECT max(`record_id`) from `first_report_record` order by `record_id` desc";
+          $result_id = mysqli_query($link, $sql_id);
+          $row_id = mysqli_fetch_array($result_id);
+          $sql = "UPDATE `first_report_record` SET `first_report_annex_name` = '{$uploadfilename}',`annex_flag` = 1
+          WHERE  `first_report_record`.`topic_id`= '{$topic_id}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
+          
           mysqli_query($link, $sql);
           echo "<script>alert('上传附件成功！');history.go(-1)</script>";
         }

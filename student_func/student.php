@@ -83,7 +83,12 @@ include '../header.php';
                             include "stu_task_book_detail.php";
                             break;
                         case "first_report":
+                        if (isset($_GET["id"])) {
+                            include "stu_report_suggestion_detail.php";
+                        } else {
                             include "stu_first_report.php";
+                        }
+                            
                             break;
                         case "paper_review":
                         case "answer_information":

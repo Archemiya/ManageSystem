@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>毕业设计教学管理系统</title>
+    <link rel="stylesheet" href="../css/bootstrap-datetimepicker.css" media="screen">
     <link rel="stylesheet" type="text/css" href="../css/ManaSys.css">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap3.3.7.css">
     <!-- <link rel="stylesheet" href="../css/bootstrap4.3.1.css" > -->
@@ -20,6 +21,7 @@
     <script type="text/javascript" src="../js/bootstrap-table-zh-CN.min.js"></script>
     <script type="text/javascript" src="../js/dashboard4.3.1.js"></script>
     <link rel="icon" href="../images/besti.ico">
+    
 </head>
 
 <body>
@@ -82,4 +84,41 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../js/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    <script type="text/javascript">
+        $('.form_datetime').datetimepicker({
+            //language:  'fr',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1
+        });
+        $('.form_date').datetimepicker({
+            //language: 'fr',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+        $('.form_time').datetimepicker({
+            //language: 'fr',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 1,
+            minView: 0,
+            maxView: 1,
+            forceParse: 0
+        });
+    </script>
 </body>
