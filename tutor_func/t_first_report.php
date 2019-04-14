@@ -10,6 +10,7 @@ $sql_islook_task = "SELECT * FROM `task_book` WHERE `teacher_id` = '{$_SESSION['
 $result_islook_task = mysqli_query($link, $sql_islook_task);
 $num_islool_task = mysqli_num_rows($result_islook_task);
 
+//此函数用于输出导师所带的所有学生信息
 function table_first_report_echo($result, $link, $row_control)
 {
     $height = mysqli_num_rows($result);
@@ -139,6 +140,7 @@ Archemiya;
     echo "</tr>";
 }
 
+//此函数为答辩评阅导师所独有的输出函数，即 special 字段为 reviewer 的导师
 function final_first_report_echo($link)
 {
     //查询目前导师账号所在的答辩小组
@@ -271,6 +273,10 @@ archemiya;
         echo "</div>";
     } elseif($_SESSION['user_special']=='reviewer') {
         echo <<< archemiya
+        <br/>
+        <div class="alert alert-info" role="alert">
+        <strong>您是答辩小组评阅组长，请对答辩小组学生成员进行打分</strong>
+        </div>
     <div class="table-responsive">
         <table data-toggle="table" data-toolbar="#toolbar" data-pagination="true" data-page-list="[10, 25, 50, 100, 200, All]" >
             <thead>

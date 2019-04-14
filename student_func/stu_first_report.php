@@ -45,6 +45,7 @@ if ($today > $row_t_control['first_report_deadline']) {
 //此函数将“确认任务书”之后的情况全部涵盖，具体请看每个状态码的注释
 function report_echo($today, $row_task_book, $num_task_book, $row_first_report_record, $num_first_report_record, $row_control, $row_t_control, $num_final_first_report)
 {
+  // 此处使用task_book表中查询所得的各个信息较为方便，故使用了$row_task_book.
   echo <<< archemiya
 <div class="table-responsive">
     <table data-toggle="table" data-toolbar="#toolbar">
@@ -60,7 +61,7 @@ function report_echo($today, $row_task_book, $num_task_book, $row_first_report_r
       </thead>
       <tbody>
         <tr>
-          <td class="td-height"><a href="./tutor.php?func=topic&id={$row_task_book['id']}" >{$row_task_book['topic_name']}</a> </td>
+          <td class="td-height"><a href="./student.php?func=topic&id={$row_task_book['topic_id']}" >{$row_task_book['topic_name']}</a> </td>
           <td class="td-height td-title-center"> {$row_task_book['teacher_name']}</td>
 archemiya;
   /*
