@@ -129,10 +129,10 @@ Archemiya;
             {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
         </td>
         <td class="td-height td-title-center">     
-        <button class='btn btn-success' disabled >开题结束</button>
+        <a href="tutor.php?func=first_report&id={$row['id']}" class='btn btn-success' role='button'>开题结束</a>
         </td>
-        <td class="td-height td-title-center">
-        <button class='btn btn-success' disabled >开题结束</button>        
+        <td class="td-height td-title-center">    
+        <a href='../uploaded_files/first_report_files/{$row_first_report_record['first_report_annex_name']}' class='btn btn-success' role='button'>开题结束</a>
         </td>
 Archemiya;
         }

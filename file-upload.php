@@ -35,6 +35,23 @@ if ((($_FILES["file"]["type"] == "application/msword")
         }
         mysqli_close($link);
         break;
+      case "midterm_report":
+        $num = $_POST['num'];
+        if (!$num) {
+          echo "<script>alert('您还未上传中期报告！请先上传中期报告');history.go(-1)</script>";
+        } else {
+          $uploadfile = $uploaddir . 'midterm_report_files/' . $uploadfilename;
+          move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);
+          //echo $uploadfilename;
+          $topic_id = $_POST['topic_id'];
+          $sql = "UPDATE `midterm_report` SET `midterm_report_annex_name` = '{$uploadfilename}',`annex_flag` = 1
+          WHERE  `midterm_report`.`topic_id`= '{$topic_id}' ";
+          
+          mysqli_query($link, $sql);
+          echo "<script>alert('上传附件成功！');history.go(-1)</script>";
+        }
+        mysqli_close($link);
+        break;
     }
   }
 } else if ($_FILES["file"]["size"] >= 10000000) {

@@ -97,12 +97,12 @@ $row_first_report_record = mysqli_fetch_array($result_first_report_record, MYSQL
 
     </div>
     <?php
-    if ($row_first_report_record['final_flag'] == 2 || $row_first_report_record['final_flag'] == 3) {
+    if ($row_first_report_record['final_flag'] == 2 || $row_first_report_record['final_flag'] == 3 || $row_first_report_record['final_flag'] == 1) {
         echo "<br/>";
         echo "";
     } else {
         echo "<br/>";
-        echo "<a href=\"../tutor_func/t_add_report_suggestion.php?cid={$get}\" class=\"btn btn-primary\" role=\"button\" onclick=\"JavaScript:return confirm('确定同意该课题审核通过么？')\">同意通过</a>";
+        echo "<a href=\"../tutor_func/t_add_report_suggestion.php?cid={$get}\" class=\"btn btn-primary\" role=\"button\" onclick=\"JavaScript:return confirm('确定同意该开题报告审核通过么？')\">同意通过</a>";
         echo " ";
         echo "<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#suggestionTable\">撰写修改意见</button>";
     }
@@ -118,7 +118,7 @@ $row_first_report_record = mysqli_fetch_array($result_first_report_record, MYSQL
                 </div>
                 <div class="modal-body">
                     <?php
-                    echo "<form action=\"../tutor_func/t_add_report_suggestion.php?id={$get}\" method=\"POST\" class=\"form-horizontal\">";
+                    echo "<form action=\"../tutor_func/t_add_report_suggestion.php?func=first_report&id={$get}\" method=\"POST\" class=\"form-horizontal\">";
                     ?>
                     <div class="form-group">
                         <label for="inputTopicName" class="col-sm-2 control-label">主要修改意见</label>

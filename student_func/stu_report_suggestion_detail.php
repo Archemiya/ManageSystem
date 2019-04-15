@@ -9,13 +9,6 @@ if (isset($_GET["id"])) {
 $sql = "SELECT * FROM `first_report_record`WHERE `topic_id` = '{$get}' ORDER BY `record_id` DESC";
 $result = mysqli_query($link, $sql);
 ?>
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-</head>
 
 <body>
     <?php
@@ -146,5 +139,3 @@ archemiya;
         </div>
     </div>
 </body>
-
-</html>

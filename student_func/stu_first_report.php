@@ -226,7 +226,7 @@ archemiya;
       ) { //状态6
         //表示导师已提交意见，可查看意见并重新上传，此阶段会循环数次
         echo "<a href='student.php?func=first_report&id={$row_first_report_record['topic_id']}' 
-    class=\"btn btn-primary\" role='button' >查看修改意见</button>";
+    class=\"btn btn-primary\" role='button' >查看修改意见</a>";
       } elseif (
         $num_task_book && $row_task_book['islook_flag']
         && $num_first_report_record && ($row_first_report_record['final_flag'] == 3)
