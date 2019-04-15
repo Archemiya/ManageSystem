@@ -66,10 +66,8 @@ archemiya;
                     <?php
                     if ($num_first_report_grade != $num_student) {
                         echo <<< archemiya
-                <td>
-                <div class="alert alert-danger" role='alert'>
+                <td class="td-title-center alert alert-danger" role='alert'>
                     当前开题答辩评分尚未结束，不可提交中期报告，请耐心等待评分结束！
-                </div>
                 </td>
                 <td>
                 <td>
@@ -84,7 +82,7 @@ archemiya;
                             </td>
                             <td>
                             <button class='btn btn-primary' data-toggle="modal" 
-                data-target="#midtermReportTable">提交中期报告</button>
+                            data-target="#midtermReportTable">提交中期报告</button>
                             </td>
                             <td>
                             <button class="btn btn-primary" disabled >上传附件</button>
@@ -118,7 +116,7 @@ archemiya;
                         } else {
                             echo <<< archemiya
                             <td class="td-title-center alert alert-info" role='alert'>
-                导师已批示，请及时查看
+                            导师已批示，请及时查看
                             </td>
                             <td>
                             <a href='student.php?func=midterm_report&id={$row_midterm['topic_id']}' 

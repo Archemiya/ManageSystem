@@ -37,13 +37,13 @@ $result_topic = mysqli_query($link, $sql_topic);
 $num_topic = mysqli_num_rows($result_topic);
 
 //当服务器时间超过截止时，加载该页面自动将老师流程控制页面中的开题流程开启，即禁止所有学生上传开题报告
-if ($today > $row_t_control['first_report_deadline']) {
+if ($today > $row_t_control['first_report_deadline'] && $row_t_control['first_report_deadline'] != NULL) {
   $sql_close = "UPDATE `t_func_control` set `first_report` = 1";
   mysqli_query($link, $sql_close);
 }
 
 //此函数将“确认任务书”之后的情况全部涵盖，具体请看每个状态码的注释
-function report_echo($today, $row_task_book, $num_task_book, $row_first_report_record, $num_first_report_record, $row_control, $row_t_control, $num_final_first_report)
+function report_echo($link, $row_task_book, $num_task_book, $row_first_report_record, $num_first_report_record, $row_control, $row_t_control, $num_final_first_report)
 {
   // 此处使用task_book表中查询所得的各个信息较为方便，故使用了$row_task_book.
   echo <<< archemiya
@@ -140,37 +140,27 @@ archemiya;
       ) { //状态7
         //表示导师已确认最终稿，但此时不可上传最终稿
         echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
-        echo "当前还未分配答辩组，不可提交最终稿";
+        echo "导师已确定最终稿，当前还未分配答辩组，不可提交最终稿";
       }
-    } elseif ($second) {
-      if (
-        $num_task_book && $row_task_book['islook_flag']
-        && $num_first_report_record && ($row_first_report_record['final_flag'] == 3)
+    } elseif ($second) {//第二阶段不限制第一阶段的进行，因此第二阶段应包含第一阶段的师生交互过程
+      if ( $num_first_report_record 
+        && (($row_first_report_record['final_flag'] == 3)||($row_first_report_record['final_flag'] == 4))
       ) { //状态1
-        //表示导师已确认最终版，可上传至答辩组，但此时未提交
-        echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
-        echo "导师已确认最终稿，请在";
-        echo $row_t_control['first_report_deadline'];
-        echo "前上传至答辩组";
-      } elseif (
-        $num_task_book && $row_task_book['islook_flag']
-        && $num_first_report_record && ($row_first_report_record['final_flag'] == 4)
-        && ($row_first_report_record['annex_flag'] == 0)
-      ) { //状态2
-        //表示已上传最终稿至答辩组，等待审核
-        echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
-        echo "已上传至摘要，请在";
-        echo $row_t_control['first_report_deadline'];
-        echo "前上传附件";
-      } elseif (
-        $num_task_book && $row_task_book['islook_flag']
-        && $num_first_report_record && ($row_first_report_record['final_flag'] == 4)
-        && ($row_first_report_record['annex_flag'] == 1)
-      ) { //状态3
-        //表示已上传最终稿至答辩组，等待审核
+        //表示导师已确认最终版，系统将自动上传至答辩组，如果存在final_flag为3的记录将自动升级成为4
+        $sql_update = "UPDATE `first_report_record` set `final_flag` = 4 
+        where `first_report_record`.`final_flag` = 3 and `student_id` = '{$_SESSION['user_id']}' ";
+        mysqli_query($link,$sql_update);
         echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
         echo "已上传至答辩组，请等待答辩组审核";
-      }
+      } elseif (
+        !$num_first_report_record || ($row_first_report_record['final_flag'] != 3)
+      ) { //状态2
+        //表示尚未完成最终稿，应在截止日期之前完成
+        echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
+        echo "尚未完成最终稿，请在";
+        echo $row_t_control['first_report_deadline'];
+        echo "前完成";
+      } 
     }
   } elseif ($third) {
     if (
@@ -236,26 +226,17 @@ archemiya;
       }
     } elseif ($second) {
       if (
-        $num_task_book && $row_task_book['islook_flag']
-        && $num_first_report_record && ($row_first_report_record['final_flag'] == 3)
+         $num_first_report_record 
+        && (($row_first_report_record['final_flag'] == 3)||($row_first_report_record['final_flag'] == 4))
       ) { //状态1
-        //表示导师已确认最终版，可上传至答辩组，但此时未提交
-        echo "<button class=\"btn btn-danger\" data-toggle=\"modal\" 
-            data-target=\"#finalfirstReportTable\" >上传最终报告</button>";
+        //表示导师已确认最终版，系统将自动上传至答辩组，如果存在final_flag为3的记录将自动升级成为4
+        echo "<button class=\"btn btn-warning\"  disabled>不可操作</button>";
       } elseif (
-        $num_task_book && $row_task_book['islook_flag']
-        && $num_first_report_record && ($row_first_report_record['final_flag'] == 4)
-        && ($row_first_report_record['annex_flag'] == 0)
+        !$num_first_report_record || ($row_first_report_record['final_flag'] != 3)
       ) { //状态2
-        //表示已上传最终稿摘要至答辩组，未上交附件
-        echo "<button class=\"btn btn-warning\" disabled >不可操作</button>";
-      } elseif (
-        $num_task_book && $row_task_book['islook_flag']
-        && $num_first_report_record && ($row_first_report_record['final_flag'] == 4)
-        && ($row_first_report_record['annex_flag'] == 1)
-      ) { //状态3
-        //表示已上传最终稿至答辩组，等待审核
-        echo "<button class=\"btn btn-warning\" disabled >不可操作</button>";
+        //表示尚未完成最终稿，应在截止日期之前完成
+        echo "<button class=\"btn btn-warning\" data-toggle=\"modal\" 
+            data-target=\"#firstReportTable\" >上传报告</button>";
       }
     }
   } elseif ($third) {
@@ -282,87 +263,77 @@ archemiya;
           <td>
 archemiya;
 
-if (!$third) {
-  if (!$second) {
-    if ($num_task_book == 0) { //状态1
-      echo "<button class=\"btn btn-primary\" disabled >不可操作</button>";
-    } elseif ($row_task_book['islook_flag'] == 0) { //状态2
-      echo "<button class=\"btn btn-primary\" disabled >不可操作</button>";
-    } elseif (
-      $num_task_book && $row_task_book['islook_flag']
-      && (!$num_first_report_record && ($row_first_report_record['annex_flag'] == 0))
-    ) { //状态3
-      echo "<button class=\"btn btn-default\" data-toggle=\"modal\" 
+  if (!$third) {
+    if (!$second) {
+      if ($num_task_book == 0) { //状态1
+        echo "<button class=\"btn btn-primary\" disabled >不可操作</button>";
+      } elseif ($row_task_book['islook_flag'] == 0) { //状态2
+        echo "<button class=\"btn btn-primary\" disabled >不可操作</button>";
+      } elseif (
+        $num_task_book && $row_task_book['islook_flag']
+        && (!$num_first_report_record && ($row_first_report_record['annex_flag'] == 0))
+      ) { //状态3
+        echo "<button class=\"btn btn-default\" data-toggle=\"modal\" 
             data-target=\"#firstReportAnnexTable\" disabled>上传附件</button>";
-    } elseif (
-      $num_task_book && $row_task_book['islook_flag']
-      && ($num_first_report_record && ($row_first_report_record['annex_flag'] == 0))
-    ) { //状态4
-      echo "<button class=\"btn btn-default\" data-toggle=\"modal\" 
+      } elseif (
+        $num_task_book && $row_task_book['islook_flag']
+        && ($num_first_report_record && ($row_first_report_record['annex_flag'] == 0))
+      ) { //状态4
+        echo "<button class=\"btn btn-default\" data-toggle=\"modal\" 
             data-target=\"#firstReportAnnexTable\" >上传附件</button>";
-    } elseif (
-      $num_task_book && $row_task_book['islook_flag']
-      && $num_first_report_record && ($row_first_report_record['final_flag'] == 0)
-      && ($row_first_report_record['annex_flag'] == 1)
-    ) { //状态5
-      //表示处于导师审核阶段
-      echo "<button class=\"btn btn-warning\" disabled>不可操作</button>";
-    } elseif (
-      $num_task_book && $row_task_book['islook_flag']
-      && $num_first_report_record && ($row_first_report_record['final_flag'] == 2)
-    ) { //状态6
-      //表示导师已提交意见，可查看意见并重新上传，此阶段会循环数次
-      echo "<button class=\"btn btn-primary\" data-toggle=\"modal\" 
+      } elseif (
+        $num_task_book && $row_task_book['islook_flag']
+        && $num_first_report_record && ($row_first_report_record['final_flag'] == 0)
+        && ($row_first_report_record['annex_flag'] == 1)
+      ) { //状态5
+        //表示处于导师审核阶段
+        echo "<button class=\"btn btn-warning\" disabled>不可操作</button>";
+      } elseif (
+        $num_task_book && $row_task_book['islook_flag']
+        && $num_first_report_record && ($row_first_report_record['final_flag'] == 2)
+      ) { //状态6
+        //表示导师已提交意见，可查看意见并重新上传，此阶段会循环数次
+        echo "<button class=\"btn btn-primary\" data-toggle=\"modal\" 
             data-target=\"#firstReportAnnexTable\" >重新上传附件</button>";
-    } elseif (
-      $num_task_book && $row_task_book['islook_flag']
-      && $num_first_report_record && ($row_first_report_record['final_flag'] == 3)
-    ) { //状态7
-      //表示导师已确认最终稿，但此时不可上传最终稿
-      echo "<button class=\"btn btn-warning\" disabled>不可操作</button>";
+      } elseif (
+        $num_task_book && $row_task_book['islook_flag']
+        && $num_first_report_record && ($row_first_report_record['final_flag'] == 3)
+      ) { //状态7
+        //表示导师已确认最终稿，但此时不可上传最终稿
+        echo "<button class=\"btn btn-warning\" disabled>不可操作</button>";
+      }
+    } elseif ($second) {
+      if (
+        $num_first_report_record 
+        && (($row_first_report_record['final_flag'] == 3)||($row_first_report_record['final_flag'] == 4))
+      ) { //状态1
+        //表示导师已确认最终版，系统将自动上传至答辩组，如果存在final_flag为3的记录将自动升级成为4
+        echo "<button class=\"btn btn-warning\" disabled>不可操作</button>";
+      } elseif (
+        !$num_first_report_record || ($row_first_report_record['final_flag'] != 3)
+      ) { //状态2
+        //表示尚未完成最终稿，应在截止日期之前完成
+        echo "<button class=\"btn btn-warning\" data-toggle=\"modal\" 
+          data-target=\"#firstReportAnnexTable\" >上传附件</button>";
+      } 
     }
-  } elseif ($second) {
+  } elseif ($third) {
     if (
       $num_task_book && $row_task_book['islook_flag']
-      && $num_first_report_record && ($row_first_report_record['final_flag'] == 3)
-    ) { //状态1
-      //表示导师已确认最终版，可上传至答辩组，但此时未提交
-      echo "<button class=\"btn btn-danger\" data-toggle=\"modal\" 
-          data-target=\"#firstReportAnnexTable\" >上传最终附件</button>";
-    } elseif (
-      $num_task_book && $row_task_book['islook_flag']
-      && $num_first_report_record && ($row_first_report_record['final_flag'] == 4)
-      && ($row_first_report_record['annex_flag'] == 0)
-    ) { //状态2
-      //表示已上传最终稿摘要至答辩组，未上交附件
-      echo "<button class=\"btn btn-danger\" data-toggle=\"modal\" 
-          data-target=\"#firstReportAnnexTable\" >上传最终附件</button>";
-    } elseif (
-      $num_task_book && $row_task_book['islook_flag']
       && $num_first_report_record && ($row_first_report_record['final_flag'] == 4)
       && ($row_first_report_record['annex_flag'] == 1)
-    ) { //状态3
-      //表示已上传最终稿至答辩组，等待审核
+    ) { //状态1
       echo "<button class=\"btn btn-warning\" disabled >不可操作</button>";
+    } elseif (
+      $num_task_book && $row_task_book['islook_flag']
+      && $num_first_report_record
+      && ($row_first_report_record['final_flag'] == 1)
+    ) { //状态2
+      echo "<button class=\"btn btn-success\" disabled >审核结束</button>";
+    } else {
+      echo "<button class=\"btn btn-danger\" disabled >不可操作</button>";
     }
   }
-} elseif ($third) {
-  if (
-    $num_task_book && $row_task_book['islook_flag']
-    && $num_first_report_record && ($row_first_report_record['final_flag'] == 4)
-    && ($row_first_report_record['annex_flag'] == 1)
-  ) { //状态1
-    echo "<button class=\"btn btn-warning\" disabled >不可操作</button>";
-  } elseif (
-    $num_task_book && $row_task_book['islook_flag']
-    && $num_first_report_record
-    && ($row_first_report_record['final_flag'] == 1)
-  ) { //状态2
-    echo "<button class=\"btn btn-success\" disabled >审核结束</button>";
-  } else {
-    echo "<button class=\"btn btn-danger\" disabled >不可操作</button>";
-  }
-}
   echo <<< archemiya
           </td>
         </tr>
@@ -397,11 +368,11 @@ archemiya;
     请上传开题报告摘要，再上传附件！
     </div>
 archemiya;
-    report_echo($today, $row_task_book, $num_task_book, $row_first_report_record, $num_first_report_record, $row_control, $row_t_control, $num_final_first_report);
+    report_echo($link, $row_task_book, $num_task_book, $row_first_report_record, $num_first_report_record, $row_control, $row_t_control, $num_final_first_report);
   }
   ?>
 
-  <!-- 此处的两个modeltable为该学生第一次上传开题报告和附件所用 -->
+  <!-- 此处的两个modeltable为该学生上传开题报告和附件所用 -->
   <div class="modal fade " id="firstReportTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="chose-student-dialog">
       <div class="modal-content">
@@ -415,43 +386,43 @@ archemiya;
             <div class="form-group">
               <label for="inputTopicIntro" class="col-sm-3 control-label">课题来源</label>
               <div class="col-sm-8">
-                <textarea name="topic_source" class="form-control" rows="3"></textarea>
+                <textarea name="topic_source" class="form-control" rows="3" required></textarea>
               </div>
             </div>
             <div class="form-group">
               <label for="inputTopicIntro" class="col-sm-3 control-label">课题研究的目的、意义</label>
               <div class="col-sm-8">
-                <textarea name="topic_purpose" class="form-control" rows="3"></textarea>
+                <textarea name="topic_purpose" class="form-control" rows="3" required></textarea>
               </div>
             </div>
             <div class="form-group">
               <label for="inputTopicIntro" class="col-sm-3 control-label">课题的国内外研究现状和发展动态</label>
               <div class="col-sm-8">
-                <textarea name="topic_research_status" class="form-control" rows="3"></textarea>
+                <textarea name="topic_research_status" class="form-control" rows="3" required></textarea>
               </div>
             </div>
             <div class="form-group">
               <label for="inputTopicIntro" class="col-sm-3 control-label">课题的研究内容、拟采取的技术方案或研究方法</label>
               <div class="col-sm-8">
-                <textarea name="topic_main" class="form-control" rows="3"></textarea>
+                <textarea name="topic_main" class="form-control" rows="3" required></textarea>
               </div>
             </div>
             <div class="form-group">
               <label for="inputTopicReq" class="col-sm-3 control-label">课题研究的重点、难点及创新点</label>
               <div class="col-sm-8">
-                <textarea name="topic_difficulty" class="form-control" rows="3"></textarea>
+                <textarea name="topic_difficulty" class="form-control" rows="3" required></textarea>
               </div>
             </div>
             <div class="form-group">
               <label for="inputTopicRef" class="col-sm-3 control-label">课题研究的进度安排</label>
               <div class="col-sm-8">
-                <textarea name="topic_schedule" class="form-control" rows="3"></textarea>
+                <textarea name="topic_schedule" class="form-control" rows="3" required></textarea>
               </div>
             </div>
             <div class="form-group">
               <label for="inputTopicRef" class="col-sm-3 control-label">主要参考文献</label>
               <div class="col-sm-8">
-                <textarea name="topic_ref" class="form-control" rows="3"></textarea>
+                <textarea name="topic_ref" class="form-control" rows="3" required></textarea>
               </div>
             </div>
             <?php
@@ -466,7 +437,7 @@ archemiya;
             ?>
             <div class="form-group">
               <div class="col-sm-offset-3 col-sm-10">
-                <button type="submit" class="btn btn-primary" onclick="JavaScript:return confirm('确定填写无误并上传开题报告么？');">上传</button>
+                <button type="submit" class="btn btn-primary">上传</button>
               </div>
             </div>
           </form>
@@ -521,124 +492,7 @@ archemiya;
   </div>
 
 
-  <!-- 此处的两个modeltable为该学生上传最终开题报告和附件所用 -->
-  <div class="modal fade " id="finalfirstReportTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="chose-student-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title login-title">上传最终开题报告（请谨慎操作）</h4>
-        </div>
-        <div class="modal-body">
-          <form action="stu_add_first_report.php?index=final" method="POST" class="form-horizontal">
-            <div class="form-group">
-              <label for="inputTopicIntro" class="col-sm-3 control-label">课题来源</label>
-              <div class="col-sm-8">
-                <textarea name="topic_source" class="form-control" rows="3"></textarea>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputTopicIntro" class="col-sm-3 control-label">课题研究的目的、意义</label>
-              <div class="col-sm-8">
-                <textarea name="topic_purpose" class="form-control" rows="3"></textarea>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputTopicIntro" class="col-sm-3 control-label">课题的国内外研究现状和发展动态</label>
-              <div class="col-sm-8">
-                <textarea name="topic_research_status" class="form-control" rows="3"></textarea>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputTopicIntro" class="col-sm-3 control-label">课题的研究内容、拟采取的技术方案或研究方法</label>
-              <div class="col-sm-8">
-                <textarea name="topic_main" class="form-control" rows="3"></textarea>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputTopicReq" class="col-sm-3 control-label">课题研究的重点、难点及创新点</label>
-              <div class="col-sm-8">
-                <textarea name="topic_difficulty" class="form-control" rows="3"></textarea>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputTopicRef" class="col-sm-3 control-label">课题研究的进度安排</label>
-              <div class="col-sm-8">
-                <textarea name="topic_schedule" class="form-control" rows="3"></textarea>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputTopicRef" class="col-sm-3 control-label">主要参考文献</label>
-              <div class="col-sm-8">
-                <textarea name="topic_ref" class="form-control" rows="3"></textarea>
-              </div>
-            </div>
-            <?php
-            echo <<< archemiya
-          <input type="hidden" name="student_id" value="{$_SESSION['user_id']}">
-          <input type="hidden" name="student_name" value="{$_SESSION['user_name']}">
-          <input type="hidden" name="topic_id" value="{$row_task_book['topic_id']}">
-          <input type="hidden" name="topic_name" value="{$row_task_book['topic_name']}">
-          <input type="hidden" name="teacher_id" value="{$row_task_book['teacher_id']}">
-          <input type="hidden" name="teacher_name" value="{$row_task_book['teacher_name']}">
-archemiya;
-            ?>
-            <div class="form-group">
-              <div class="col-sm-offset-3 col-sm-10">
-                <button type="submit" class="btn btn-primary" onclick="JavaScript:return confirm('确定填写无误并上传开题报告么？');">上传</button>
-              </div>
-            </div>
-          </form>
 
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade " id="firstReportAnnexTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="chose-student-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title login-title">上传最终附件（请先上传摘要再上传附件，请谨慎操作）</h4>
-        </div>
-        <div class="modal-body">
-          <form action="../file-upload.php?func=first_report" method="POST" class="form-horizontal" enctype="multipart/form-data">
-            <div class="form-group">
-              <label for="inputTopicRef" class="col-sm-3 control-label">上传开题报告附件</label>
-              <div class="col-sm-8">
-                <input name="file" type="file" class="input-file" />
-                <p class="help-block">上传文件格式仅限doc/docx/pdf，文件大小限制为10MB</p>
-              </div>
-            </div>
-            <?php
-            echo <<< archemiya
-          <input type="hidden" name="num" value="{$num_first_report_record}">
-          <input type="hidden" name="student_id" value="{$_SESSION['user_id']}">
-          <input type="hidden" name="student_name" value="{$_SESSION['user_name']}">
-          <input type="hidden" name="topic_id" value="{$row_task_book['topic_id']}">
-          <input type="hidden" name="topic_name" value="{$row_task_book['topic_name']}">
-archemiya;
-            ?>
-            <div class="form-group">
-              <div class="col-sm-offset-3 col-sm-10">
-                <button type="submit" class="btn btn-primary">确定上传</button>
-              </div>
-            </div>
-          </form>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
 
 

@@ -358,7 +358,7 @@ archemiya;
                                                         <tr>
                                                             <td class="td-title-center">答辩组长</td>
                                                             <td>
-                                                                <input id="id_t_1" name="t_tleader_id" class="form-control" autocomplete="off" onkeyup="showName(1,this.value)">
+                                                                <input id="id_t_1" name="t_tleader_id" class="form-control " autocomplete="off" onkeyup="showName(1,this.value)">
                                                             </td>
                                                             <td>
                                                                 <input id="hezi1" name="t_tleader_name" class="form-control" autocomplete="off" readonly>

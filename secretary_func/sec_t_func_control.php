@@ -81,7 +81,7 @@ $today = date('Y-m-d');
                     //当前时间
                     //$today & $row_control['first_report_deadline']
 
-                    if (($num_final_first_report == $num_user) || ($today > $row_control['first_report_deadline']) && ($row_control['first_report'] == 0)) {
+                    if (($num_final_first_report == $num_user) || ($today > $row_control['first_report_deadline']) && ($row_control['first_report'] == 0) && $row_control['first_report_deadline'] != NULL) {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
                         echo "当前学生已全部全部上交开题报告最终稿或超过提交截止日期，可以开启学生开题流程";
                     } else if (($row_control['first_report'] == 1)) {
@@ -97,7 +97,7 @@ $today = date('Y-m-d');
 
                     <td class="col-xs-2 th-title-center">
                         <?php
-                        if (($num_final_first_report == $num_user) || ($today > $row_control['first_report_deadline']) && ($row_control['first_report'] == 0)) {
+                        if (($num_final_first_report == $num_user) || ($today > $row_control['first_report_deadline']) && ($row_control['first_report'] == 0) && $row_control['first_report_deadline']) {
                             echo "<a href='sec_chang_t_control_value.php?func=first_report' 
                                 class='btn btn-primary' role='button'
                                 onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启选题</a>";
@@ -199,7 +199,7 @@ archemiya;
                                 <thead>
                                     <tr>
                                         <th >
-                                            <div class="th-inner th-title-center" >未完成选题学生名单</div>
+                                            <div class="th-inner th-title-center" >未提交学生名单</div>
                                         </th>
                                         
                                     </tr>
@@ -207,21 +207,33 @@ archemiya;
                                 <tbody >
 archemiya;
                     for ($i = 0; $i < ($num_user - $num_do); $i++) {
-                        $row_user = mysqli_fetch_array($result_user, MYSQLI_BOTH);
-                        for ($j = 0; $j < $num_do; $j++) {
-                            $row_do_check = mysqli_fetch_array($result_do, MYSQLI_BOTH);
-                            if ($row_user['id'] == $row_do_check['student_id']) {
-                                $i++;
-                                break;
-                            } else {
-                                echo "<tr>";
-
-                                echo "<td class='alert alert-danger td-title-center td-height' role='alert'>";
-                                echo $row_user['id'] . $row_user['name'];
-                                echo "</td>";
-                                echo "</tr>";
-                            }
-                        }
+                        $row_user_array = mysqli_fetch_array($result_user, MYSQLI_BOTH);
+                        $students = array($i => $row_user_array['id']);
+                    }
+                 for ($i = 0; $i < ($num_user - $num_do); $i++) {
+                    //     $row_user = mysqli_fetch_array($result_user, MYSQLI_BOTH);
+                    //     if (!$num_do) {
+                    //         for ($j = 0; $j < $num_do; $j++) {
+                    //             $row_do_check = mysqli_fetch_array($result_do, MYSQLI_BOTH);
+                    //             if (isset($row_do_check['student_id']) && ($row_user['id'] == $row_do_check['student_id'])) {
+                    //                 $i++;
+                    //                 break;
+                    //             } else {
+                    //                 echo "<tr>";
+                    //                 echo "<td class='alert alert-danger td-title-center td-height' role='alert'>";
+                    //                 echo $row_user['id'] . $row_user['name'];
+                    //                 echo "</td>";
+                    //                 echo "</tr>";
+                    //             }
+                    //         }
+                    //     } else {
+                            echo "<tr>";
+                            echo "<td class='alert alert-danger td-title-center td-height' role='alert'>";
+                            // echo $row_user['id'] . $row_user['name'];
+                            print_r($students[$i]);
+                            echo "</td>";
+                            echo "</tr>";
+                    //     }
                     }
 
 

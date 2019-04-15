@@ -12,7 +12,7 @@ if (isset($_GET["func"])) {
                 mysqli_query($link, $sql_first_report_record);
                 mysqli_close($link);
                 echo "<script>alert('上传意见成功！');history.go(-1)</script>";
-            } else {
+            } else if(isset($_GET['cid'])){
                 $sql_first_report_record = "UPDATE  `first_report_record` set `final_flag` = 3 WHERE `first_report_record`.`topic_id` = '{$_GET['cid']}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
                 mysqli_query($link, $sql_first_report_record);
                 mysqli_close($link);

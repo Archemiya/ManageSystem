@@ -1,5 +1,6 @@
 <?php
 include "../link.php";
+include "../secretary_func/sec_query_t_control.php";
 session_start();
 $user = $_SESSION['user_name'];
 $id = $_SESSION['user_id'];

@@ -102,7 +102,7 @@ $row_first_report_record = mysqli_fetch_array($result_first_report_record, MYSQL
         echo "";
     } else {
         echo "<br/>";
-        echo "<a href=\"../tutor_func/t_add_report_suggestion.php?cid={$get}\" class=\"btn btn-primary\" role=\"button\" onclick=\"JavaScript:return confirm('确定同意该开题报告审核通过么？')\">同意通过</a>";
+        echo "<a href=\"../tutor_func/t_add_report_suggestion.php?func=first_report&cid={$get}\" class=\"btn btn-primary\" role=\"button\" onclick=\"JavaScript:return confirm('确定同意该开题报告审核通过么？')\">同意通过</a>";
         echo " ";
         echo "<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#suggestionTable\">撰写修改意见</button>";
     }
