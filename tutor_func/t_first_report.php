@@ -38,6 +38,7 @@ Archemiya;
         $num_first_report_record = mysqli_num_rows($result_first_report_record);
 
         if (!$num_first_report_record && $row_first_report_record['annex_flag'] == 0) {
+            if (!$row_control['first_report']) {
             echo <<< Archemiya
         <td class="td-height td-title-center alert alert-danger" role="alert">
             {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
@@ -49,6 +50,19 @@ Archemiya;
         <button class='btn btn-danger' disabled >学生未提交</button>
         </td>
 Archemiya;
+            }else {
+                echo <<< Archemiya
+        <td class="td-height td-title-center alert alert-danger" role="alert">
+            {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
+        </td>
+        <td class="td-height td-title-center">     
+        <button class='btn btn-danger' disabled >开题结束</button>
+        </td>
+        <td class="td-height td-title-center">
+        <button class='btn btn-danger' disabled >开题结束</button>
+        </td>
+Archemiya;
+            }
         } elseif ($num_first_report_record && $row_first_report_record['annex_flag'] == 0) {
             echo <<< Archemiya
         <td class="td-height td-title-center alert alert-danger" role="alert">

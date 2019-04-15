@@ -33,10 +33,6 @@ include '../header.php';
                                                                     echo "class=active";
                                                                 } ?>><i class="glyphicon glyphicon-file"> 中期报告</i><span class="sr-only">(current)</span></a></li>
 
-
-                <li><a href="./student.php?func=guidance_record"><i class="glyphicon glyphicon-pencil"> 指导记录</i><span class="sr-only">(current)</span></a></li>
-
-
                 <li><a href="./student.php?func=first_draft"><i class="glyphicon glyphicon-file"> 论文初稿</i><span class="sr-only">(current)</span></a></li>
 
 
