@@ -72,11 +72,14 @@ $row_midterm_report = mysqli_fetch_array($result_midterm_report, MYSQLI_BOTH);
     if ($row_midterm_report['final_flag'] == 1 ) {
         echo "<br/>";
         echo "";
-    } else {
+    } else if($row_midterm_report['final_flag'] == 0){
         echo "<br/>";
         echo "<a href='../tutor_func/t_add_report_suggestion.php?func=midterm_report&cid={$get}' type=\"button\" class=\"btn btn-primary\" role='button'>同意通过</a>";
         echo " ";
         echo "<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#suggestionTable\">撰写指导意见</button>";
+    }else {
+        echo "<br/>";
+        echo "<a href='../tutor_func/t_add_report_suggestion.php?func=midterm_report&cid={$get}' type=\"button\" class=\"btn btn-primary\" role='button'>同意通过</a>";
     }
     ?>
     <button type="button" class="btn btn-primary" onclick="JavaScript:history.go(-1)">返回</button>
