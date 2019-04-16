@@ -9,9 +9,9 @@ if (isset($_GET["fid"])) {
     echo "<script>aler('请求失败！');history.go(-1)</script>";
 }
 //当前学生查询最新开题报告
-$sql_id = "SELECT max(`record_id`) from `first_report_record` order by `record_id` desc";
+$sql_id = "SELECT max(`record_id`) from `first_report_record` WHERE `first_report_record`.`topic_id` = '{$get}' order by `record_id` desc ";
 $result_id = mysqli_query($link, $sql_id);
-$row_id = mysqli_fetch_array($result_id);
+$row_id = mysqli_fetch_array($result_id, MYSQLI_BOTH);
 $sql_first_report_record = "SELECT * FROM `first_report_record` WHERE `first_report_record`.`topic_id` = '{$get}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
 $result_first_report_record = mysqli_query($link, $sql_first_report_record);
 $row_first_report_record = mysqli_fetch_array($result_first_report_record, MYSQLI_BOTH);
@@ -146,14 +146,14 @@ archemiya;
                     </div>
                     <div class="form-group">
                         <label for="inputTopicName" class="col-sm-2 control-label">说明（点评）</label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-8">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
                             <textarea name="grade_description" class="form-control" rows="20"></textarea>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-primary" onclick="javascript:confirm('确认无误并提交么？提交成绩后将无法修改！')">提交</button>
+                            <button type="submit" class="btn btn-primary" onclick="javascript:return confirm('确认无误并提交么？提交成绩后将无法修改！')">提交</button>
                         </div>
                     </div>
                     </form>

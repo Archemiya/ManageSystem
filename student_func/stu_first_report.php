@@ -100,24 +100,24 @@ archemiya;
   $second = $row_control['first_report'];
   $third = $row_t_control['first_report'];
   if (!$third) {
-    if (!$second) {
+    if (!$second) { //第一阶段，此时需要判断选题以及任务书的确认情况
       if ($num_task_book == 0) { //状态1
-        echo "<td class=\"td-height td-title-center alert alert-danger\" role='alert'>";
+        echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
         echo "导师还未下达任务书！不可填写开题报告";
       } elseif ($row_task_book['islook_flag'] == 0) { //状态2
-        echo "<td class=\"td-height td-title-center alert alert-danger\" role='alert'>";
+        echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
         echo "您还未确认任务书！不可填写开题报告";
       } elseif (
         $num_task_book && $row_task_book['islook_flag']
         && (!$num_first_report_record && ($row_first_report_record['annex_flag'] == 0))
-      ) { //状态3
-        echo "<td class=\"td-height td-title-center alert alert-danger\" role='alert'>";
+      ) { //状态3 未上传报告及附件状态
+        echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
         echo "您还未上传开题报告及附件，请及时上传";
       } elseif (
         $num_task_book && $row_task_book['islook_flag']
         && ($num_first_report_record && ($row_first_report_record['annex_flag'] == 0))
-      ) { //状态4
-        echo "<td class=\"td-height td-title-center alert alert-danger\" role='alert'>";
+      ) { //状态4 未上传附件
+        echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
         echo "您还未上传附件，请及时上传";
       } elseif (
         $num_task_book && $row_task_book['islook_flag']
@@ -142,25 +142,54 @@ archemiya;
         echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
         echo "导师已确定最终稿，当前还未分配答辩组，不可提交最终稿";
       }
-    } elseif ($second) {//第二阶段不限制第一阶段的进行，因此第二阶段应包含第一阶段的师生交互过程
-      if ( $num_first_report_record 
-        && (($row_first_report_record['final_flag'] == 3)||($row_first_report_record['final_flag'] == 4))
+    } elseif ($second) { //第二阶段不限制第一阶段的进行，此时不需要判断选题以及任务书的确认情况，因此第二阶段应包含第一阶段的师生交互过程
+      if (
+        $num_first_report_record
+        && (($row_first_report_record['final_flag'] == 3) || ($row_first_report_record['final_flag'] == 4))
       ) { //状态1
         //表示导师已确认最终版，系统将自动上传至答辩组，如果存在final_flag为3的记录将自动升级成为4
         $sql_update = "UPDATE `first_report_record` set `final_flag` = 4 
         where `first_report_record`.`final_flag` = 3 ";
-        mysqli_query($link,$sql_update);
+        mysqli_query($link, $sql_update);
         echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
         echo "已上传至答辩组，请等待答辩组审核";
       } elseif (
-        !$num_first_report_record || ($row_first_report_record['final_flag'] != 3)
+        !$num_first_report_record && ($row_first_report_record['annex_flag'] == 0)
       ) { //状态2
-        //表示尚未完成最终稿，应在截止日期之前完成
-        echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
+        //表示尚未完成最终稿 （报告与附件都从未上交），应在截止日期之前完成
+        echo "<td class=\"td-height td-title-center alert alert-danger\" role='alert'>";
         echo "尚未完成最终稿，请在";
         echo $row_t_control['first_report_deadline'];
         echo "前完成";
-      } 
+      } elseif (
+        $num_first_report_record && ($row_first_report_record['annex_flag'] == 0)
+      ) { //状态3
+        //上交报告未上交附件
+        echo "<td class=\"td-height td-title-center alert alert-danger\" role='alert'>";
+        echo "您还未上传附件，请及时上传";
+        echo "（截止时间";
+        echo $row_t_control['first_report_deadline'];
+        echo "）";
+      } elseif (
+        $num_first_report_record && ($row_first_report_record['final_flag'] == 0)
+        && ($row_first_report_record['annex_flag'] == 1)
+      ) { //状态4
+        //导师审核
+        echo "<td class=\"td-height td-title-center alert alert-danger\" role='alert'>";
+        echo "您已上传开题报告，请等待指导老师审核";
+        echo "（截止时间";
+        echo $row_t_control['first_report_deadline'];
+        echo "）";
+      } elseif (
+        $num_first_report_record && ($row_first_report_record['final_flag'] == 2)
+      ) { //状态5
+        //表示导师已提交意见，可查看意见并重新上传，此阶段会循环数次
+        echo "<td class=\"td-height td-title-center alert alert-danger\" role='alert'>";
+        echo "导师已审核，请查看修改建议";
+        echo "（截止时间";
+        echo $row_t_control['first_report_deadline'];
+        echo "）";
+      }
     }
   } elseif ($third) {
     if (
@@ -226,34 +255,49 @@ archemiya;
       }
     } elseif ($second) {
       if (
-         $num_first_report_record 
-        && (($row_first_report_record['final_flag'] == 3)||($row_first_report_record['final_flag'] == 4))
+        $num_first_report_record
+        && (($row_first_report_record['final_flag'] == 3) || ($row_first_report_record['final_flag'] == 4))
       ) { //状态1
         //表示导师已确认最终版，系统将自动上传至答辩组，如果存在final_flag为3的记录将自动升级成为4
         echo "<button class=\"btn btn-warning\"  disabled>不可操作</button>";
       } elseif (
-        !$num_first_report_record || ($row_first_report_record['final_flag'] != 3)
+        !$num_first_report_record && ($row_first_report_record['annex_flag'] == 0)
       ) { //状态2
-        //表示尚未完成最终稿，应在截止日期之前完成
-        echo "<button class=\"btn btn-warning\" data-toggle=\"modal\" 
-            data-target=\"#firstReportTable\" >上传报告</button>";
+        //表示尚未完成最终稿 （报告与附件都从未上交），应在截止日期之前完成
+        echo "<button class=\"btn btn-default\" data-toggle=\"modal\" 
+              data-target=\"#firstReportTable\" >上传开题报告</button>";
+      } elseif (
+        $num_first_report_record && ($row_first_report_record['annex_flag'] == 0)
+      ) { //状态3
+        //上交报告未上交附件
+        echo "<button class=\"btn btn-warning\" disabled>不可操作</button>";
+      } elseif (
+        $num_first_report_record && ($row_first_report_record['final_flag'] == 0)
+        && ($row_first_report_record['annex_flag'] == 1)
+      ) { //状态4
+        //导师审核
+        echo "<button class=\"btn btn-warning\" disabled>不可操作</button>";
+      } elseif (
+        $num_first_report_record && ($row_first_report_record['final_flag'] == 2)
+      ) { //状态5
+        //表示导师已提交意见，可查看意见并重新上传，此阶段会循环数次
+        echo "<a href='student.php?func=first_report&id={$row_first_report_record['topic_id']}' 
+        class=\"btn btn-primary\" role='button' >查看修改意见</a>";
       }
     }
   } elseif ($third) {
     if (
-      $num_task_book && $row_task_book['islook_flag']
-      && $num_first_report_record && ($row_first_report_record['final_flag'] == 4)
+       $num_first_report_record && ($row_first_report_record['final_flag'] == 4)
       && ($row_first_report_record['annex_flag'] == 1)
-    ) { //状态1
+    ) { //状态1 
       echo "<button class=\"btn btn-warning\" disabled >不可操作</button>";
     } elseif (
-      $num_task_book && $row_task_book['islook_flag']
-      && $num_first_report_record
+       $num_first_report_record
       && ($row_first_report_record['final_flag'] == 1)
     ) { //状态2
       echo "<button class=\"btn btn-success\" disabled >审核结束</button>";
     } else {
-      echo "<button class=\"btn btn-danger\" disabled >不可操作</button>";
+      echo "<button class=\"btn btn-danger\" disabled >审核结束</button>";
     }
   }
 
@@ -264,7 +308,7 @@ archemiya;
 archemiya;
 
   if (!$third) {
-    if (!$second) {
+    if (!$second) { //第一阶段，此时需要判断选题以及任务书的确认情况
       if ($num_task_book == 0) { //状态1
         echo "<button class=\"btn btn-primary\" disabled >不可操作</button>";
       } elseif ($row_task_book['islook_flag'] == 0) { //状态2
@@ -273,8 +317,7 @@ archemiya;
         $num_task_book && $row_task_book['islook_flag']
         && (!$num_first_report_record && ($row_first_report_record['annex_flag'] == 0))
       ) { //状态3
-        echo "<button class=\"btn btn-default\" data-toggle=\"modal\" 
-            data-target=\"#firstReportAnnexTable\" disabled>上传附件</button>";
+        echo "<button class=\"btn btn-default\" disabled>上传附件</button>";
       } elseif (
         $num_task_book && $row_task_book['islook_flag']
         && ($num_first_report_record && ($row_first_report_record['annex_flag'] == 0))
@@ -302,20 +345,37 @@ archemiya;
         //表示导师已确认最终稿，但此时不可上传最终稿
         echo "<button class=\"btn btn-warning\" disabled>不可操作</button>";
       }
-    } elseif ($second) {
+    } elseif ($second) { //第二阶段，此时不需要判断选题以及任务书的确认情况
       if (
-        $num_first_report_record 
-        && (($row_first_report_record['final_flag'] == 3)||($row_first_report_record['final_flag'] == 4))
+        $num_first_report_record
+        && (($row_first_report_record['final_flag'] == 3) || ($row_first_report_record['final_flag'] == 4))
       ) { //状态1
         //表示导师已确认最终版，系统将自动上传至答辩组，如果存在final_flag为3的记录将自动升级成为4
         echo "<button class=\"btn btn-warning\" disabled>不可操作</button>";
       } elseif (
-        !$num_first_report_record || ($row_first_report_record['final_flag'] != 3)
+        !$num_first_report_record && ($row_first_report_record['annex_flag'] == 0)
       ) { //状态2
-        //表示尚未完成最终稿，应在截止日期之前完成
-        echo "<button class=\"btn btn-warning\" data-toggle=\"modal\" 
-          data-target=\"#firstReportAnnexTable\" >上传附件</button>";
-      } 
+        //表示尚未完成最终稿 （报告与附件都从未上交），应在截止日期之前完成
+        echo "<button class=\"btn btn-default\" disabled>上传附件</button>";
+      } elseif (
+        $num_first_report_record && ($row_first_report_record['annex_flag'] == 0)
+      ) { //状态3
+        //上交报告未上交附件
+        echo "<button class=\"btn btn-default\" data-toggle=\"modal\" 
+            data-target=\"#firstReportAnnexTable\" >上传附件</button>";
+      } elseif (
+        $num_first_report_record && ($row_first_report_record['final_flag'] == 0)
+        && ($row_first_report_record['annex_flag'] == 1)
+      ) { //状态4
+        //导师审核
+        echo "<button class=\"btn btn-warning\" disabled>不可操作</button>";
+      } elseif (
+        $num_first_report_record && ($row_first_report_record['final_flag'] == 2)
+      ) { //状态5
+        //表示导师已提交意见，可查看意见并重新上传，此阶段会循环数次
+        echo "<button class=\"btn btn-primary\" data-toggle=\"modal\" 
+        data-target=\"#firstReportAnnexTable\" >重新上传附件</button>";
+      }
     }
   } elseif ($third) {
     if (
@@ -331,7 +391,7 @@ archemiya;
     ) { //状态2
       echo "<button class=\"btn btn-success\" disabled >审核结束</button>";
     } else {
-      echo "<button class=\"btn btn-danger\" disabled >不可操作</button>";
+      echo "<button class=\"btn btn-danger\" disabled >审核结束</button>";
     }
   }
   echo <<< archemiya

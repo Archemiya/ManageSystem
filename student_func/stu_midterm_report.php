@@ -4,7 +4,14 @@
 不同于开题报告，中期报告只是一个检查报告，不需要答辩，因此只需要一次提交，导师确认即可，因此可参照任务书的形式来写
 1.首先判断开启条件：
  - 只有一个条件，即开题报告结束，此处可对 `student_grade`即学生成绩表中的 `first_grade` 字段进行查询，得出 **num_rows** ，然后与`user`中的 **num_rows** 对比。
-2.开启之后，学生提交中期报告，各自导师对学生的中期报告进行检查，并写下指导意见。（暂时想不到其他的）
+2.开启之后，学生提交中期报告，各自导师对学生的中期报告进行检查，并写下指导意见。
+3.学生查看指导意见之后，对报告进行修改，并重新上传
+4.重复上述过程直到老师同意为止
+
+其中处于何种状态通过 `final_flag` 的值来确定
+ - 0 学生已提交新的中期报告
+ - 2 导师已提交新的指导建议
+ - 1 导师已确定新的中期报告
 */
 include "../link.php";
 
@@ -88,7 +95,7 @@ archemiya;
                             <button class="btn btn-primary" disabled >上传附件</button>
                             </td>
 archemiya;
-                        } elseif (isset($row_midterm['student_id']) && $row_midterm['annex_flag'] == 0) {
+                        } elseif (isset($row_midterm['student_id']) && $row_midterm['annex_flag'] == 0 && $row_midterm['final_flag'] == 0) {
                             echo <<< archemiya
                             <td class="td-title-center alert alert-warning" role='alert'>
                             您尚未提交附件，请及时提交！
@@ -101,7 +108,7 @@ archemiya;
                 data-target="#midtermReportAnnexTable" >上传附件</button>
                             </td>
 archemiya;
-                        } elseif (($row_midterm['student_id']) && $row_midterm['islook_flag'] == 0) {
+                        } elseif (($row_midterm['student_id']) && $row_midterm['final_flag'] == 0) {
                             echo <<< archemiya
                             <td class="td-title-center alert alert-warning" role='alert'>
                             您已提交中期报告，请耐心等待导师确认！
@@ -113,17 +120,32 @@ archemiya;
                             <button class="btn btn-warning" disabled>不可操作</button>
                             </td>
 archemiya;
-                        } else {
+                        } elseif (($row_midterm['student_id']) && $row_midterm['final_flag'] == 2) {
                             echo <<< archemiya
-                            <td class="td-title-center alert alert-info" role='alert'>
+                            <td class="td-title-center alert alert-warning" role='alert'>
                             导师已批示，请及时查看
                             </td>
                             <td>
                             <a href='student.php?func=midterm_report&id={$row_midterm['topic_id']}' 
-                            class="btn btn-success" role='button' >查看修改意见</a>
+                            class="btn btn-primary" role='button' >查看修改意见</a>
                             </td>
                             <td>
-                            <button class="btn btn-success" disabled>审核结束</button>
+                            <button class="btn btn-primary" data-toggle="modal" 
+                data-target="#midtermReportAnnexTable" >重新上传附件</button>
+                            </td>
+archemiya;
+                        } elseif(($row_midterm['student_id']) && $row_midterm['final_flag'] == 1) {
+                            echo <<< archemiya
+                            <td class="td-title-center alert alert-info" role='alert'>
+                            已通过导师审核
+                            </td>
+                            <td>
+                            <a href="student.php?func=midterm_report&fid={$row_midterm['topic_id']}"
+                            class="btn btn-success" role='button' >查看中期报告</a>
+                            </td>
+                            <td>
+                            <a href='../uploaded_files/midterm_report_files/{$row_midterm['midterm_report_annex_name']}' 
+                            class='btn btn-success' role='button'>下载附件</a>
                             </td>
 archemiya;
                         }
@@ -143,29 +165,29 @@ archemiya;
                         <h4 class="modal-title login-title">上传中期报告</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="stu_add_midterm_report.php" method="POST" class="form-horizontal">
+                        <form action="stu_add_update_midterm_report.php" method="POST" class="form-horizontal">
                             <div class="form-group">
                                 <label for="inputTopicIntro" class="col-sm-3 control-label">当前完成情况</label>
                                 <div class="col-sm-8">
-                                    <textarea name="current_status" class="form-control" rows="3"></textarea>
+                                    <textarea name="current_status" class="form-control" rows="3" required></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="inputTopicIntro" class="col-sm-3 control-label">尚需完成任务</label>
                                 <div class="col-sm-8">
-                                    <textarea name="need_to_complete" class="form-control" rows="3"></textarea>
+                                    <textarea name="need_to_complete" class="form-control" rows="3" required></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="inputTopicIntro" class="col-sm-3 control-label">目前存在的问题及拟解决办法</label>
                                 <div class="col-sm-8">
-                                    <textarea name="current_problems_and_solutions" class="form-control" rows="3"></textarea>
+                                    <textarea name="current_problems_and_solutions" class="form-control" rows="3" required></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="inputTopicIntro" class="col-sm-3 control-label">后期工作进度安排</label>
                                 <div class="col-sm-8">
-                                    <textarea name="postwork_schedule" class="form-control" rows="3"></textarea>
+                                    <textarea name="postwork_schedule" class="form-control" rows="3" required></textarea>
                                 </div>
                             </div>
                             <?php
@@ -180,7 +202,7 @@ archemiya;
                             ?>
                             <div class="form-group">
                                 <div class="col-sm-offset-3 col-sm-10">
-                                    <button type="submit" class="btn btn-primary" onclick="JavaScript:return confirm('确定填写无误并上传中期报告么？');">上传</button>
+                                    <button type="submit" class="btn btn-primary" >上传</button>
                                 </div>
                             </div>
                         </form>

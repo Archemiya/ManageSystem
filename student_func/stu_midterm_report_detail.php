@@ -5,10 +5,12 @@
 include "../link.php";
 if (isset($_GET["id"])) {
     $get = $_GET["id"];
-} else {
+} elseif(isset($_GET["fid"])){
+    $get = $_GET["fid"];
+}else {
     echo "<script>aler('请求失败！');history.go(-1)</script>";
 }
-//当前学生查询最新开题报告
+//当前学生查询中期报告
 $sql_midterm_report = "SELECT * FROM `midterm_report` WHERE `midterm_report`.`topic_id` = '{$get}'";
 $result_midterm_report = mysqli_query($link, $sql_midterm_report);
 $row_midterm_report = mysqli_fetch_array($result_midterm_report, MYSQLI_BOTH);
@@ -67,11 +69,13 @@ $row_midterm_report = mysqli_fetch_array($result_midterm_report, MYSQLI_BOTH);
 
     </div>
     <?php
-    if ($row_midterm_report['islook_flag'] == 1 ) {
+    if ($row_midterm_report['final_flag'] == 1 ) {
         echo "<br/>";
         echo "";
     } else {
         echo "<br/>";
+        echo "<a href='../tutor_func/t_add_report_suggestion.php?func=midterm_report&cid={$get}' type=\"button\" class=\"btn btn-primary\" role='button'>同意通过</a>";
+        echo " ";
         echo "<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#suggestionTable\">撰写指导意见</button>";
     }
     ?>

@@ -9,9 +9,9 @@ if (isset($_GET["id"])) {
     echo "<script>aler('请求失败！');history.go(-1)</script>";
 }
 //当前学生查询最新开题报告
-$sql_id = "SELECT max(`record_id`) from `first_report_record` order by `record_id` desc";
+$sql_id = "SELECT max(`record_id`) from `first_report_record` WHERE `first_report_record`.`topic_id` = '{$get}' order by `record_id` desc";
 $result_id = mysqli_query($link, $sql_id);
-$row_id = mysqli_fetch_array($result_id);
+$row_id = mysqli_fetch_array($result_id,MYSQLI_BOTH);
 $sql_first_report_record = "SELECT * FROM `first_report_record` WHERE `first_report_record`.`topic_id` = '{$get}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
 $result_first_report_record = mysqli_query($link, $sql_first_report_record);
 $row_first_report_record = mysqli_fetch_array($result_first_report_record, MYSQLI_BOTH);

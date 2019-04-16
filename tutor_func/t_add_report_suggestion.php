@@ -4,7 +4,7 @@ if (isset($_GET["func"])) {
     $result = $_GET["func"];
     switch ($result) {
         case "first_report":
-            $sql_id = "SELECT max(`record_id`) from `first_report_record` order by `record_id` desc";
+            $sql_id = "SELECT max(`record_id`) from `first_report_record` WHERE `first_report_record`.`topic_id` = '{$_GET['cid']}' order by `record_id` desc";
             $result_id = mysqli_query($link, $sql_id);
             $row_id = mysqli_fetch_array($result_id);
             if (isset($_GET['id'])) {
@@ -22,12 +22,16 @@ if (isset($_GET["func"])) {
             break;
         case "midterm_report":
             if (isset($_GET['id'])) {
-                $sql_report = "UPDATE  `midterm_report` set `instructions`='{$_POST['report_suggestion']}',`islook_flag` = 1 WHERE `midterm_report`.`topic_id` = '{$_GET['id']}' ";
+                $sql_report = "UPDATE  `midterm_report` set `instructions`='{$_POST['report_suggestion']}',`final_flag` = 2 WHERE `midterm_report`.`topic_id` = '{$_GET['id']}' ";
                 mysqli_query($link, $sql_report);
                 mysqli_close($link);
                 echo "<script>alert('上传意见成功！');history.go(-1)</script>";
-            } else {
-                echo "<script>alert('上传意见失败！');history.go(-1)</script>"; 
+            }
+            if(isset($_GET['cid'])){
+                $sql_report = "UPDATE  `midterm_report` set `final_flag` = 1 WHERE `midterm_report`.`topic_id` = '{$_GET['cid']}' ";
+                mysqli_query($link, $sql_report);
+                mysqli_close($link);
+                echo "<script>alert('已同意此学生的中期报告！');history.go(-1)</script>";
             }
             break;
     }

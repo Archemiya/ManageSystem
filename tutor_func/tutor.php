@@ -37,8 +37,8 @@ include '../header.php';
 
 
                 <li><a href="./tutor.php?func=midterm_report" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "midterm_report") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
-                                                                echo "class=active";
-                                                            } ?>><i class="glyphicon glyphicon-file"> 中期报告</i><span class="sr-only">(current)</span></a></li>
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-file"> 中期报告</i><span class="sr-only">(current)</span></a></li>
 
                 <li><a href="./tutor.php?func=first_draft"><i class="glyphicon glyphicon-file"> 论文初稿</i><span class="sr-only">(current)</span></a></li>
 
@@ -109,8 +109,6 @@ include '../header.php';
                         case "midterm_report":
                             if (isset($_GET["id"])) {
                                 include "../student_func/stu_midterm_report_detail.php";
-                            } elseif (isset($_GET["fid"])) {
-                                include "t_give_first_report_grade.php";
                             } else {
                                 include "t_midterm_report.php";
                             }

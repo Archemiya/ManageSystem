@@ -37,6 +37,12 @@ Archemiya;
         $row_first_report_record = mysqli_fetch_array($result_first_report_record, MYSQLI_BOTH);
         $num_first_report_record = mysqli_num_rows($result_first_report_record);
 
+        //查询是否给出最终成绩
+        $sql_isscore = "SELECT * from `student_grade` where `student_id` = '{$row_chose_final_flag['student_id']}'";
+        $result_isscore = mysqli_query($link, $sql_isscore);
+        //$row_score = mysqli_fetch_array($result_isscore, MYSQLI_BOTH);
+        $num_isscore = mysqli_num_rows($result_isscore);
+
         if (!$num_first_report_record && $row_first_report_record['annex_flag'] == 0) {
             if (!$row_control['first_report']) {
             echo <<< Archemiya
@@ -50,7 +56,19 @@ Archemiya;
         <button class='btn btn-danger' disabled >学生未提交</button>
         </td>
 Archemiya;
-            }else {
+            }else if($row_control['first_report'] && !$num_isscore){
+                echo <<< Archemiya
+        <td class="td-height td-title-center alert alert-danger" role="alert">
+            {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
+        </td>
+        <td class="td-height td-title-center">     
+        <button class='btn btn-danger' disabled >答辩组评分中</button>
+        </td>
+        <td class="td-height td-title-center">
+        <button class='btn btn-danger' disabled >答辩组评分中</button>
+        </td>
+Archemiya;
+            }else if($row_control['first_report'] && $num_isscore){
                 echo <<< Archemiya
         <td class="td-height td-title-center alert alert-danger" role="alert">
             {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
@@ -280,7 +298,7 @@ archemiya;
 archemiya;
     }
 
-    if ($row_control['first_report'] == 0) {
+    if ($row_control['first_report'] == 0 && $_SESSION['user_special'] == 'reviewer') {
         echo "<br/>";
         echo "<div class=\"alert alert-danger\" role=\"alert\">";
         echo "<strong>当前答辩小组开题报告评阅功能尚未开放</strong>";

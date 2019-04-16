@@ -91,6 +91,8 @@ include '../header.php';
                         case "midterm_report":
                             if (isset($_GET["id"])) {
                                 include "stu_midterm_instructions_detail.php";
+                            } elseif (isset($_GET["fid"])) {
+                                include "stu_midterm_report_detail.php";
                             } else {
                                 include "stu_midterm_report.php";
                             }

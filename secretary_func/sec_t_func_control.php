@@ -3,6 +3,9 @@
 <?php
 include "../link.php";
 include "sec_query_t_control.php";
+
+date_default_timezone_set('Asia/Shanghai');
+$today = date('Y-m-d');
 ?>
 
 <body>
@@ -78,7 +81,9 @@ include "sec_query_t_control.php";
                     //当前时间
                     //$today & $row_control['first_report_deadline']
 
-                    if (($num_final_first_report == $num_user) || ($today > $row_control['first_report_deadline']) && ($row_control['first_report'] == 0) && $row_control['first_report_deadline'] != NULL) {
+                    if ((($today > $row_control['first_report_deadline']) && ($row_control['first_report'] == 0) )
+                        || (($num_final_first_report == $num_user) && ($row_control['first_report'] == 0) )
+                    ) {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
                         echo "当前学生已全部全部上交开题报告最终稿或超过提交截止日期，可以开启学生开题流程";
                     } else if (($row_control['first_report'] == 1)) {
@@ -94,7 +99,9 @@ include "sec_query_t_control.php";
 
                     <td class="col-xs-2 th-title-center">
                         <?php
-                        if (($num_final_first_report == $num_user) || ($today > $row_control['first_report_deadline']) && ($row_control['first_report'] == 0) && $row_control['first_report_deadline']) {
+                        if ((($today > $row_control['first_report_deadline']) && ($row_control['first_report'] == 0) )
+                            || (($num_final_first_report == $num_user) && ($row_control['first_report'] == 0) )
+                        ) {
                             echo "<a href='sec_chang_t_control_value.php?func=first_report' 
                                 class='btn btn-primary' role='button'
                                 onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启选题</a>";
