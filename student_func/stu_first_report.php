@@ -148,7 +148,7 @@ archemiya;
       ) { //状态1
         //表示导师已确认最终版，系统将自动上传至答辩组，如果存在final_flag为3的记录将自动升级成为4
         $sql_update = "UPDATE `first_report_record` set `final_flag` = 4 
-        where `first_report_record`.`final_flag` = 3 and `student_id` = '{$_SESSION['user_id']}' ";
+        where `first_report_record`.`final_flag` = 3 ";
         mysqli_query($link,$sql_update);
         echo "<td class=\"td-height td-title-center alert alert-warning\" role='alert'>";
         echo "已上传至答辩组，请等待答辩组审核";
