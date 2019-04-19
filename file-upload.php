@@ -24,17 +24,19 @@ if ((($_FILES["file"]["type"] == "application/msword")
           //echo $uploadfilename;
           $topic_id = $_POST['topic_id'];
 
-          $sql_id = "SELECT max(`record_id`) from `first_report_record` order by `record_id` desc";
+          $sql_id = "SELECT max(`record_id`) from `first_report_record` 
+          where `topic_id` = '{$topic_id}' order by `record_id` desc";
           $result_id = mysqli_query($link, $sql_id);
           $row_id = mysqli_fetch_array($result_id);
           $sql = "UPDATE `first_report_record` SET `first_report_annex_name` = '{$uploadfilename}',`annex_flag` = 1
           WHERE  `first_report_record`.`topic_id`= '{$topic_id}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
-          
+
           mysqli_query($link, $sql);
           echo "<script>alert('上传附件成功！');history.go(-1)</script>";
         }
         mysqli_close($link);
         break;
+
       case "midterm_report":
         $num = $_POST['num'];
         if (!$num) {
@@ -46,10 +48,29 @@ if ((($_FILES["file"]["type"] == "application/msword")
           $topic_id = $_POST['topic_id'];
           $sql = "UPDATE `midterm_report` SET `midterm_report_annex_name` = '{$uploadfilename}',`annex_flag` = 1
           WHERE  `midterm_report`.`topic_id`= '{$topic_id}' ";
-          
+
           mysqli_query($link, $sql);
           echo "<script>alert('上传附件成功！');history.go(-1)</script>";
         }
+        mysqli_close($link);
+        break;
+
+      case "first_paper":
+        $sql_id = "SELECT max(`record_id`) from `first_paper_record` 
+        where `topic_id` = '{$_POST['topic_id']}' order by `record_id` desc";
+        $result_id = mysqli_query($link, $sql_id);
+        $row_id = mysqli_fetch_array($result_id);
+
+        $newdir = "./uploaded_files/first_paper_files/".$_POST['student_id'] .'_'. $row_id['max(`record_id`)'];
+        mkdir("{$newdir}");
+
+        $uploadfile = $newdir ."/". $uploadfilename;
+        move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);
+        $topic_id = $_POST['topic_id'];
+        $sql = "UPDATE `first_paper_record` SET `first_paper_annex_name` = '{$uploadfilename}',`annex_flag` = 1
+        WHERE  `first_paper_record`.`topic_id`= '{$topic_id}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
+        mysqli_query($link, $sql);
+        echo "<script>alert('上传附件成功！');history.go(-1)</script>";
         mysqli_close($link);
         break;
     }

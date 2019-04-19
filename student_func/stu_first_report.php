@@ -13,7 +13,7 @@ $today = date('Y-m-d');
 //查询该学生最新提交的开题报告
 $sql_id = "SELECT max(`record_id`) from `first_report_record` where `student_id` = '{$_SESSION['user_id']}' order by `record_id` desc ";
 $result_id = mysqli_query($link, $sql_id);
-$row_id = mysqli_fetch_array($result_id);
+$row_id = mysqli_fetch_array($result_id,MYSQLI_BOTH);
 $sql_first_report_record = "SELECT * FROM `first_report_record` WHERE `student_id` = '{$_SESSION['user_id']}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
 $result_first_report_record = mysqli_query($link, $sql_first_report_record);
 $row_first_report_record = mysqli_fetch_array($result_first_report_record, MYSQLI_BOTH);

@@ -40,7 +40,9 @@ include '../header.php';
                                                                     echo "class=active";
                                                                 } ?>><i class="glyphicon glyphicon-file"> 中期报告</i><span class="sr-only">(current)</span></a></li>
 
-                <li><a href="./tutor.php?func=first_draft"><i class="glyphicon glyphicon-file"> 论文初稿</i><span class="sr-only">(current)</span></a></li>
+                <li><a href="./tutor.php?func=first_paper" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "first_paper") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
+                                                                echo "class=active";
+                                                            } ?>><i class="glyphicon glyphicon-file"> 论文初稿</i><span class="sr-only">(current)</span></a></li>
 
 
                 <li><a href="./tutor.php?func=paper_review"><i class="glyphicon glyphicon-search"> 论文查重 </i><span class="sr-only">(current)</span></a></li>
@@ -113,7 +115,13 @@ include '../header.php';
                                 include "t_midterm_report.php";
                             }
                             break;
-                        case "paper_review":
+                        case "first_paper":
+                            if (isset($_GET["id"])) {
+                                include "../student_func/stu_first_paper_detail.php";
+                            } else {
+                                include "t_first_paper.php";
+                            }
+                            break;
                         case "answer_information":
                         case "deferred_reply":
                         case "second_reply":

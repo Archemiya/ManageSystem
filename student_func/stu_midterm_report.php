@@ -41,6 +41,10 @@ $row_topic = mysqli_fetch_array($result_topic, MYSQLI_BOTH);
 ?>
 
 <body>
+<br/>
+    <div class="alert alert-info" role="alert">
+    <strong>提示：</strong>请先上传中期报告摘要，再上传附件
+    </div>
     <div class="table-responsive">
         <table data-toggle="table" data-toolbar="#toolbar">
             <thead>

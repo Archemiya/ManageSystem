@@ -85,13 +85,13 @@ $today = date('Y-m-d');
                         || (($num_final_first_report == $num_user) && ($row_control['first_report'] == 0) )
                     ) {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
-                        echo "当前学生已全部全部上交开题报告最终稿或超过提交截止日期，可以开启学生开题流程";
+                        echo "当前学生已全部全部上交开题报告最终稿或超过提交截止日期，可以开启老师开题流程";
                     } else if (($row_control['first_report'] == 1)) {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
-                        echo "已开启学生开题流程";
+                        echo "已开启老师开题流程";
                     } else {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
-                        echo "当前时间未超过截止日期且学生尚未全部上交开题报告最终稿，不可开启学生开题流程";
+                        echo "当前时间未超过截止日期且学生尚未全部上交开题报告最终稿，不可开启老师开题流程";
                         echo "<a data-toggle=\"modal\" data-target=\"#unupload_list\">(查看未提交名单)</a>";
                     }
                     ?>

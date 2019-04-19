@@ -134,7 +134,7 @@ Archemiya;
         echo <<< archemiya
                 <br/>
                 <div class="alert alert-danger" role='alert'>
-                    当前开题答辩评分尚未结束，不可提交中期报告，请耐心等待评分结束！
+                    当前开题答辩评分尚未结束，中期报告流程未开启
                 </div>
 archemiya;
     } else {

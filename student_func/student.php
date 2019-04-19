@@ -33,7 +33,9 @@ include '../header.php';
                                                                     echo "class=active";
                                                                 } ?>><i class="glyphicon glyphicon-file"> 中期报告</i><span class="sr-only">(current)</span></a></li>
 
-                <li><a href="./student.php?func=first_draft"><i class="glyphicon glyphicon-file"> 论文初稿</i><span class="sr-only">(current)</span></a></li>
+                <li><a href="./student.php?func=first_paper" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "first_paper") {
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-file"> 论文初稿</i><span class="sr-only">(current)</span></a></li>
 
 
                 <li><a href="./student.php?func=paper_review"><i class="glyphicon glyphicon-search"> 论文查重 </i><span class="sr-only">(current)</span></a></li>
@@ -83,6 +85,8 @@ include '../header.php';
                         case "first_report":
                             if (isset($_GET["id"])) {
                                 include "stu_report_suggestion_detail.php";
+                            } elseif (isset($_GET["fid"])) {
+                                include "stu_first_report_detail.php";
                             } else {
                                 include "stu_first_report.php";
                             }
@@ -97,7 +101,15 @@ include '../header.php';
                                 include "stu_midterm_report.php";
                             }
                             break;
-                        case "paper_review":
+                        case "first_paper":
+                            if (isset($_GET["id"])) {
+                                include "stu_first_paper_suggestion_detail.php";
+                            } elseif (isset($_GET["fid"])) {
+                                include "stu_first_paper_detail.php";
+                            } else {
+                                include "stu_first_paper.php";
+                            }
+                            break;
                         case "answer_information":
                         case "deferred_reply":
                         case "second_reply":

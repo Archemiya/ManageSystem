@@ -1,4 +1,4 @@
-<!-- 此文件为导师修改意见明细文件 -->
+<!-- 此文件为开题报告导师修改意见明细文件 -->
 <!-- 学生可以在导师给出修改意见使用此文件查看对应的修改意见，并重新上传开题报告摘要 -->
 <!-- 传递的参数为 topic_id -->
 <?php
@@ -6,7 +6,12 @@ include "../link.php";
 if (isset($_GET["id"])) {
     $get = $_GET["id"];
 }
-$sql = "SELECT * FROM `first_report_record`WHERE `topic_id` = '{$get}' ORDER BY `record_id` DESC";
+//查询当前学生最新开题报告
+$sql_id = "SELECT max(`record_id`) from `first_report_record` WHERE `first_report_record`.`topic_id` = '{$get}' order by `record_id` desc";
+$result_id = mysqli_query($link, $sql_id);
+$row_id = mysqli_fetch_array($result_id,MYSQLI_BOTH);
+
+$sql = "SELECT * FROM `first_report_record`WHERE `topic_id` = '{$get}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
 $result = mysqli_query($link, $sql);
 ?>
 

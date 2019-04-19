@@ -74,7 +74,7 @@ $row_midterm_report = mysqli_fetch_array($result_midterm_report, MYSQLI_BOTH);
         echo "";
     } else if($row_midterm_report['final_flag'] == 0){
         echo "<br/>";
-        echo "<a href='../tutor_func/t_add_report_suggestion.php?func=midterm_report&cid={$get}' type=\"button\" class=\"btn btn-primary\" role='button'>同意通过</a>";
+        echo "<a href='../tutor_func/t_add_suggestion.php?func=midterm_report&cid={$get}' type=\"button\" class=\"btn btn-primary\" role='button'>同意通过</a>";
         echo " ";
         echo "<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#suggestionTable\">撰写指导意见</button>";
     }else {
@@ -93,7 +93,7 @@ $row_midterm_report = mysqli_fetch_array($result_midterm_report, MYSQLI_BOTH);
                 </div>
                 <div class="modal-body">
                     <?php
-                    echo "<form action=\"../tutor_func/t_add_report_suggestion.php?func=midterm_report&id={$get}\" method=\"POST\" class=\"form-horizontal\">";
+                    echo "<form action=\"../tutor_func/t_add_suggestion.php?func=midterm_report&id={$get}\" method=\"POST\" class=\"form-horizontal\">";
                     ?>
                     <div class="form-group">
                         <label for="inputTopicName" class="col-sm-2 control-label">主要指导意见</label>
