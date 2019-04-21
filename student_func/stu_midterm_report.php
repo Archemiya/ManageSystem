@@ -50,51 +50,52 @@ $num = mysqli_num_rows($result_num);
 ?>
 
 <body>
-<br/>
-    <div class="alert alert-info" role="alert">
-    <strong>提示：</strong>请先上传中期报告摘要，再上传附件
-    </div>
-    <div class="table-responsive">
-        <table data-toggle="table" data-toolbar="#toolbar">
-            <thead>
-                <tr>
-                    <th class="col-md-4 th-title-topic-chs">课题名称</th>
-                    <th class="col-md-1 th-title-center th-title-topic-stu">指导教师</th>
-                    <th class="col-md-3 th-title-center th-title-topic-stu">状态</th>
-                    <th class="col-md-2 th-title-center th-title-topic-stu">操作1</th>
-                    <th class="col-md-2 th-title-center th-title-topic-stu">操作2</th>
-                </tr>
+    <?php
+    if ($num_first_report_grade != $num_student) {
+        echo <<< archemiya
+                <br/>
+                <div class="alert alert-danger" role='alert'>
+                    <strong>当前开题答辩评分尚未结束，不可提交中期报告，请耐心等待评分结束！</strong>
+                </div>
+                
+archemiya;
+    } else {
+        ?>
 
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="td-height">
-                        <?php
-                        echo <<< archemiya
+        <br />
+        <div class="alert alert-info" role="alert">
+            <strong>提示：</strong>请先上传中期报告摘要，再上传附件
+        </div>
+        <div class="table-responsive">
+            <table data-toggle="table" data-toolbar="#toolbar">
+                <thead>
+                    <tr>
+                        <th class="col-md-4 th-title-topic-chs">课题名称</th>
+                        <th class="col-md-1 th-title-center th-title-topic-stu">指导教师</th>
+                        <th class="col-md-3 th-title-center th-title-topic-stu">状态</th>
+                        <th class="col-md-2 th-title-center th-title-topic-stu">操作1</th>
+                        <th class="col-md-2 th-title-center th-title-topic-stu">操作2</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="td-height">
+                            <?php
+                            echo <<< archemiya
                         <a href="./student.php?func=topic&id={$row_topic['id']}">
                         {$row_topic['name']}
 archemiya;
-                        ?>
-                        </a>
-                    </td>
-                    <td class="td-height td-title-center">
-                        <?php
-                        echo $row_topic['teacher_name'];
-                        ?>
-                    </td>
+                            ?>
+                            </a>
+                        </td>
+                        <td class="td-height td-title-center">
+                            <?php
+                            echo $row_topic['teacher_name'];
+                            ?>
+                        </td>
 
-                    <?php
-                    if ($num_first_report_grade != $num_student) {
-                        echo <<< archemiya
-                <td class="td-title-center alert alert-danger" role='alert'>
-                    当前开题答辩评分尚未结束，不可提交中期报告，请耐心等待评分结束！
-                </td>
-                <td>
-                <td>
-                </td>
-                </td>
-archemiya;
-                    } else {
+                        <?php
                         if (!isset($row_midterm['student_id'])) {
                             echo <<< archemiya
                             <td class="td-title-center alert alert-warning" role='alert'>
@@ -110,7 +111,7 @@ archemiya;
 archemiya;
                         } elseif (isset($row_midterm['student_id']) && $row_midterm['annex_flag'] == 0 && $row_midterm['final_flag'] == 0) {
                             //第一次提交时显示
-                            if($num == 1){
+                            if ($num == 1) {
                                 echo <<< archemiya
                                 <td class="td-title-center alert alert-warning" role='alert'>
                                 您尚未提交附件，请及时提交！
@@ -125,7 +126,7 @@ archemiya;
 archemiya;
                             }
                             //第二次提交时显示
-                            elseif(($num > 1)){
+                            elseif (($num > 1)) {
                                 echo <<< archemiya
                                 <td class="td-title-center alert alert-warning" role='alert'>
                                 您尚未提交附件，请及时提交！
@@ -151,7 +152,7 @@ archemiya;
                             <button class="btn btn-warning" disabled>不可操作</button>
                             </td>
 archemiya;
-                        } elseif (($row_midterm['student_id']) && $row_midterm['final_flag'] == 2 ) {
+                        } elseif (($row_midterm['student_id']) && $row_midterm['final_flag'] == 2) {
                             echo <<< archemiya
                             <td class="td-title-center alert alert-warning" role='alert'>
                             导师已批示，请及时查看
@@ -164,7 +165,7 @@ archemiya;
                             <button class="btn btn-primary" disabled >重新上传附件</button>
                             </td>
 archemiya;
-                        } elseif(($row_midterm['student_id']) && $row_midterm['final_flag'] == 1) {
+                        } elseif (($row_midterm['student_id']) && $row_midterm['final_flag'] == 1) {
                             echo <<< archemiya
                             <td class="td-title-center alert alert-info" role='alert'>
                             已通过导师审核
@@ -179,12 +180,15 @@ archemiya;
                             </td>
 archemiya;
                         }
-                    }
-                    ?>
 
-                </tr>
-            </tbody>
-        </table>
+                        ?>
+
+                    </tr>
+                </tbody>
+            </table>
+        <?php
+    }
+    ?>
         <!-- 此处的两个modeltable功能为填写中期报告及中期报告附件 -->
         <div class="modal fade " id="midtermReportTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="chose-student-dialog">
@@ -232,7 +236,7 @@ archemiya;
                             ?>
                             <div class="form-group">
                                 <div class="col-sm-offset-3 col-sm-10">
-                                    <button type="submit" class="btn btn-primary" >上传</button>
+                                    <button type="submit" class="btn btn-primary">上传</button>
                                 </div>
                             </div>
                         </form>

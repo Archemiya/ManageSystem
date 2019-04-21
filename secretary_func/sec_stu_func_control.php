@@ -140,6 +140,7 @@ $today = date('Y-m-d');
                             && ($row_control['first_report'] == 0)
                             && ($num_user == $num_reply)
                             && ($num_user == $num_task_book)
+                            && ($row_t_control['first_report_deadline'])
                         ) {
                             echo "<a href='sec_chang_stu_control_value.php?func=first_report' 
                                 class='btn btn-primary' role='button'
@@ -150,6 +151,13 @@ $today = date('Y-m-d');
                             && ($num_user == $num_task_book)
                         ) {
                             echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
+                        } elseif (($num_stu_chosed == $num_topic)
+                            && ($row_control['first_report'] == 0)
+                            && ($num_user == $num_reply)
+                            && ($num_user == $num_task_book)
+                            && (!$row_t_control['first_report_deadline'])
+                        ) {
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
                         } else {
                             echo "<button class='btn btn-warning' disabled>不可操作</button>";
                         }

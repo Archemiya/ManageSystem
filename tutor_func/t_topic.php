@@ -28,13 +28,20 @@ archemiya;
         <td> {$num_chose_record_topic} / 5</td>
         <td >
 archemiya;
+        //状态2 表示答辩秘书已提交修改意见
         if (($row_passed_me_topic['topic_ispass'] == 2) && ($row_passed_me_topic['teacher_id'] == $_SESSION['user_id'])) {
             echo "<a href=\"./tutor.php?func=topic&cid={$row_passed_me_topic['id']}\" class=\"btn btn-warning\" role=\"button\">查看修改建议</a>";
-        } elseif (($row_passed_me_topic['topic_ispass'] == 0) && ($row_passed_me_topic['teacher_id'] == $_SESSION['user_id'])) {
+        } 
+        //状态0 表示提交课题但答辩秘书还未进行审核
+        elseif (($row_passed_me_topic['topic_ispass'] == 0) && ($row_passed_me_topic['teacher_id'] == $_SESSION['user_id'])) {
             echo "<a href=\"./tutor.php?func=topic&id={$row_passed_me_topic['id']}\" class=\"btn btn-danger\" role=\"button\">查看课题详情</a>";
-        } elseif (($row_passed_me_topic['topic_ispass'] == 1)) {
+        } 
+        //状态1 表示已过审
+        elseif (($row_passed_me_topic['topic_ispass'] == 1)) {
             echo "<a href=\"./tutor.php?func=topic&id={$row_passed_me_topic['id']}\" class=\"btn btn-success\" role=\"button\">查看过审课题</a>";
-        } elseif (($row_passed_me_topic['topic_ispass'] == 3) && ($row_passed_me_topic['teacher_id'] == $_SESSION['user_id'])) {
+        } 
+        //状态3 表示导师已修改并重新上传课题
+        elseif (($row_passed_me_topic['topic_ispass'] == 3) && ($row_passed_me_topic['teacher_id'] == $_SESSION['user_id'])) {
             echo "<a href=\"./tutor.php?func=topic&id={$row_passed_me_topic['id']}\" class=\"btn btn-warning\" role=\"button\">查看课题详情</a>";
         }
         echo <<< archemiya

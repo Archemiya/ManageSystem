@@ -81,8 +81,8 @@ $today = date('Y-m-d');
                     //当前时间
                     //$today & $row_control['first_report_deadline']
 
-                    if ((($today > $row_control['first_report_deadline']) && ($row_control['first_report'] == 0) )
-                        || (($num_final_first_report == $num_user) && ($row_control['first_report'] == 0) )
+                    if ((($today > $row_control['first_report_deadline']) && ($row_control['first_report'] == 0) && ($row_control['first_report_deadline'] != NULL))
+                        || (($num_final_first_report == $num_user) && ($row_control['first_report'] == 0))
                     ) {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
                         echo "当前学生已全部全部上交开题报告最终稿或超过提交截止日期，可以开启老师开题流程";
@@ -99,8 +99,8 @@ $today = date('Y-m-d');
 
                     <td class="col-xs-2 th-title-center">
                         <?php
-                        if ((($today > $row_control['first_report_deadline']) && ($row_control['first_report'] == 0) )
-                            || (($num_final_first_report == $num_user) && ($row_control['first_report'] == 0) )
+                        if ((($today > $row_control['first_report_deadline']) && ($row_control['first_report'] == 0)  && ($row_control['first_report_deadline'] != NULL))
+                            || (($num_final_first_report == $num_user) && ($row_control['first_report'] == 0))
                         ) {
                             echo "<a href='sec_chang_t_control_value.php?func=first_report' 
                                 class='btn btn-primary' role='button'

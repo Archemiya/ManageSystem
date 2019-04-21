@@ -1,13 +1,20 @@
 <!-- 此文件为答辩小组显示 + 分组文件 -->
 <?php
 include "../link.php";
-$sql_stu_chosed = "SELECT * FROM `chose_topic_record` WHERE `final_flag` = 1"; //查看当前完成选题的学生数量
+//查看当前完成选题的学生数量
+$sql_stu_chosed = "SELECT * FROM `chose_topic_record` WHERE `final_flag` = 1";
 $result_stu_chosed = mysqli_query($link, $sql_stu_chosed);
 $num_stu_chosed = mysqli_num_rows($result_stu_chosed);
 
+//查看当前课题数量
 $sql_topic = "SELECT * FROM `topic`";
 $result_topic = mysqli_query($link, $sql_topic);
 $num_topic = mysqli_num_rows($result_topic);
+
+//查看当前已过审课题数量
+$sql_topic_ispass = "SELECT * FROM `topic` where `topic_ispass` = 1";
+$result_topic_ispass = mysqli_query($link, $sql_topic_ispass);
+$num_topic_ispass = mysqli_num_rows($result_topic_ispass);
 
 //此函数输出所有已分配好的答辩小组名单
 function echo_reply_schedule_table($i, $link)
@@ -206,7 +213,7 @@ archemiya;
             $group_num += 1;
         }
     }
-    if ($num_stu_chosed != $num_topic) {
+    if ($num_stu_chosed != $num_topic && $num_topic == $num_topic_ispass) {
         //比较 选题学生数 和 全部课题数 来得出当前学生是否全部完成选题
         $sql_chose = "SELECT * FROM `user` WHERE `topic_ischose` = 1 AND `permission`='student'";
         $result_chose = mysqli_query($link, $sql_chose);
@@ -286,6 +293,18 @@ archemiya;
         </div>
         
         
+archemiya;
+    } elseif (!$num_topic) {
+        echo <<< archemiya
+        <div class="alert alert-danger" role="alert">
+            <strong>尚无导师提交课题</strong>
+        </div>
+archemiya;
+    } elseif ($num_topic != $num_topic_ispass) {
+        echo <<< archemiya
+        <div class="alert alert-danger" role="alert">
+            <strong>当前导师课题尚未全部过审</strong>
+        </div>
 archemiya;
     } else {
         echo <<< archemiya

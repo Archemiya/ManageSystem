@@ -236,7 +236,7 @@ archemiya;
         echo <<< archemiya
     <br/>
     <div class="alert alert-danger" role="alert">
-    您尚未完成中期报告，请先完成中期报告！
+    <strong>您尚未完成中期报告，请先完成中期报告！</strong>
     </div>
 archemiya;
     } else {

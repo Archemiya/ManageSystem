@@ -61,7 +61,7 @@ function table_echo($length, $result, $link, $num_chose_record_stu_final, $row_c
                 echo "";
             }
         } else if ($num_chose_record_stu == 0) { //该学生未进行选题
-            if ($num_chose_record_topic == 5) { //当前课题已被选满
+            if ($num_chose_record_topic == 5 && !$num_chose_record_topic_final) { //当前课题已被选满（而不是被其他学生确定）
                 echo "<button type=\"button\" class=\"btn btn-danger\" disabled>";
                 echo "课题已满";
             } else if ($num_chose_record_topic_final && ($row_chose_record_topic_final['student_id'] != $_SESSION['user_id'])) { //当前课题已被其他学生确定
@@ -73,7 +73,7 @@ function table_echo($length, $result, $link, $num_chose_record_stu_final, $row_c
                 class=\"btn btn-primary\" role=\"button\"
                 > 确认选题</a>";
             }
-        } else if ($num_chose_record_stu >= 1 && $num_chose_record_stu_final == 0) { //该学生进行过选题操作但未被选上（包括 被拒绝但还未重新选题 和 选题但老师还未被确定学生 两种状态）
+        } else if ($num_chose_record_stu >= 1 && $num_chose_record_stu_final == 0) { //该学生进行过选题操作但未被选上（包括 被拒绝但还未重新选题 和 已选题但还未被老师确定 两种状态）
             /*此处需先进行学生是否处于被拒状态的判断：
             1. 当学生处于被拒状态时，判断条件为，学生所选课题数 = 学生所有选择课题被确定状态下，所属学生不为该学生的数量。
             2. 当学生处于未被选上状态，判断条件为，存在一个未被确认的课题，即final全部为0的课题
@@ -86,7 +86,7 @@ function table_echo($length, $result, $link, $num_chose_record_stu_final, $row_c
                 } else if (($num_chose_record_stu_topic == 0) && ($num_chose_record_topic_final == 1)) { //该学生未选择当前课题，当前课题已被确认
                     echo "<button type=\"button\" class=\"btn btn-danger\" disabled>";
                     echo "课题已锁";
-                } else if (($row_chose_record_stu2['topic_id'] != $row['id']) && ($num_chose_record_topic == 5)) { //该学生未选择当前课题，但当前课题已达最大选题人数
+                } else if (($row_chose_record_stu2['topic_id'] != $row['id']) && ($num_chose_record_topic == 5) && (!$num_chose_record_topic_final)) { //该学生未选择当前课题，但当前课题已达最大选题人数（而不是被其他学生确定）
                     echo "<button type=\"button\" class=\"btn btn-danger\" disabled>";
                     echo "课题已满";
                 } else {
@@ -102,11 +102,12 @@ function table_echo($length, $result, $link, $num_chose_record_stu_final, $row_c
                 } else if (($num_chose_record_stu_topic == 1) && ($num_chose_record_topic_final == 0)) { //该学生选择了当前课题，当前课题未被确认
                     echo "<button type=\"button\" class=\"btn btn-warning\" disabled>";
                     echo "已选课题";
-                } else if (($row_chose_record_stu2['topic_id'] != $row['id']) && ($num_chose_record_topic == 5)) { //该学生未选择当前课题，但当前课题已达最大选题人数
+                } else if (($row_chose_record_stu2['topic_id'] != $row['id']) && ($num_chose_record_topic == 5) && (!$num_chose_record_topic_final)) { //该学生未选择当前课题，但当前课题已达最大选题人数（而不是被其他学生确定）
                     echo "<button type=\"button\" class=\"btn btn-danger\" disabled>";
                     echo "课题已满";
-                } else {
-                    echo '';
+                } else if(($num_chose_record_stu_topic == 0) && ($num_chose_record_topic_final == 1)){ //该学生未选择当前课题，当前课题已被确认
+                    echo "<button type=\"button\" class=\"btn btn-danger\" disabled>";
+                    echo "课题已锁";
                 }
             }
         }

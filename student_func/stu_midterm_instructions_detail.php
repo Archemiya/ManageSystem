@@ -41,19 +41,29 @@ $result = mysqli_query($link, $sql);
                 </div>
                 <div class="modal-body">
                     <form action="stu_add_midterm_report.php?func=update" method="POST" class="form-horizontal">
+                    <?php 
+                    echo <<< archemiya
                         <div class="form-group">
+
                             <label for="inputTopicIntro" class="col-sm-3 control-label">当前完成情况</label>
                             <div class="col-sm-8">
-                                <textarea name="current_status" class="form-control" rows="3" required>
-                                <?php echo $row['current_status']; ?>
+                                <textarea name="current_status" class="form-control" rows="3">
+archemiya;
+                                echo $row['current_status']; 
+                    echo <<< archemiya
                                 </textarea>
                             </div>
                         </div>
+archemiya;
+                    echo <<< archemiya
                         <div class="form-group">
                             <label for="inputTopicIntro" class="col-sm-3 control-label">尚需完成任务</label>
                             <div class="col-sm-8">
                                 <textarea name="need_to_complete" class="form-control" rows="3" required>
-                                <?php echo $row['need_to_complete']; ?>
+archemiya;
+                    
+                                echo $row['need_to_complete'];
+                    echo <<< archemiya
                                 </textarea>
                             </div>
                         </div>
@@ -61,7 +71,9 @@ $result = mysqli_query($link, $sql);
                             <label for="inputTopicIntro" class="col-sm-3 control-label">目前存在的问题及拟解决办法</label>
                             <div class="col-sm-8">
                                 <textarea name="current_problems_and_solutions" class="form-control" rows="3" required>
-                                <?php echo $row['current_problems_and_solutions']; ?>
+archemiya;
+                                echo $row['current_problems_and_solutions'];
+                    echo <<< archemiya
                                 </textarea>
                             </div>
                         </div>
@@ -69,28 +81,27 @@ $result = mysqli_query($link, $sql);
                             <label for="inputTopicIntro" class="col-sm-3 control-label">后期工作进度安排</label>
                             <div class="col-sm-8">
                                 <textarea name="postwork_schedule" class="form-control" rows="3" required>
-                                <?php echo $row['postwork_schedule']; ?>
+archemiya;
+                                echo $row['postwork_schedule'];
+                    echo <<< archemiya
                                 </textarea>
                             </div>
                         </div>
-                        <?php
-                        echo <<< archemiya
                         <input type="hidden" name="student_id" value="{$_SESSION['user_id']}">
                         <input type="hidden" name="student_name" value="{$_SESSION['user_name']}">
                         <input type="hidden" name="topic_id" value="{$row['topic_id']}">
                         <input type="hidden" name="topic_name" value="{$row['topic_name']}">
                         <input type="hidden" name="teacher_id" value="{$row['teacher_id']}">
                         <input type="hidden" name="teacher_name" value="{$row['teacher_name']}">
-archemiya;
-                        ?>
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-10">
                                 <button type="submit" class="btn btn-primary">确认上传</button>
                             </div>
                         </div>
-                        
-                    </form>
 
+                    </form>
+archemiya;
+                    ?>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

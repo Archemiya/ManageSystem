@@ -93,10 +93,10 @@ $result = mysqli_query($link, $sql);
         </table>
         <br />
         <?php
-        if ($row['topic_ispass'] == 1) {
+        if ($row['topic_ispass'] == 1 || $row['topic_ispass'] == 2) {
             echo "";
         } else {
-            echo "<a href=\"sec_complete_review.php?id={$get}\" class=\"btn btn-primary\" role=\"button\" onclick=\"JavaScript:return from('确定同意该课题审核通过么？')\">同意通过</a>";
+            echo "<a href=\"sec_complete_review.php?id={$get}\" class=\"btn btn-success\" role=\"button\" onclick=\"JavaScript:return from('确定同意该课题审核通过么？')\">同意通过</a>";
             echo " ";
             echo "<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#suggestionTable\">撰写修改意见</button>";
         }

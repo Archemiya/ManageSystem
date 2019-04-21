@@ -25,8 +25,19 @@ $result = mysqli_query($link, $sql);
     ?>
 
     <br />
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chsugTable">修改课题</button>
-    <button type="button" class="btn btn-primary" onclick="JavaScript:history.go(-1)">返回</button>
+    <?php
+    if ($row['topic_ispass'] == 2) {
+        ?>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chsugTable">修改课题</button>
+        <button type="button" class="btn btn-primary" onclick="JavaScript:history.go(-1)">返回</button>
+    <?php
+} else {
+    ?>
+        <button type="button" class="btn btn-primary" onclick="JavaScript:history.go(-1)">返回</button>
+    <?php
+}
+?>
+
     <div class="modal fade " id="chsugTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="chose-student-dialog">
             <div class="modal-content">
