@@ -6,16 +6,30 @@
  - 0 导师未审核状态 
  - 2 导师已审核，学生未修改状态
  - 1 最终审核完成状态
+
+ 两个重要条件：
+ 1 中期报告是否完成审核
+ 2 服务器时间是否超过截止时间
 */
 
 include "../link.php";
 include "../secretary_func/sec_query_stu_control.php";
+
+//当前服务器时间
+date_default_timezone_set('Asia/Shanghai');
+$today = date('Y-m-d');
 
 //查询此学生的课题信息
 $sql_topic = "SELECT * from `topic` 
 where `student_id` =  '{$_SESSION['user_id']}'";
 $result_topic = mysqli_query($link, $sql_topic);
 $row_topic = mysqli_fetch_array($result_topic, MYSQLI_BOTH);
+
+//查询论文初稿开启条件，即此学生是否完成中期报告
+$sql_midterm_ispassed = "SELECT * from `midterm_report` 
+where `student_id` = '{$_SESSION['user_id']}' and `final_flag` = 1";
+$result_midterm_ispassed = mysqli_query($link, $sql_midterm_ispassed);
+$num_midterm_ispassed = mysqli_fetch_array($result_midterm_ispassed);
 
 //查询此学生提交的最新的论文初稿
 $sql_id = "SELECT max(`record_id`) from `first_paper_record` 
@@ -28,8 +42,13 @@ $result_first_paper = mysqli_query($link, $sql_first_paper);
 $row_first_paper = mysqli_fetch_array($result_first_paper, MYSQLI_BOTH);
 $num_first_paper = mysqli_num_rows($result_first_paper);
 
+//查询此学生提交的论文初稿次数
+$sql_num = "SELECT * FROM `first_paper_record` WHERE `first_paper_record`.`student_id` = '{$_SESSION['user_id']}' ";
+$result_num = mysqli_query($link, $sql_num);
+$num = mysqli_num_rows($result_num);
 
-function paper_table_echo($link, $num_first_paper, $row_topic, $row_control, $row_first_paper,$row_id)
+
+function paper_table_echo($link, $num_first_paper, $row_topic, $row_control, $row_first_paper, $row_id,$num)
 {
 
     echo <<< archemiya
@@ -78,7 +97,7 @@ archemiya;
             && $row_first_paper['final_flag'] == 0
         ) {
             //第一次提交时显示
-            if ($num_first_paper == 1) {
+            if ($num == 1) {
                 echo <<< archemiya
             <td class='td-title-center alert alert-danger' role='alert'>
             当前尚未上传附件，请尽快上传
@@ -102,11 +121,11 @@ archemiya;
             <strong>{$row_control['first_paper_deadline']}</strong>）
             </td>
             <td>
-            <button class="btn btn-warning" disabled>已上传初稿摘要</button>
+            <button class="btn btn-primary" disabled>已上传初稿摘要</button>
             </td>
             <td>
-            <button class="btn btn-default" data-toggle="modal" 
-            data-target="#firstPaperAnnexTable" >上传附件</button>
+            <button class="btn btn-primary" data-toggle="modal" 
+            data-target="#firstPaperAnnexTable" >重新上传附件</button>
             </td>
 archemiya;
             }
@@ -168,10 +187,10 @@ archemiya;
         </td>
 archemiya;
         }
-    
+    }
     //如果超过截止时间  
-    } elseif ($row_control['first_paper']) {
-        if($row_first_paper['final_flag'] == 1){
+    elseif ($row_control['first_paper']) {
+        if ($row_first_paper['final_flag'] == 1) {
             echo <<< archemiya
             <td class='td-title-center alert alert-info' role='alert'>
             导师审核已完成
@@ -185,7 +204,7 @@ archemiya;
                     class='btn btn-success' role='button'>下载附件</a>
             </td>
 archemiya;
-        }else{
+        } else {
             echo <<< archemiya
             <td class='td-title-center alert alert-danger' role='alert'>
             已超过截止时间，尚未完成论文初稿的撰写
@@ -198,7 +217,6 @@ archemiya;
             </td>
 archemiya;
         }
-        
     }
 
     echo <<< archemiya
@@ -212,15 +230,6 @@ archemiya;
 ?>
 
 <body>
-
-    <?php
-    //查询论文初稿开启条件，即此学生是否完成中期报告
-    $sql_midterm_ispassed = "SELECT * from `midterm_report` 
-where `final_flag` = 1";
-    $result_midterm_ispassed = mysqli_query($link, $sql_midterm_ispassed);
-    $num_midterm_ispassed = mysqli_fetch_array($result_midterm_ispassed);
-
-    ?>
 
     <?php
     if (!$num_midterm_ispassed) {
@@ -237,7 +246,7 @@ archemiya;
     <strong>提示：</strong>请先上传初稿内容摘要，再上传附件
     </div>
 archemiya;
-        paper_table_echo($link, $num_first_paper, $row_topic, $row_control, $row_first_paper,$row_id);
+        paper_table_echo($link, $num_first_paper, $row_topic, $row_control, $row_first_paper, $row_id,$num);
     }
     ?>
     <!-- 此处的两个modeltable为该学生上传开题报告和附件所用 -->

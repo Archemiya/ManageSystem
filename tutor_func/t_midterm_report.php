@@ -36,7 +36,7 @@ function table_midterm_report_echo($result, $link, $height)
 {
     for ($i = 0; $i < $height; $i++) { //根据该老师的课题数进行循环输出
         //依次查询每个课题的详细信息
-        $row = mysqli_fetch_array($result, MYSQLI_BOTH); 
+        $row = mysqli_fetch_array($result, MYSQLI_BOTH);
         echo <<< Archemiya
         <tr>
         <td class="td-height"> <a href="./tutor.php?func=topic&id={$row['id']}" >{$row['name']}</a></td>
@@ -48,8 +48,13 @@ Archemiya;
         $row_chose_final_flag = mysqli_fetch_array($result_chose_final_flag, MYSQLI_BOTH);
 
         //查询当前课题学生提交的中期报告信息
+        $sql_id = "SELECT max(`record_id`) from `midterm_report` 
+        WHERE `midterm_report`.`topic_id` = '{$row['id']}' order by `record_id` desc";
+        $result_id = mysqli_query($link, $sql_id);
+        $row_id = mysqli_fetch_array($result_id, MYSQLI_BOTH);
+
         $sql_midterm_report = "SELECT * FROM `midterm_report` 
-        WHERE `midterm_report`.`topic_id` = '{$row['id']}' ";
+        WHERE `midterm_report`.`topic_id` = '{$row['id']}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
         $result_midterm_report = mysqli_query($link, $sql_midterm_report);
         $row_midterm_report = mysqli_fetch_array($result_midterm_report, MYSQLI_BOTH);
         $num_midterm_report = mysqli_num_rows($result_midterm_report);
@@ -81,7 +86,7 @@ Archemiya;
         <button class='btn btn-danger' disabled >学生未提交</button>
         </td>
 Archemiya;
-        } 
+        }
         //状态三：学生提交完整报告，等待导师提交指导意见
         elseif ($num_midterm_report && $row_midterm_report['final_flag'] == 0 && $row_midterm_report['annex_flag'] == 1) {
             echo <<< Archemiya
@@ -95,9 +100,9 @@ Archemiya;
         <a href='../uploaded_files/midterm_report_files/{$row_midterm_report['midterm_report_annex_name']}' class='btn btn-primary' role='button'>下载附件</a>
         </td>
 Archemiya;
-        } 
+        }
         //状态四：导师提交指导意见，等待学生修改 (此处规定学生必须报告和附件均提交后导师才能进行查看)
-        elseif($num_midterm_report && $row_midterm_report['final_flag'] == 2 ){
+        elseif ($num_midterm_report && $row_midterm_report['final_flag'] == 2) {
             echo <<< Archemiya
         <td class="td-height td-title-center alert alert-warning" role="alert">
             {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
@@ -109,8 +114,7 @@ Archemiya;
         <button class='btn btn-warning' disabled>等待学生修改</button>
         </td>
 Archemiya;
-        }
-        else {
+        } else {
             echo <<< Archemiya
         <td class="td-height td-title-center alert alert-info" role="alert">
             {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}

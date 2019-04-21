@@ -5,13 +5,19 @@
 include "../link.php";
 if (isset($_GET["id"])) {
     $get = $_GET["id"];
-} elseif(isset($_GET["fid"])){
+} elseif (isset($_GET["fid"])) {
     $get = $_GET["fid"];
-}else {
+} else {
     echo "<script>aler('请求失败！');history.go(-1)</script>";
 }
-//当前学生查询中期报告
-$sql_midterm_report = "SELECT * FROM `midterm_report` WHERE `midterm_report`.`topic_id` = '{$get}'";
+//查询当前学生最新中期报告
+$sql_id = "SELECT max(`record_id`) from `midterm_report` 
+where `midterm_report`.`topic_id` = '{$get}' order by `record_id` desc";
+$result_id = mysqli_query($link, $sql_id);
+$row_id = mysqli_fetch_array($result_id, MYSQLI_BOTH);
+
+$sql_midterm_report = "SELECT * FROM `midterm_report` 
+WHERE `midterm_report`.`topic_id` = '{$get}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
 $result_midterm_report = mysqli_query($link, $sql_midterm_report);
 $row_midterm_report = mysqli_fetch_array($result_midterm_report, MYSQLI_BOTH);
 
@@ -69,17 +75,17 @@ $row_midterm_report = mysqli_fetch_array($result_midterm_report, MYSQLI_BOTH);
 
     </div>
     <?php
-    if ($row_midterm_report['final_flag'] == 1 ) {
+    if ($row_midterm_report['final_flag'] == 1) {
         echo "<br/>";
         echo "";
-    } else if($row_midterm_report['final_flag'] == 0){
+    } else if ($row_midterm_report['final_flag'] == 0) {
         echo "<br/>";
-        echo "<a href='../tutor_func/t_add_suggestion.php?func=midterm_report&cid={$get}' type=\"button\" class=\"btn btn-primary\" role='button'>同意通过</a>";
+        echo "<a href='../tutor_func/t_add_suggestion.php?func=midterm_report&cid={$get}' type=\"button\" class=\"btn btn-success\" role='button'>同意通过</a>";
         echo " ";
         echo "<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#suggestionTable\">撰写指导意见</button>";
-    }else {
+    } else {
         echo "<br/>";
-        echo "<a href='../tutor_func/t_add_report_suggestion.php?func=midterm_report&cid={$get}' type=\"button\" class=\"btn btn-primary\" role='button'>同意通过</a>";
+        echo "<a href='../tutor_func/t_add_report_suggestion.php?func=midterm_report&cid={$get}' type=\"button\" class=\"btn btn-success\" role='button'>同意通过</a>";
     }
     ?>
     <button type="button" class="btn btn-primary" onclick="JavaScript:history.go(-1)">返回</button>

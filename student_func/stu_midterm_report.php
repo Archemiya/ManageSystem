@@ -27,7 +27,13 @@ $result_student = mysqli_query($link, $sql_student);
 $num_student = mysqli_num_rows($result_student);
 
 //查询当前中期报告状态
-$sql_midterm = "SELECT * from `midterm_report` where `student_id` = '{$_SESSION['user_id']}' ";
+$sql_id = "SELECT max(`record_id`) from `midterm_report` 
+where `midterm_report`.`student_id` = '{$_SESSION['user_id']}' order by `record_id` desc";
+$result_id = mysqli_query($link, $sql_id);
+$row_id = mysqli_fetch_array($result_id, MYSQLI_BOTH);
+
+$sql_midterm = "SELECT * FROM `midterm_report` 
+WHERE `midterm_report`.`student_id` = '{$_SESSION['user_id']}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
 $result_midterm = mysqli_query($link, $sql_midterm);
 $row_midterm = mysqli_fetch_array($result_midterm, MYSQLI_BOTH);
 $num_midterm = mysqli_num_rows($result_midterm);
@@ -37,7 +43,10 @@ $sql_topic = "SELECT * from `topic` where `student_id` = '{$_SESSION['user_id']}
 $result_topic = mysqli_query($link, $sql_topic);
 $row_topic = mysqli_fetch_array($result_topic, MYSQLI_BOTH);
 
-
+//查询此学生提交的中期报告次数
+$sql_num = "SELECT * FROM `midterm_report` WHERE `student_id` = '{$_SESSION['user_id']}' ";
+$result_num = mysqli_query($link, $sql_num);
+$num = mysqli_num_rows($result_num);
 ?>
 
 <body>
@@ -92,26 +101,44 @@ archemiya;
                             您尚未提交中期报告及附件，请及时提交！（请先上传摘要再上传附件）
                             </td>
                             <td>
-                            <button class='btn btn-primary' data-toggle="modal" 
+                            <button class='btn btn-default' data-toggle="modal" 
                             data-target="#midtermReportTable">提交中期报告</button>
                             </td>
                             <td>
-                            <button class="btn btn-primary" disabled >上传附件</button>
+                            <button class="btn btn-default" disabled >上传附件</button>
                             </td>
 archemiya;
                         } elseif (isset($row_midterm['student_id']) && $row_midterm['annex_flag'] == 0 && $row_midterm['final_flag'] == 0) {
-                            echo <<< archemiya
-                            <td class="td-title-center alert alert-warning" role='alert'>
-                            您尚未提交附件，请及时提交！
-                            </td>
-                            <td>
-                            <button class='btn btn-warning' disabled>已提交摘要部分</button>
-                            </td>
-                            <td>
-                            <button class="btn btn-primary" data-toggle="modal" 
-                data-target="#midtermReportAnnexTable" >上传附件</button>
-                            </td>
+                            //第一次提交时显示
+                            if($num == 1){
+                                echo <<< archemiya
+                                <td class="td-title-center alert alert-warning" role='alert'>
+                                您尚未提交附件，请及时提交！
+                                </td>
+                                <td>
+                                <button class='btn btn-default' disabled>已提交摘要部分</button>
+                                </td>
+                                <td>
+                                <button class="btn btn-default" data-toggle="modal" 
+                    data-target="#midtermReportAnnexTable" >上传附件</button>
+                                </td>
 archemiya;
+                            }
+                            //第二次提交时显示
+                            elseif(($num > 1)){
+                                echo <<< archemiya
+                                <td class="td-title-center alert alert-warning" role='alert'>
+                                您尚未提交附件，请及时提交！
+                                </td>
+                                <td>
+                                <button class='btn btn-primary' disabled>已提交摘要部分</button>
+                                </td>
+                                <td>
+                                <button class="btn btn-primary" data-toggle="modal" 
+                    data-target="#midtermReportAnnexTable" >重新上传附件</button>
+                                </td>
+archemiya;
+                            }
                         } elseif (($row_midterm['student_id']) && $row_midterm['final_flag'] == 0) {
                             echo <<< archemiya
                             <td class="td-title-center alert alert-warning" role='alert'>
@@ -124,7 +151,7 @@ archemiya;
                             <button class="btn btn-warning" disabled>不可操作</button>
                             </td>
 archemiya;
-                        } elseif (($row_midterm['student_id']) && $row_midterm['final_flag'] == 2) {
+                        } elseif (($row_midterm['student_id']) && $row_midterm['final_flag'] == 2 ) {
                             echo <<< archemiya
                             <td class="td-title-center alert alert-warning" role='alert'>
                             导师已批示，请及时查看
@@ -134,8 +161,7 @@ archemiya;
                             class="btn btn-primary" role='button' >查看修改意见</a>
                             </td>
                             <td>
-                            <button class="btn btn-primary" data-toggle="modal" 
-                data-target="#midtermReportAnnexTable" >重新上传附件</button>
+                            <button class="btn btn-primary" disabled >重新上传附件</button>
                             </td>
 archemiya;
                         } elseif(($row_midterm['student_id']) && $row_midterm['final_flag'] == 1) {
@@ -169,7 +195,7 @@ archemiya;
                         <h4 class="modal-title login-title">上传中期报告</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="stu_add_update_midterm_report.php" method="POST" class="form-horizontal">
+                        <form action="stu_add_midterm_report.php" method="POST" class="form-horizontal">
                             <div class="form-group">
                                 <label for="inputTopicIntro" class="col-sm-3 control-label">当前完成情况</label>
                                 <div class="col-sm-8">

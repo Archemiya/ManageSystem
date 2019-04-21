@@ -1,7 +1,7 @@
 <?php
 include "../link.php";
 session_start();
-if (isset($_GET['func']) && $_GET['func'] == 'update') {
+/* if (isset($_GET['func']) && $_GET['func'] == 'update') {
     $current_status = $_POST['current_status'];
     $need_to_complete = $_POST['need_to_complete'];
     $current_problems_and_solutions = $_POST['current_problems_and_solutions'];
@@ -19,7 +19,7 @@ if (isset($_GET['func']) && $_GET['func'] == 'update') {
         `student_id` = '{$_SESSION['user_id']}'
     ";
 
- } else {
+ } else { */
     $user = $_SESSION['user_name'];
     $id = $_SESSION['user_id'];
     $teacher_id = $_POST['teacher_id'];
@@ -62,7 +62,7 @@ if (isset($_GET['func']) && $_GET['func'] == 'update') {
         '0', 
         '0'
     )";
-}
+// }
 if ($result = mysqli_query($link, $sql, MYSQLI_USE_RESULT)) {
 
     /* Note, that we can't execute any functions which interact with the
@@ -72,5 +72,5 @@ if ($result = mysqli_query($link, $sql, MYSQLI_USE_RESULT)) {
         printf("Error: %s\n", mysqli_error($link));
     }
 }
-echo "<script>alert('上传开题报告成功！'); history.go(-1);</script>";
+echo "<script>alert('上传中期报告成功！'); history.go(-1);</script>";
 mysqli_close($link);
