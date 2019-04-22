@@ -48,7 +48,7 @@ $result_num = mysqli_query($link, $sql_num);
 $num = mysqli_num_rows($result_num);
 
 
-function paper_table_echo($link, $num_first_paper, $row_topic, $row_control, $row_first_paper, $row_id,$num)
+function paper_table_echo($link, $today, $num_first_paper, $row_topic, $row_control, $row_first_paper, $row_id, $num)
 {
 
     echo <<< archemiya
@@ -71,7 +71,7 @@ function paper_table_echo($link, $num_first_paper, $row_topic, $row_control, $ro
 archemiya;
 
     //当前是否超过截止时间
-    if (!$row_control['first_paper']) {
+    if ($today <= $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL) {
         //状态1 未提交状态，判断条件：查询最新报告未发现查询结果
         if (!$num_first_paper) {
             echo <<< archemiya
@@ -189,7 +189,7 @@ archemiya;
         }
     }
     //如果超过截止时间  
-    elseif ($row_control['first_paper']) {
+    elseif ($today > $row_control['first_paper_deadline'] && $row_control['dead_line'] != NULL) {
         if ($row_first_paper['final_flag'] == 1) {
             echo <<< archemiya
             <td class='td-title-center alert alert-info' role='alert'>
@@ -239,6 +239,13 @@ archemiya;
     <strong>您尚未完成中期报告，请先完成中期报告！</strong>
     </div>
 archemiya;
+    } elseif (!$row_control['first_paper']) {
+        echo <<< archemiya
+        <br/>
+        <div class="alert alert-danger" role="alert">
+        <strong>当前论文初稿流程尚未开启，请等待教务处开启！</strong>
+        </div>
+archemiya;
     } else {
         echo <<< archemiya
     <br/>
@@ -246,7 +253,7 @@ archemiya;
     <strong>提示：</strong>请先上传初稿内容摘要，再上传附件
     </div>
 archemiya;
-        paper_table_echo($link, $num_first_paper, $row_topic, $row_control, $row_first_paper, $row_id,$num);
+        paper_table_echo($link, $today, $num_first_paper, $row_topic, $row_control, $row_first_paper, $row_id, $num);
     }
     ?>
     <!-- 此处的两个modeltable为该学生上传开题报告和附件所用 -->

@@ -1,6 +1,15 @@
 <?php
 include "../link.php";
 include "../secretary_func/sec_query_stu_control.php";
+
+$sql_t_control = "SELECT * from `t_func_control` where `id` = 1";
+$result_t_control = mysqli_query($link, $sql_t_control);
+$row_t_control = mysqli_fetch_array($result_t_control,MYSQLI_BOTH);
+
+//当前服务器时间
+date_default_timezone_set('Asia/Shanghai');
+$today = date('Y-m-d');
+
 //判断当前老师的课题数
 $sql = "SELECT * FROM `topic` WHERE `topic`.`teacher_id` = '{$_SESSION['user_id']}'";
 $result = mysqli_query($link, $sql);
@@ -11,7 +20,7 @@ $result_midterm = mysqli_query($link, $sql_midterm);
 $num_midterm = mysqli_num_rows($result_midterm);
 
 //此函数用于输出导师所带的所有学生信息
-function table_first_paper_echo($result, $link, $row_control)
+function table_first_paper_echo($result, $link, $row_control,$today)
 {
     $height = mysqli_num_rows($result);
     for ($i = 0; $i < $height; $i++) { //根据该老师的课题数进行循环输出
@@ -42,7 +51,7 @@ Archemiya;
         */
 
         //首先判断是否超过截止时间，若未超过：
-        if (!$row_control['first_paper']) {
+        if ($today <= $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL) {
 
             //当前学生从未交过论文初稿
             if (!$num_first_paper) {
@@ -140,7 +149,7 @@ Archemiya;
                 </td>
 Archemiya;
             }
-        }elseif ($row_control['first_paper']) { 
+        }elseif ($today > $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL) { 
             if($row_first_paper['final_flag'] == 1){
                 echo <<< archemiya
                 <td class="td-height td-title-center alert alert-info" role="alert">
@@ -180,17 +189,17 @@ archemiya;
 
 <body>
     <?php
-    if ($num_midterm == 0) {
+    if($row_t_control['first_paper']==0){
         echo "<br/>";
         echo "<div class=\"alert alert-danger\" role=\"alert\">";
-        echo "<strong>尚无学生完成中期报告审核！</strong>";
+        echo "<strong>尚未开启论文初稿流程！</strong>";
         echo "</div>";
-    } else {
+    }else {
         //判断是否已到提交截止时间
-        if ($row_control['first_paper']) {
+        if ($today > $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL) {
             echo <<< Archemiya
             <div class="alert alert-danger" role="alert">
-            <strong></strong>
+            <strong>当前论文初稿提交系统已关闭，未按时完成初稿审核的学生将自动进入二次答辩</strong>
             </div>
 Archemiya;
         } else {
@@ -215,7 +224,7 @@ Archemiya;
             </thead>
             <tbody>
 archemiya;
-        table_first_paper_echo($result, $link, $row_control);
+        table_first_paper_echo($result, $link, $row_control,$today);
         echo <<< archemiya
             </tbody>
         </table>

@@ -43,26 +43,35 @@ include '../header.php';
                 <li><a href="./tutor.php?func=first_paper" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "first_paper") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
                                                                 echo "class=active";
                                                             } ?>><i class="glyphicon glyphicon-file"> 论文初稿</i><span class="sr-only">(current)</span></a></li>
-
-
-                <li><a href="./tutor.php?func=paper_review"><i class="glyphicon glyphicon-search"> 论文查重 </i><span class="sr-only">(current)</span></a></li>
-
                 <br />
-                <li><a href="./tutor.php?func=answer_information"><i class="glyphicon glyphicon-list-alt"> 答辩信息
+                <li><a href="./tutor.php?func=answer_information" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "answer_information") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
+                                                                        echo "class=active";
+                                                                    } ?>><i class="glyphicon glyphicon-list-alt"> 答辩信息
                         </i><span class="sr-only">(current)</span></a></li>
-
-
-                <li><a href="./tutor.php?func=deferred_reply"><i class="glyphicon glyphicon-warning-sign"> 延期答辩
-                        </i><span class="sr-only">(current)</span></a></li>
-
-
-                <li><a href="./tutor.php?func=second_reply"><i class="glyphicon glyphicon-warning-sign"> 二次答辩</i> <span class="sr-only">(current)</span></a></li>
-
-
-                <li><a href="./tutor.php?func=reply_record"><i class="glyphicon glyphicon-pencil"> 答辩记录</i><span class="sr-only">(current)</span></a></li>
-
-
+                <?php
+                if ($_SESSION['user_special'] == "recorder") {
+                    ?>
+                    <li><a href="./tutor.php?func=reply_record" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "reply_record") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-pencil"> 答辩记录</i> <span class="sr-only">(current)</span></a></li>
+                <?php
+            } elseif ($_SESSION['user_special'] == "reviewer") {
+                ?>
+                    <li><a href="./tutor.php?func=delay_reply" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "delay_reply") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-warning-sign"> 延期答辩</i> <span class="sr-only">(current)</span></a></li>
+                    <li><a href="./tutor.php?func=second_reply" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "second_reply") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-warning-sign"> 二次答辩</i> <span class="sr-only">(current)</span></a></li>
+                    <li><a href="./tutor.php?func=reply_grade" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "reply_grade") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-pencil"> 答辩评分</i> <span class="sr-only">(current)</span></a></li>
+                <?php
+            }
+            ?>
                 <li><a href="./tutor.php?func=final_draft"><i class="glyphicon glyphicon-file"> 论文终稿</i> <span class="sr-only">(current)</span></a></li>
+
+
 
                 <br />
                 <li><a href="./tutor.php?func=inquiry_result"><i class="glyphicon glyphicon-search"> 成绩查询 </i><span class="sr-only">(current)</span></a></li>
@@ -123,9 +132,16 @@ include '../header.php';
                             }
                             break;
                         case "answer_information":
-                        case "deferred_reply":
-                        case "second_reply":
+                            include "t_answer_information.php";
+                            break;
                         case "reply_record":
+                            include "t_reply_record.php";
+                            break;
+                        case "second_reply":
+                            break;
+                        case "reply_grade":
+                            include "t_reply_grade.php";
+                            break;
                         case "final_draft":
                         case "inquiry_result":
                         case "excellent_paper":

@@ -4,6 +4,10 @@
 include "../link.php";
 include "sec_query_t_control.php";
 
+$sql_stu_control = "SELECT * from `stu_func_control` where `id` = 1";
+$result_stu_control = mysqli_query($link, $sql_stu_control);
+$row_stu_control = mysqli_fetch_array($result_stu_control,MYSQLI_BOTH);
+
 date_default_timezone_set('Asia/Shanghai');
 $today = date('Y-m-d');
 ?>
@@ -110,6 +114,54 @@ $today = date('Y-m-d');
                         } else {
                             echo "<button class='btn btn-warning' disabled>不可操作</button>";
                         }
+                        ?>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <!-- 
+                        论文初稿开启条件：
+                        无特殊开启条件，由答辩秘书自行控制
+                     -->
+                    <td class="col-xs-5 th-title-center">论文初稿
+                        <?php
+                        if (!$row_stu_control['first_paper_deadline']) {
+                            echo "";
+                        } else {
+                            echo "(截止时间为：";
+                            echo $row_stu_control['first_paper_deadline'];
+                            echo "）";
+                        }
+                        ?>
+                    </td>
+                    <?php
+
+                    if ((!$row_stu_control['first_paper']) && $row_stu_control['first_paper_deadline'] == NULL) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
+                        echo "请根据学校要求在学生流程控制界面及时设置截止日期并打开论文初稿提交流程";
+                    } elseif ((!$row_control['first_paper'])) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
+                        echo "请根据学校要求及时打开论文初稿提交流程";
+                    } else {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\">";
+                        echo "已开启学生论文初稿流程";
+                    }
+                    ?>
+                    </td>
+
+                    <td class="col-xs-2 th-title-center">
+                        <?php
+                        if ((!$row_stu_control['first_paper']) && $row_stu_control['first_paper_deadline'] == NULL) {
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                        } elseif ((!$row_control['first_paper'])) {
+                            echo "<a href='sec_chang_t_control_value.php?func=first_paper' 
+                                class='btn btn-primary' role='button'
+                                onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启论文初稿</a>";
+                        } else {
+                            echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
+                        }
+
                         ?>
                     </td>
 

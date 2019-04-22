@@ -36,25 +36,22 @@ include '../header.php';
                 <li><a href="./student.php?func=first_paper" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "first_paper") {
                                                                     echo "class=active";
                                                                 } ?>><i class="glyphicon glyphicon-file"> 论文初稿</i><span class="sr-only">(current)</span></a></li>
-
-
-                <li><a href="./student.php?func=paper_review"><i class="glyphicon glyphicon-search"> 论文查重 </i><span class="sr-only">(current)</span></a></li>
                 <br />
 
-                <li><a href="./student.php?func=answer_information"><i class="glyphicon glyphicon-list-alt"> 答辩信息
+                <li><a href="./student.php?func=answer_information"<?php if (isset($_GET["func"]) && ($_GET["func"]) == "answer_information") {
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-list-alt"> 答辩信息
                         </i><span class="sr-only">(current)</span></a></li>
 
 
-                <li><a href="./student.php?func=deferred_reply"><i class="glyphicon glyphicon-warning-sign"> 延期答辩
+                <li><a href="./student.php?func=delay_reply"<?php if (isset($_GET["func"]) && ($_GET["func"]) == "delay_reply") {
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-warning-sign"> 延期答辩
                         </i><span class="sr-only">(current)</span></a></li>
 
 
                 <li><a href="./student.php?func=second_reply"><i class="glyphicon glyphicon-warning-sign"> 二次答辩</i>
                         <span class="sr-only">(current)</span></a></li>
-
-
-                <li><a href="./student.php?func=reply_record"><i class="glyphicon glyphicon-pencil"> 答辩记录</i><span class="sr-only">(current)</span></a></li>
-
 
                 <li><a href="./student.php?func=final_draft"><i class="glyphicon glyphicon-file"> 论文终稿</i> <span class="sr-only">(current)</span></a></li>
                 <br />
@@ -111,7 +108,11 @@ include '../header.php';
                             }
                             break;
                         case "answer_information":
-                        case "deferred_reply":
+                            include "stu_answer_information.php";
+                            break;
+                        case "delay_reply":
+                            include "stu_delay_reply.php";
+                            break;
                         case "second_reply":
                         case "reply_record":
                         case "final_draft":

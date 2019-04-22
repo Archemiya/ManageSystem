@@ -12,4 +12,9 @@ switch ($get) {
         mysqli_query($link, $sql_first_report);
         echo "<script>alert('开启学生开题流程成功！');history.go(-1);</script>";
         break;
+    case "first_paper":
+        $sql_first_report = "UPDATE `stu_func_control` SET `first_paper` = 1 WHERE `id` = 1";
+        mysqli_query($link, $sql_first_report);
+        echo "<script>alert('开启学生开题流程成功！');history.go(-1);</script>";
+        break;
 }
