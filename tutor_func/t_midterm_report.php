@@ -15,6 +15,11 @@
  - 1 导师已确定新的中期报告
 */
 include "../link.php";
+include "../secretary_func/sec_query_stu_control.php";
+
+//判断当前服务器时间
+date_default_timezone_set('Asia/Shanghai');
+$today = date('Y-m-d');
 
 //检查成绩表中得到开题分数的同学人数    
 $sql_first_report_grade = "SELECT * from `student_grade` where `first_report_grade` != 0";
@@ -40,6 +45,7 @@ function table_midterm_report_echo($result, $link, $height)
         echo <<< Archemiya
         <tr>
         <td class="td-height"> <a href="./tutor.php?func=topic&id={$row['id']}" >{$row['name']}</a></td>
+        
 Archemiya;
         //查询当前课题的学生信息
         $sql_chose_final_flag = "SELECT * FROM `chose_topic_record` 
@@ -59,12 +65,16 @@ Archemiya;
         $row_midterm_report = mysqli_fetch_array($result_midterm_report, MYSQLI_BOTH);
         $num_midterm_report = mysqli_num_rows($result_midterm_report);
 
-        //状态一：学生未提交报告及附件
-        if (!$num_midterm_report && $row_midterm_report['annex_flag'] == 0) {
-            echo <<< Archemiya
+        echo <<< archemiya
         <td class="td-height td-title-center alert alert-danger" role="alert">
             {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
         </td>
+archemiya;
+
+        //状态一：学生未提交报告及附件
+        if (!$num_midterm_report && $row_midterm_report['annex_flag'] == 0) {
+            echo <<< Archemiya
+        
         <td class="td-height td-title-center">     
         <button class='btn btn-danger' disabled >学生未提交</button>
         </td>
@@ -76,9 +86,7 @@ Archemiya;
         //状态二：学生提交报告 未提交附件
         elseif ($num_midterm_report && $row_midterm_report['annex_flag'] == 0) {
             echo <<< Archemiya
-        <td class="td-height td-title-center alert alert-danger" role="alert">
-            {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
-        </td>
+        
         <td class="td-height td-title-center">     
         <button class='btn btn-primary' disabled >已提交摘要</button>
         </td>
@@ -90,9 +98,7 @@ Archemiya;
         //状态三：学生提交完整报告，等待导师提交指导意见
         elseif ($num_midterm_report && $row_midterm_report['final_flag'] == 0 && $row_midterm_report['annex_flag'] == 1) {
             echo <<< Archemiya
-        <td class="td-height td-title-center alert alert-warning" role="alert">
-            {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
-        </td>
+        
         <td class="td-height td-title-center">     
         <a href="tutor.php?func=midterm_report&id={$row['id']}" class='btn btn-primary' role='button'>查看中期报告</a>
         </td>
@@ -104,9 +110,7 @@ Archemiya;
         //状态四：导师提交指导意见，等待学生修改 (此处规定学生必须报告和附件均提交后导师才能进行查看)
         elseif ($num_midterm_report && $row_midterm_report['final_flag'] == 2) {
             echo <<< Archemiya
-        <td class="td-height td-title-center alert alert-warning" role="alert">
-            {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
-        </td>
+        
         <td class="td-height td-title-center">     
         <button class='btn btn-warning' disabled>等待学生修改</button>
         </td>
@@ -116,9 +120,7 @@ Archemiya;
 Archemiya;
         } else {
             echo <<< Archemiya
-        <td class="td-height td-title-center alert alert-info" role="alert">
-            {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
-        </td>
+        
         <td class="td-height td-title-center">     
         <a href="tutor.php?func=midterm_report&id={$row['id']}" class='btn btn-success' role='button'>查看中期报告</a>
         </td>
@@ -130,10 +132,67 @@ Archemiya;
         echo "</tr>";
     }
 }
+
+function table_midterm_delay_echo($result, $link, $height)
+{
+    for ($i = 0; $i < $height; $i++) { //根据该老师的课题数进行循环输出
+        //依次查询每个课题的详细信息
+        $row = mysqli_fetch_array($result, MYSQLI_BOTH);
+        echo <<< Archemiya
+        <tr>
+        <td class="td-height"> <a href="./tutor.php?func=topic&id={$row['id']}" >{$row['name']}</a></td>
+Archemiya;
+        //查询当前课题的学生信息
+        $sql_chose_final_flag = "SELECT * FROM `chose_topic_record` 
+        WHERE `teacher_id` = '{$_SESSION['user_id']}' AND `topic_id` = '{$row['id']}' AND `final_flag` = 1";
+        $result_chose_final_flag = mysqli_query($link, $sql_chose_final_flag);
+        $row_chose_final_flag = mysqli_fetch_array($result_chose_final_flag, MYSQLI_BOTH);
+
+        //查询当前课题学生提交的中期报告信息
+        $sql_id = "SELECT max(`record_id`) from `midterm_report` 
+        WHERE `midterm_report`.`topic_id` = '{$row['id']}' order by `record_id` desc";
+        $result_id = mysqli_query($link, $sql_id);
+        $row_id = mysqli_fetch_array($result_id, MYSQLI_BOTH);
+
+        $sql_midterm_report = "SELECT * FROM `midterm_report` 
+        WHERE `midterm_report`.`topic_id` = '{$row['id']}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
+        $result_midterm_report = mysqli_query($link, $sql_midterm_report);
+        $row_midterm_report = mysqli_fetch_array($result_midterm_report, MYSQLI_BOTH);
+        //$num_midterm_report = mysqli_num_rows($result_midterm_report);
+
+        echo <<< archemiya
+        <td class="td-height td-title-center alert alert-info" role="alert">
+            {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
+        </td>
+archemiya;
+
+        if (($row_midterm_report['student_id']) && $row_midterm_report['final_flag'] == 1) {
+            echo <<< archemiya
+            <td class="td-height td-title-center">     
+            <a href="tutor.php?func=midterm_report&id={$row['id']}" class='btn btn-success' role='button'>查看中期报告</a>
+            </td>
+            <td class="td-height td-title-center">
+            <a href='../uploaded_files/midterm_report_files/{$row_midterm_report['midterm_report_annex_name']}' class='btn btn-success' role='button'>下载附件</a>   
+            </td>
+archemiya;
+        } else {
+            echo <<< archemiya
+            <td class="td-height td-title-center">     
+            <button class='btn btn-danger' disabled>审核结束</button>
+            </td>
+            <td class="td-height td-title-center">
+            <button class='btn btn-danger' disabled>审核结束</button>
+            </td>
+archemiya;
+        }
+        echo "</tr>";
+    }
+}
 ?>
 
 <body>
     <?php
+
     if ($num_first_report_grade != $num_student) {
         echo <<< archemiya
                 <br/>
@@ -142,7 +201,9 @@ Archemiya;
                 </div>
 archemiya;
     } else {
-        echo <<< archemiya
+        //判断当前是否已经超过截止时间
+        if ($today <= $row_control['midterm_deadline'] && $row_control['midterm_deadline'] != NULL) {
+            echo <<< archemiya
         <div class="table-responsive">
         <table data-toggle="table" data-toolbar="#toolbar" data-pagination="true" data-page-list="[10, 25, 50, 100, 200, All]" >
             <thead>
@@ -155,12 +216,33 @@ archemiya;
             </thead>
             <tbody>
 archemiya;
-        table_midterm_report_echo($result, $link, $height);
-        echo <<< archemiya
+            table_midterm_report_echo($result, $link, $height);
+            echo <<< archemiya
             </tbody>
         </table>
     </div>
 archemiya;
+        } elseif ($today > $row_control['midterm_deadline'] && $row_control['midterm_deadline'] != NULL) {
+            echo <<< archemiya
+        <div class="table-responsive">
+        <table data-toggle="table" data-toolbar="#toolbar" data-pagination="true" data-page-list="[10, 25, 50, 100, 200, All]" >
+            <thead>
+                <tr>
+                    <th class="col-md-6 th-title-topic-chs">课题名称</th>
+                    <th class="col-md-2 th-title-center th-title-topic-stu">指导学生</th>
+                    <th class="col-md-2 th-title-center th-title-topic-stu">操作1</th>
+                    <th class="col-md-2 th-title-center th-title-topic-stu">操作2</th>
+                </tr>
+            </thead>
+            <tbody>
+archemiya;
+            table_midterm_delay_echo($result, $link, $height);
+            echo <<< archemiya
+            </tbody>
+        </table>
+    </div>
+archemiya;
+        }
     }
     ?>
 

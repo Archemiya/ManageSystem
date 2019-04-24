@@ -14,8 +14,8 @@ $today = date('Y-m-d');
 
 <body>
     <div class="alert alert-info" role="alert">
-        <strong>提示：</strong>
-        <span><strong>开题流程</strong></span>表示导师可以对开题报告进行评分（开启条件：所有学生全部上交开题报告最终稿或超过提交截止日期）
+        <span><strong>开题流程</strong></span>表示导师可以对开题报告进行评分（开启条件：所有学生全部上交开题报告最终稿或超过提交截止日期）<br/>
+        <span><strong>中期流程</strong></span>只需设置截止时间，之后的开启条件为是否开启开题流程，此流程无需手动打开<br/>
         <div>
         </div>
     </div>
@@ -114,6 +114,52 @@ $today = date('Y-m-d');
                         } else {
                             echo "<button class='btn btn-warning' disabled>不可操作</button>";
                         }
+                        ?>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <!-- 
+                        论文初稿开启条件：
+                        无特殊开启条件，由答辩秘书自行控制
+                     -->
+                    <td class="col-xs-5 th-title-center">中期报告
+                        <?php
+                        if (!$row_stu_control['midterm_deadline']) {
+                            echo "";
+                        } else {
+                            echo "(截止时间为：";
+                            echo $row_stu_control['midterm_deadline'];
+                            echo "）";
+                        }
+                        ?>
+                    </td>
+                    <?php
+
+                    if ((!$row_stu_control['midterm_deadline']) && $row_stu_control['midterm_deadline'] == NULL) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
+                        echo "请根据学校要求在学生流程控制界面及时设置截止日期并打开论文初稿提交流程";
+                    } elseif ((!$row_control['first_report'])) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
+                        echo "当前开题流程尚未完全开启";
+                    } else {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\">";
+                        echo "已开启老师中期流程";
+                    }
+                    ?>
+                    </td>
+
+                    <td class="col-xs-2 th-title-center">
+                        <?php
+                        if ((!$row_stu_control['midterm_deadline']) && $row_stu_control['midterm_deadline'] == NULL) {
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                        } elseif ((!$row_control['first_report'])) {
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                        } else {
+                            echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
+                        }
+
                         ?>
                     </td>
 

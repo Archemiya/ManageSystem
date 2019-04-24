@@ -1,7 +1,7 @@
 <?php
 session_start();
 $user = $_POST['account'];
-$psw = $_POST['passwd'];
+$psw = md5($_POST['passwd']);
 if (!isset($user) || !isset($psw)) {
     echo "<script>alert('请输入用户名或密码！'); history.go(-1);</script>";
 } else {

@@ -22,6 +22,11 @@ $sql_topic_ispass = "SELECT * FROM `topic` where `topic_ispass` = 1";
 $result_topic_ispass = mysqli_query($link, $sql_topic_ispass);
 $num_topic_ispass = mysqli_num_rows($result_topic_ispass);
 
+//判断当前"添加答辩安排详情"功能的关闭条件
+$sql_issettime = "SELECT * from `reply_schedule` where `time` = NULL ";
+$result_issettime = mysqli_query($link,$sql_issettime);
+$num_issettime = mysqli_num_rows($result_issettime);
+
 //此函数输出所有已分配好的答辩小组名单
 function echo_reply_schedule_table($i, $link)
 {
@@ -223,6 +228,7 @@ archemiya;
 
     $group_num = 0;
 
+    //以下代码用于输出已完成选题的学生和未完成选题的学生
     for ($i = 1;; $i++) { //使用循环判断已有答辩组数量
         $sql_group_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$i}'";
         $result_group_num = mysqli_query($link, $sql_group_num);
@@ -314,6 +320,8 @@ archemiya;
         
         
 archemiya;
+    //以上为输出已完成选题学生和未完成选题学生名单
+
     } elseif (!$num_topic) {
         echo <<< archemiya
         <div class="alert alert-danger" role="alert">
@@ -326,7 +334,9 @@ archemiya;
             <strong>当前导师课题尚未全部过审</strong>
         </div>
 archemiya;
-    } elseif ($num_topic == $num_topic_ispass && !$row_control['first_report']) {
+    } 
+    //判断是否所有学生已经完成选题
+    elseif ($num_topic == $num_topic_ispass && !$row_control['first_report']) {
         echo <<< archemiya
         <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#table">
         添加答辩小组
@@ -341,7 +351,11 @@ archemiya;
     $row_control['first_report']为判断学生开题报告流程是否开启：
     因为其开启条件为答辩小组全部分配完毕，即所有学生都已经有所属答辩组，故此处直接使用这个值判断答辩小组是否分配完毕    
     */ 
-    elseif ($row_control['first_report']) {
+    /*除了判断“添加答辩安排详情”的开启条件，此处同样应该判断其关闭条件：
+        即判断time字段 = NULL的num数（见开头处 sql_issettime 语句）
+    */
+    elseif ($row_control['first_report'] ) {
+        if($num_issettime){
         echo <<< archemiya
         <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#detail">
         添加答辩安排详情
@@ -349,6 +363,7 @@ archemiya;
         <p></p>
         <br/>
 archemiya;
+        }
         for ($i = 0; $i < $group_num; $i++) {
             echo_reply_schedule_table($i, $link);
             echo "<br/>";

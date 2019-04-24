@@ -174,6 +174,52 @@ $today = date('Y-m-d');
                 </tr>
                 <tr>
                     <!-- 
+                        中期报告开启条件：
+                        此处中期报告流程控制不可控制学生与老师间的中期报告交互功能，只可起到规定截止时间的作用，即到达截止
+                     -->
+                    <td class="col-xs-5 th-title-center">中期报告
+                        <?php
+                        if (!$row_control['midterm_deadline']) {
+                            echo "<a data-toggle=\"modal\" data-target=\"#midterm_deadline_setting\">（点此添加提交截止日期）<a>";
+                        } else {
+                            echo "(截止时间为：";
+                            echo $row_control['midterm_deadline'];
+                            echo "）";
+                        }
+                        ?>
+                    </td>
+                    <?php
+
+                    if ((!$row_control['midterm_deadline']) && $row_control['midterm_deadline'] == NULL) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
+                        echo "请根据学校要求及时设置截止日期";
+                    } elseif ((!$row_t_control['first_report'])) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
+                        echo "当前开题流程尚未完全开启";
+                    } else {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\">";
+                        echo "已开启学生中期流程";
+                    }
+                    ?>
+                    </td>
+
+                    <td class="col-xs-2 th-title-center">
+                        <?php
+                        if ((!$row_control['midterm_deadline']) && $row_control['midterm_deadline'] == NULL) {
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                        } elseif ((!$row_t_control['first_report'])) {
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                        } else {
+                            echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
+                        }
+
+                        ?>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <!-- 
                         论文初稿开启条件：
                         无特殊开启条件，由答辩秘书自行控制
                      -->
@@ -256,13 +302,43 @@ $today = date('Y-m-d');
             </div>
         </div>
     </div>
+    <div class="modal fade" id="midterm_deadline_setting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加中期报告提交截止时间</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="../deadline-setting.php?func=midterm " method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="dtp_input2" class="col-md-4 control-label">选择日期</label>
+                            <div class="input-group date form_date col-md-5" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                <?php
+                                echo "<input name='deadline' class=\"form-control\" size=\"16\" type=\"text\" value=\"{$today}\" readonly>";
+                                ?>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                            <input type="hidden" id="dtp_input2" value="" /><br />
+                            <button type="submit" class="col-sm-offset-4 btn btn-default" onclick="Javascript:return confirm('确定要上传么？此操作不可逆转');">确认截止时间</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="first_paper_deadline_setting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">添加最终报告提交截止时间</h4>
+                    <h4 class="modal-title">添加论文初稿提交截止时间</h4>
                 </div>
                 <div class="modal-body">
                     <form action="../deadline-setting.php?func=first_paper " method="post" class="form-horizontal">

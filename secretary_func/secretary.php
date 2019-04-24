@@ -19,12 +19,6 @@ include '../header.php';
                             课题审核</i><span class="sr-only">(current)</span></a></li>
 
 
-                <li><a href="./secretary.php?func=lesson_record" method="GET" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "lesson_record") {
-                                                                                    echo "class=active";
-                                                                                } ?>><i class="glyphicon glyphicon-pencil">
-                            指导记录</i><span class="sr-only">(current)</span></a></li>
-
-
                 <li><a href="./secretary.php?func=reply_schedule" method="GET" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "reply_schedule") {
                                                                                     echo "class=active";
                                                                                 } ?>><i class="glyphicon glyphicon-sort-by-alphabet">
