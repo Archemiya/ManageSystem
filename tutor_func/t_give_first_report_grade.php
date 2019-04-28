@@ -116,11 +116,11 @@ archemiya;
         echo "";
     } else {
         echo "<br/>";
-        echo "<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#suggestionTable\">最终成绩</button>";
+        echo "<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#gradeTable\">最终成绩</button>";
     }
     ?>
     <button type="button" class="btn btn-primary" onclick="JavaScript:history.go(-1)">返回</button>
-    <div class="modal fade " id="suggestionTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade " id="gradeTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="chose-student-dialog">
             <div class="modal-content">
                 <div class="modal-header">

@@ -422,6 +422,14 @@ archemiya;
     </div>
 archemiya;
   } else {
+    if($today <= $row_t_control['first_report_deadline'] && $row_t_control['first_report_deadline']!=NULL){
+      echo <<< archemiya
+      <br/>
+      <div class='alert alert-danger' role='alert'>
+      开题报告截止时间为<strong>{$row_t_control['first_report_deadline']}</strong>，请及时完成开题报告审核
+      </div>
+archemiya;
+    }
     echo <<< archemiya
     <br/>
     <div class='alert alert-info' role='alert'>

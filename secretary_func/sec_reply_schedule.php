@@ -35,18 +35,19 @@ function echo_reply_schedule_table($i, $link)
     $result_teacher_num = mysqli_query($link, $sql_teacher_num);
     $num_teacher = mysqli_num_rows($result_teacher_num);
 
-    $sql_student_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'student' ";
-    $result_student_num = mysqli_query($link, $sql_student_num);
-    $row_student = mysqli_fetch_array($result_student_num, MYSQLI_BOTH);
+    $sql_student = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'student' ";
+    $result_time = mysqli_query($link,$sql_student);
+    $result_student_num = mysqli_query($link, $sql_student);
+    $row_time = mysqli_fetch_array($result_time, MYSQLI_BOTH);
     $num_student = mysqli_num_rows($result_student_num);
     
-    if(isset($row_student['time'])){
+    if(isset($row_time['time'])){
     echo " <div class='alert alert-info' role='alert'>";
     echo "第 " . $group_id . " 小组";
     echo "答辩时间为：";
-    echo $row_student['time'];
+    echo $row_time['time'];
     echo " 答辩地点为：";
-    echo $row_student['place'];
+    echo $row_time['place'];
     echo "</div>";
     }else{
         echo "";
@@ -62,7 +63,7 @@ function echo_reply_schedule_table($i, $link)
                 </tr>
                 <tr>
                     <th class="col-md-3 th-title-center">导师姓名</th>
-                    <th class="col-md-3 th-title-center"> 导师简介</th>
+                    <th class="col-md-3 th-title-center">导师简介</th>
                     <th class="col-md-3 th-title-center">学生姓名</th>
                     <th class="col-md-3 th-title-center">学生选题</th>
                 </tr>
@@ -354,7 +355,7 @@ archemiya;
     /*除了判断“添加答辩安排详情”的开启条件，此处同样应该判断其关闭条件：
         即判断time字段 = NULL的num数（见开头处 sql_issettime 语句）
     */
-    elseif ($row_control['first_report'] ) {
+    elseif ($row_control['first_report']) {
         if($num_issettime){
         echo <<< archemiya
         <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#detail">

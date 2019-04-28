@@ -133,6 +133,7 @@ Archemiya;
     }
 }
 
+//此函数用于输出超过截止时间之后的学生情况
 function table_midterm_delay_echo($result, $link, $height)
 {
     for ($i = 0; $i < $height; $i++) { //根据该老师的课题数进行循环输出
@@ -160,14 +161,13 @@ Archemiya;
         $row_midterm_report = mysqli_fetch_array($result_midterm_report, MYSQLI_BOTH);
         //$num_midterm_report = mysqli_num_rows($result_midterm_report);
 
-        echo <<< archemiya
-        <td class="td-height td-title-center alert alert-info" role="alert">
-            {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
-        </td>
-archemiya;
-
+        
+        //如果完成将输出学生完成的中期报告
         if (($row_midterm_report['student_id']) && $row_midterm_report['final_flag'] == 1) {
             echo <<< archemiya
+            <td class="td-height td-title-center alert alert-info" role="alert">
+            {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
+            </td>
             <td class="td-height td-title-center">     
             <a href="tutor.php?func=midterm_report&id={$row['id']}" class='btn btn-success' role='button'>查看中期报告</a>
             </td>
@@ -175,8 +175,13 @@ archemiya;
             <a href='../uploaded_files/midterm_report_files/{$row_midterm_report['midterm_report_annex_name']}' class='btn btn-success' role='button'>下载附件</a>   
             </td>
 archemiya;
-        } else {
+        } 
+        //如果未完成将输出红色的审核结束
+        else {
             echo <<< archemiya
+            <td class="td-height td-title-center alert alert-danger" role="alert">
+            {$row_chose_final_flag['student_id']}{$row_chose_final_flag['student_name']}
+            </td>
             <td class="td-height td-title-center">     
             <button class='btn btn-danger' disabled>审核结束</button>
             </td>

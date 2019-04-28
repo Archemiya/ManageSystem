@@ -49,35 +49,29 @@ include '../header.php';
                                                                     } ?>><i class="glyphicon glyphicon-list-alt"> 答辩信息
                         </i><span class="sr-only">(current)</span></a></li>
                 <?php
-                if ($_SESSION['user_special'] == "recorder") {
+                if ($_SESSION['user_special'] == "reviewer") {
                     ?>
-                    <li><a href="./tutor.php?func=reply_record" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "reply_record") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
-                                                                    echo "class=active";
-                                                                } ?>><i class="glyphicon glyphicon-pencil"> 答辩记录</i> <span class="sr-only">(current)</span></a></li>
-                <?php
-            } elseif ($_SESSION['user_special'] == "reviewer") {
-                ?>
-                    <li><a href="./tutor.php?func=delay_reply" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "delay_reply") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
-                                                                    echo "class=active";
-                                                                } ?>><i class="glyphicon glyphicon-warning-sign"> 延期答辩</i> <span class="sr-only">(current)</span></a></li>
-                    <li><a href="./tutor.php?func=second_reply" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "second_reply") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
-                                                                    echo "class=active";
-                                                                } ?>><i class="glyphicon glyphicon-warning-sign"> 二次答辩</i> <span class="sr-only">(current)</span></a></li>
                     <li><a href="./tutor.php?func=reply_grade" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "reply_grade") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
                                                                     echo "class=active";
                                                                 } ?>><i class="glyphicon glyphicon-pencil"> 答辩评分</i> <span class="sr-only">(current)</span></a></li>
                 <?php
             }
             ?>
-                <li><a href="./tutor.php?func=final_draft"><i class="glyphicon glyphicon-file"> 论文终稿</i> <span class="sr-only">(current)</span></a></li>
+                <li><a href="./tutor.php?func=final_draft" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "final_draft") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
+                                                                echo "class=active";
+                                                            } ?>><i class="glyphicon glyphicon-file"> 论文终稿</i> <span class="sr-only">(current)</span></a></li>
 
 
 
                 <br />
-                <li><a href="./tutor.php?func=inquiry_result"><i class="glyphicon glyphicon-search"> 成绩查询 </i><span class="sr-only">(current)</span></a></li>
+                <li><a href="./tutor.php?func=inquiry_result" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "inquiry_result") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
+                                                                echo "class=active";
+                                                            } ?>><i class="glyphicon glyphicon-search"> 成绩查询 </i><span class="sr-only">(current)</span></a></li>
 
 
-                <li><a href="./tutor.php?func=excellent_paper"><i class="glyphicon glyphicon-thumbs-up"> 优秀论文 </i><span class="sr-only">(current)</span></a></li>
+                <li><a href="./tutor.php?func=excellent_paper" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "excellent_paper") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
+                                                                echo "class=active";
+                                                            } ?>><i class="glyphicon glyphicon-thumbs-up"> 优秀论文 </i><span class="sr-only">(current)</span></a></li>
 
 
             </ul>

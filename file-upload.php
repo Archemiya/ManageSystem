@@ -51,7 +51,7 @@ if ((($_FILES["file"]["type"] == "application/msword")
           where `topic_id` = '{$topic_id}' order by `record_id` desc";
           $result_id = mysqli_query($link, $sql_id);
           $row_id = mysqli_fetch_array($result_id, MYSQLI_BOTH);
-          
+
           $sql = "UPDATE `midterm_report` SET `midterm_report_annex_name` = '{$uploadfilename}',`annex_flag` = 1
           WHERE  `midterm_report`.`topic_id`= '{$topic_id}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
 
@@ -67,14 +67,34 @@ if ((($_FILES["file"]["type"] == "application/msword")
         $result_id = mysqli_query($link, $sql_id);
         $row_id = mysqli_fetch_array($result_id, MYSQLI_BOTH);
 
-        $newdir = "./uploaded_files/first_paper_files/".$_POST['student_id'] .'_'. $row_id['max(`record_id`)'];
+        $newdir = "./uploaded_files/first_paper_files/" . $_POST['student_id'] . '_' . $row_id['max(`record_id`)'];
         mkdir("{$newdir}");
 
-        $uploadfile = $newdir ."/". $uploadfilename;
+        $uploadfile = $newdir . "/" . $uploadfilename;
         move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);
         $topic_id = $_POST['topic_id'];
         $sql = "UPDATE `first_paper_record` SET `first_paper_annex_name` = '{$uploadfilename}',`annex_flag` = 1
         WHERE  `first_paper_record`.`topic_id`= '{$topic_id}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
+        mysqli_query($link, $sql);
+        echo "<script>alert('上传附件成功！');history.go(-1)</script>";
+        mysqli_close($link);
+        break;
+
+      case "delay_reply":
+        $newdir = "./uploaded_files/delay_report_files/" . $_POST['student_id'] ;
+        mkdir("{$newdir}");
+
+        $uploadfile = $newdir . "/" . $uploadfilename;
+        move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);
+        $topic_id = $_POST['topic_id'];
+        $student_id = $_POST['student_id'];
+        $student_name = $_POST['student_name'];
+        $sql = "UPDATE `reply_schedule` 
+        SET 
+        `delay_annex_name` = '{$uploadfilename}',
+        `reply_delay` = 2,
+        `delay_description` = '{$_POST['delay_description']}';
+        WHERE  `reply_schedule`.`id`= '{$student_id}'";
         mysqli_query($link, $sql);
         echo "<script>alert('上传附件成功！');history.go(-1)</script>";
         mysqli_close($link);
@@ -87,5 +107,7 @@ if ((($_FILES["file"]["type"] == "application/msword")
   || ($_FILES["file"]["type"] != "application/pdf")
   || ($_FILES["file"]["type"] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
 ) {
-  echo "<script>alert('只允许上传doc/docx/pdf格式文件！请重新上传');history.go(-1)</script>";
+  echo $_FILES["file"]["type"];
+  
+  //echo "<script>alert('只允许上传doc/docx/pdf格式文件！请重新上传');history.go(-1)</script>";
 }

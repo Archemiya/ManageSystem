@@ -68,9 +68,17 @@ archemiya;
         ?>
 
         <br />
-        <div class="alert alert-danger" role="alert">
-            中期报告截止时间为<strong><?php echo $row_control['midterm_deadline'] ?></strong>，请及时完成中期报告审核
-        </div>
+
+        <?php
+        if ($today <= $row_control['midterm_deadline'] && $row_control['midterm_deadline'] != NULL) {
+            ?>
+            <div class="alert alert-danger" role="alert">
+                中期报告截止时间为<strong><?php echo $row_control['midterm_deadline'] ?></strong>，请及时完成中期报告审核
+            </div>
+        <?php
+    }
+    ?>
+
         <div class="alert alert-info" role="alert">
             <strong>提示：</strong>请先上传中期报告摘要，再上传附件
         </div>
@@ -191,8 +199,8 @@ archemiya;
                             </td>
 archemiya;
                             }
-                        }elseif($today > $row_control['midterm_deadline'] && $row_control['midterm_deadline']!=NULL){
-                            if(($row_midterm['student_id']) && $row_midterm['final_flag'] == 1) {
+                        } elseif ($today > $row_control['midterm_deadline'] && $row_control['midterm_deadline'] != NULL) {
+                            if (($row_midterm['student_id']) && $row_midterm['final_flag'] == 1) {
                                 echo <<< archemiya
                             <td class="td-title-center alert alert-info" role='alert'>
                             已通过导师审核
@@ -206,7 +214,7 @@ archemiya;
                             class='btn btn-success' role='button'>下载附件</a>
                             </td>
 archemiya;
-                            }else{
+                            } else {
                                 echo <<< archemiya
                             <td class="td-title-center alert alert-danger" role='alert'>
                             当前时间已超过截止时间，您未完成中期报告的线上审核

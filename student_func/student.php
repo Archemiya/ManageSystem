@@ -50,16 +50,24 @@ include '../header.php';
                         </i><span class="sr-only">(current)</span></a></li>
 
 
-                <li><a href="./student.php?func=second_reply"><i class="glyphicon glyphicon-warning-sign"> 二次答辩</i>
+                <li><a href="./student.php?func=second_reply" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "second_reply") {
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-warning-sign"> 二次答辩</i>
                         <span class="sr-only">(current)</span></a></li>
 
-                <li><a href="./student.php?func=final_draft"><i class="glyphicon glyphicon-file"> 论文终稿</i> <span class="sr-only">(current)</span></a></li>
+                <li><a href="./student.php?func=final_draft" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "final_draft") {
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-file"> 论文终稿</i> <span class="sr-only">(current)</span></a></li>
                 <br />
 
-                <li><a href="./student.php?func=inquiry_result"><i class="glyphicon glyphicon-search"> 成绩查询 </i><span class="sr-only">(current)</span></a></li>
+                <li><a href="./student.php?func=inquiry_result" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "inquiry_result") {
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-search"> 成绩查询 </i><span class="sr-only">(current)</span></a></li>
 
 
-                <li><a href="./student.php?func=excellent_paper"><i class="glyphicon glyphicon-thumbs-up"> 优秀论文
+                <li><a href="./student.php?func=excellent_paper" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "excellent_paper") {
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-thumbs-up"> 优秀论文
                         </i><span class="sr-only">(current)</span></a></li>
             </ul>
         </div>

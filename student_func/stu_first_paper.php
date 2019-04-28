@@ -189,7 +189,7 @@ archemiya;
         }
     }
     //如果超过截止时间  
-    elseif ($today > $row_control['first_paper_deadline'] && $row_control['dead_line'] != NULL) {
+    elseif ($today > $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL) {
         if ($row_first_paper['final_flag'] == 1) {
             echo <<< archemiya
             <td class='td-title-center alert alert-info' role='alert'>
@@ -207,7 +207,7 @@ archemiya;
         } else {
             echo <<< archemiya
             <td class='td-title-center alert alert-danger' role='alert'>
-            已超过截止时间，尚未完成论文初稿的撰写
+            已超过截止时间，未完成论文初稿的审核
             </td>
             <td>
             <button class="btn btn-danger"  disabled>不可操作</button>
@@ -232,25 +232,43 @@ archemiya;
 <body>
 
     <?php
-    if (!$num_midterm_ispassed) {
-        echo <<< archemiya
+    //先判断是否超过截止时间
+    if ($today <= $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL) {
+        if (!$num_midterm_ispassed && $today <= $row_control['midterm_deadline']) {
+            echo <<< archemiya
     <br/>
     <div class="alert alert-danger" role="alert">
     <strong>您尚未完成中期报告，请先完成中期报告！</strong>
     </div>
 archemiya;
-    } elseif (!$row_control['first_paper']) {
-        echo <<< archemiya
+        } elseif (!$row_control['first_paper']) {
+            echo <<< archemiya
         <br/>
         <div class="alert alert-danger" role="alert">
         <strong>当前论文初稿流程尚未开启，请等待教务处开启！</strong>
         </div>
 archemiya;
+        } else {
+            echo <<< archemiya
+    <br/>
+    <div class="alert alert-danger" role="alert">
+    论文初稿截止时间为<strong>{$row_control['first_paper_deadline']}</strong>，
+    请及时完成论文初稿审核。如需申请延期答辩请在<strong>{$row_control['delay_reply_deadline']}</strong>前申请。(点击左侧
+    <span>
+    <a href='student.php?func=delay_reply'>延期答辩</a></span>
+    功能按钮申请)
+    </div>
+    <div class="alert alert-info" role="alert">
+    <strong>提示：</strong>请先上传初稿内容摘要，再上传附件
+    </div>
+archemiya;
+            paper_table_echo($link, $today, $num_first_paper, $row_topic, $row_control, $row_first_paper, $row_id, $num);
+        }
     } else {
         echo <<< archemiya
     <br/>
-    <div class="alert alert-info" role="alert">
-    <strong>提示：</strong>请先上传初稿内容摘要，再上传附件
+    <div class="alert alert-danger" role="alert">
+    <strong>当前已超过截止时间，您未完成论文初稿的线上审核，失去参加论文一辩资格</strong>
     </div>
 archemiya;
         paper_table_echo($link, $today, $num_first_paper, $row_topic, $row_control, $row_first_paper, $row_id, $num);

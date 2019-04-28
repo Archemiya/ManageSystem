@@ -2,6 +2,10 @@
 include "../link.php";
 include "../secretary_func/sec_query_stu_control.php";
 
+//当前服务器时间
+date_default_timezone_set('Asia/Shanghai');
+$today = date('Y-m-d');
+
 /*查询此学生是否具有一次答辩资格:
  - 该学生论文初稿已完成审核
  - 该学生未申请延期答辩或申请延期答辩未成功
@@ -14,6 +18,10 @@ $sql_delay_1 = "SELECT * from `reply_schedule` where `id` = '{$_SESSION['user_id
 $result_delay_1 = mysqli_query($link, $sql_delay_1);
 $num_delay_1 = mysqli_num_rows($result_delay_1);
 
+//查询此学生是否具有二辩资格
+$sql_delay_2 = "SELECT * from `reply_schedule` where `id` = '{$_SESSION['user_id']}' AND `second_delay` = 1 "; //为0表示未申请延期 为1表示申请成功 为2表示申请未通过
+$result_delay_2 = mysqli_query($link, $sql_delay_2);
+$num_delay_2 = mysqli_num_rows($result_delay_2);
 
 //查询此学生所属答辩组
 $sql_group = "SELECT * from `reply_schedule` where `id` = '{$_SESSION['user_id']}'";
@@ -113,7 +121,8 @@ archemiya;
 <body>
 
     <?php
-    if (!$num_ispass) {
+    //当前论文初稿尚未审核完成且时间未超过截止时间且该学生未申请
+    if (!$num_ispass && $today <= $row_control['first_paper_deadline'] && $row_control['first_paper_deadline']!=NULL ) {
         echo <<< archemiya
         <br/>
         <div class='alert alert-danger' role='alert'>
@@ -122,7 +131,16 @@ archemiya;
             前完成
         </div>
 archemiya;
-    } elseif ($num_delay_1) {
+    } 
+    //当前论文初稿尚未审核完成但时间已超过截止时间
+    elseif(!$num_ispass && $today > $row_control['first_paper_deadline'] && $row_control['first_paper_deadline']!=NULL){
+        echo <<< archemiya
+        <br/>
+        <div class='alert alert-danger' role='alert'>
+            <strong>当前已超过论文初稿提交截止时间，您未完成论文初稿审核，将失去参加论文一辩资格</strong>
+        </div>
+archemiya;
+    }elseif ($num_delay_1) {
         echo <<< archemiya
         <br/>
         <div class='alert alert-danger' role='alert'>

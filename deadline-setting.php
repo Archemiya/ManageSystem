@@ -17,7 +17,10 @@ switch ($get){
     echo "<script>alert('设置中期报告截止时间成功！');history.go(-1)</script>";
     break;
     case "first_paper":
-    $sql = "UPDATE `stu_func_control` set `first_paper_deadline` = '{$_POST['deadline']}' ";
+    $theday = strtotime($_POST['deadline']);
+    $thedayarray = getdate($theday);
+    $delay_reply_deadline = date("Y-m-d", mktime(0,0,0,$thedayarray['mon'],$thedayarray['mday']+1,$thedayarray['year']));
+    $sql = "UPDATE `stu_func_control` set `first_paper_deadline` = '{$_POST['deadline']}',`delay_reply_deadline` = '{$delay_reply_deadline}' ";
     mysqli_query($link,$sql);
     echo "<script>alert('设置论文初稿截止时间成功！');history.go(-1)</script>";
     break;

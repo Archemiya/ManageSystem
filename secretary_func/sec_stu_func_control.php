@@ -14,7 +14,6 @@ $today = date('Y-m-d');
 
 <body>
     <div class="alert alert-info" role="alert">
-        <strong>提示：</strong>
         <span><strong>开题流程</strong></span>表示学生可以向答辩导师组递交开题报告最终稿
 
     </div>

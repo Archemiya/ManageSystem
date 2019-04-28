@@ -167,6 +167,9 @@ archemiya;
             }
             else{
                 echo <<< archemiya
+                <td class="td-height td-title-center alert alert-danger" role="alert">
+                    {$row['student_id']}{$row['student_name']}
+                </td>
                 <td>
                 <button class="btn btn-danger"  disabled>已逾期</button>
                 </td>
@@ -199,7 +202,7 @@ archemiya;
         if ($today > $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL) {
             echo <<< Archemiya
             <div class="alert alert-danger" role="alert">
-            <strong>当前论文初稿提交系统已关闭，未按时完成初稿审核的学生将自动进入二次答辩</strong>
+            <strong>当前论文初稿提交系统已关闭，未按时完成初稿审核的学生将失去参加论文一辩资格</strong>
             </div>
 Archemiya;
         } else {
