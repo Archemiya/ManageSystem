@@ -17,6 +17,10 @@ include '../header.php';
                                                                                     echo "class=active";
                                                                                 } ?>><i class="glyphicon glyphicon-list-alt">
                             课题审核</i><span class="sr-only">(current)</span></a></li>
+                <li><a href="./secretary.php?func=delay_judge" method="GET" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "delay_judge") {
+                                                                                echo "class=active";
+                                                                            } ?>><i class="glyphicon glyphicon-list-alt">
+                            延期审核</i><span class="sr-only">(current)</span></a></li>
 
 
                 <li><a href="./secretary.php?func=reply_schedule" method="GET" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "reply_schedule") {
@@ -52,12 +56,18 @@ include '../header.php';
                             include "sec_review_topic.php";
                         }
                         break;
-                    case "lesson_record":
-                        include "sec_display_name.php";
+                    case "delay_judge":
+                        if (isset($_GET["id"])) {
+                            include "sec_review_topic_detail.php";
+                        }elseif(isset($_GET['judge'])){
+                            include "sec_delay_detail.php";
+                        } else {
+                            include "sec_delay_judge.php";
+                        }
                         break;
                     case "reply_schedule":
                         if (isset($_GET['id'])) {
-                            include "../tutor_func/t_topic_detail.php";
+                            include "sec_review_topic_detail.php";
                         } else {
                             include "sec_reply_schedule.php";
                         }

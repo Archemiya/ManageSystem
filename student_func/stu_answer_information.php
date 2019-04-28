@@ -19,7 +19,7 @@ $result_delay_1 = mysqli_query($link, $sql_delay_1);
 $num_delay_1 = mysqli_num_rows($result_delay_1);
 
 //查询此学生是否具有二辩资格
-$sql_delay_2 = "SELECT * from `reply_schedule` where `id` = '{$_SESSION['user_id']}' AND `second_delay` = 1 "; //为0表示未申请延期 为1表示申请成功 为2表示申请未通过
+$sql_delay_2 = "SELECT * from `reply_schedule` where `id` = '{$_SESSION['user_id']}' AND `second_reply` = 1 "; //为0表示未申请延期 为1表示申请成功 为2表示申请未通过
 $result_delay_2 = mysqli_query($link, $sql_delay_2);
 $num_delay_2 = mysqli_num_rows($result_delay_2);
 

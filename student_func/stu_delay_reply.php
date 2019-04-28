@@ -5,6 +5,7 @@ include "../secretary_func/sec_query_stu_control.php";
 /*查询此学生是否具有申请延期答辩资格:
     1.无需完成论文初稿！
     2.需在截止时间之前申请
+    
 申请状态码 即表`reply_schedule`中的reply_delay字段
     0 表示未申请
     1 表示申请成功
@@ -26,10 +27,13 @@ $num_apply = mysqli_num_rows($result_apply);
 <body>
 
     <?php
-    //当前服务器时间未超过截止时间
-    if ($today <= $row_control['delay_reply_deadline'] && $row_control['delay_reply_deadline'] != NULL) {
-        if ($row_apply['delay_reply'] == 0) {
-            echo <<< archemiya
+    //当前服务器时间未超过截止时间且未申请延期答辩
+    if (
+        $today <= $row_control['delay_reply_deadline']
+        && $row_control['delay_reply_deadline'] != NULL
+        && $row_apply['reply_delay'] == 0
+    ) {
+        echo <<< archemiya
         <br/>
         <div class='alert alert-info' role='alert'>
             延期答辩申请截止时间为{$row_control['delay_reply_deadline']}，如需申请请在截止时间申请。
@@ -44,7 +48,33 @@ $num_apply = mysqli_num_rows($result_apply);
         </div>
         <button class='btn btn-primary' data-toggle="modal" data-target="#delayTable">申请延期答辩</button>
 archemiya;
-        }
+    }
+    //当前处于申请阶段 状态码为2
+    elseif ($row_apply['reply_delay'] == 2) {
+        echo <<< archemiya
+    <br/>
+    <div class='alert alert-warning' role='alert'>
+        您已申请延期答辩，请等待教务处审核
+    </div>
+archemiya;
+    }
+    //申请成功 状态码为1
+    elseif ($row_apply['reply_delay'] == 1) {
+        echo <<< archemiya
+    <br/>
+    <div class='alert alert-info' role='alert'>
+        您已成功申请延期答辩，请等待教务处重新分配答辩组与答辩安排，并及时查看相关信息
+    </div>
+archemiya;
+    }
+    //申请失败 状态码为-1
+    elseif ($row_apply['reply_delay'] == -1) {
+        echo <<< archemiya
+    <br/>
+    <div class='alert alert-danger' role='alert'>
+        您未通过延期答辩审核，请等待教务处重新分配答辩组与答辩安排，并及时查看相关信息
+    </div>
+archemiya;
     }
     //当前服务器时间已超过截止时间
     elseif ($today > $row_control['delay_reply_deadline'] && $row_control['delay_reply_deadline'] != NULL) {
@@ -81,35 +111,38 @@ archemiya;
                     <h4 class="modal-title login-title">申请延期答辩</h4>
                 </div>
                 <div class="modal-body">
-                <?php
-                    echo "<form action=\"../file-upload.php?func=delay_reply&id={$_SESSION['user_id']}\" method=\"POST\" class=\"form-horizontal\">";
-                       
-                        $sql = "SELECT * from `topic` where `student_id` = '{$_SESSION['user_id']}'";
-                        $result = mysqli_query($link, $sql);
-                        $row = mysqli_fetch_array($result, MYSQLI_BOTH);
-                        ?>
-                        <input type="hidden" name="topic_id" value="<?php $row['id'] ?>">
-                        <input type="hidden" name="student_id" value="<?php $row['student_id'] ?>">
-                        <input type="hidden" name="student_name" value="<?php $row['student_name'] ?>">
+                    <?php
+                    echo "<form action=\"../file-upload.php?func=delay_reply\" method=\"POST\" class=\"form-horizontal\" enctype=\"multipart/form-data\">";
 
-                        <div class="form-group">
-                            <label for="inputTopicName" class="col-sm-2 control-label">申请理由说明</label>
-                            <div class="col-sm-8">
-                                <textarea name="delay_description" class="form-control" rows="5" required></textarea>
-                            </div>
+                    $sql = "SELECT * from `topic` where `student_id` = '{$_SESSION['user_id']}'";
+                    $result = mysqli_query($link, $sql);
+                    $row = mysqli_fetch_array($result, MYSQLI_BOTH);
+                    ?>
+                    <?php
+                    echo <<< archemiya
+                        <input type="hidden" name="topic_id" value="{$row['id']}">
+                        <input type="hidden" name="student_id" value="{$row['student_id']}">
+                        <input type="hidden" name="student_name" value="{$row['student_name']}">
+archemiya;
+                    ?>
+                    <div class="form-group">
+                        <label for="inputTopicName" class="col-sm-2 control-label">申请理由说明</label>
+                        <div class="col-sm-8">
+                            <textarea name="delay_description" class="form-control" rows="5" required></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="inputDelayReport" class="col-sm-2 control-label">上传申请书</label>
-                            <div class="col-sm-8">
-                                <input name="file" type="file" class="input-file" required>
-                                <p class="help-block">上传文件格式仅限doc/docx/pdf，文件大小限制为10MB</p>
-                            </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDelayReport" class="col-sm-2 control-label">上传申请书</label>
+                        <div class="col-sm-8">
+                            <input name="file" type="file" class="input-file" required>
+                            <p class="help-block">上传文件格式仅限doc/docx/pdf，文件大小限制为10MB</p>
                         </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-primary" onclick="javascript:return confirm('确认无误并提交么？提交后将无法修改！')">提交</button>
-                            </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary" onclick="javascript:return confirm('确认无误并提交么？提交后将无法修改！')">提交</button>
                         </div>
+                    </div>
                     </form>
                 </div>
                 <div class="modal-footer">

@@ -85,8 +85,7 @@ archemiya;
             data-target="#firstPaperTable" >上传论文初稿</button>
             </td>
             <td>
-            <button class="btn btn-default" data-toggle="modal" 
-            data-target="#firstPaperAnnexTable" >上传附件</button>
+            <button class="btn btn-default" disabled >上传附件</button>
             </td>
 archemiya;
         }
@@ -167,7 +166,7 @@ archemiya;
         </td>
 archemiya;
         }
-        //状态5 论文初稿审核结束
+        //状态5 论文初稿审核完成
         elseif (
             $num_first_paper
             && $row_first_paper['annex_flag'] == 1
@@ -265,12 +264,16 @@ archemiya;
             paper_table_echo($link, $today, $num_first_paper, $row_topic, $row_control, $row_first_paper, $row_id, $num);
         }
     } else {
+        if(!$num_first_paper
+        || $row_first_paper['annex_flag'] != 1
+        || $row_first_paper['final_flag'] != 1){
         echo <<< archemiya
     <br/>
     <div class="alert alert-danger" role="alert">
     <strong>当前已超过截止时间，您未完成论文初稿的线上审核，失去参加论文一辩资格</strong>
     </div>
 archemiya;
+        }
         paper_table_echo($link, $today, $num_first_paper, $row_topic, $row_control, $row_first_paper, $row_id, $num);
     }
     ?>

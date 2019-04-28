@@ -22,36 +22,27 @@ $sql_topic_ispass = "SELECT * FROM `topic` where `topic_ispass` = 1";
 $result_topic_ispass = mysqli_query($link, $sql_topic_ispass);
 $num_topic_ispass = mysqli_num_rows($result_topic_ispass);
 
-//判断当前"添加答辩安排详情"功能的关闭条件
-$sql_issettime = "SELECT * from `reply_schedule` where `time` = NULL ";
-$result_issettime = mysqli_query($link,$sql_issettime);
-$num_issettime = mysqli_num_rows($result_issettime);
+//查看当前所有人数以及已分配答辩组的人数
+$sql_total = "SELECT * FROM `user` where `permission` = 'tutor' or `permission` = 'student' ";
+$result_total = mysqli_query($link, $sql_total);
+$num_total = mysqli_num_rows($result_total);
+
+$sql_schedule = "SELECT * FROM `reply_schedule` where 1";
+$result_schedule = mysqli_query($link, $sql_schedule);
+$num_schedule = mysqli_num_rows($result_schedule);
 
 //此函数输出所有已分配好的答辩小组名单
-function echo_reply_schedule_table($i, $link)
+function echo_first_schedule_table($i, $link)
 {
     $group_id = $i + 1;
     $sql_teacher_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'tutor' ";
     $result_teacher_num = mysqli_query($link, $sql_teacher_num);
     $num_teacher = mysqli_num_rows($result_teacher_num);
 
-    $sql_student = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'student' ";
-    $result_time = mysqli_query($link,$sql_student);
-    $result_student_num = mysqli_query($link, $sql_student);
-    $row_time = mysqli_fetch_array($result_time, MYSQLI_BOTH);
+    $sql_student_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'student' ";
+    $result_student_num = mysqli_query($link, $sql_student_num);
     $num_student = mysqli_num_rows($result_student_num);
-    
-    if(isset($row_time['time'])){
-    echo " <div class='alert alert-info' role='alert'>";
-    echo "第 " . $group_id . " 小组";
-    echo "答辩时间为：";
-    echo $row_time['time'];
-    echo " 答辩地点为：";
-    echo $row_time['place'];
-    echo "</div>";
-    }else{
-        echo "";
-    }
+
     echo <<< archemiya
     
     <div class="table-responsive">
@@ -107,6 +98,114 @@ archemiya;
         echo "<a href='secretary.php?func=reply_schedule&id={$row_topic['id']} '>" . $row_topic['name'] . "</a>";
         echo "</td>";
 
+        echo "</tr>";
+    }
+    echo <<< archemiya
+            </tbody>
+        </table>
+
+
+
+    </div>
+archemiya;
+}
+
+//此函数用于输出最终确定的一辩学生名单
+function echo_reply_schedule_table($i, $link)
+{
+    $group_id = $i + 1;
+
+    $sql_teacher_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'tutor' ";
+    $result_teacher_num = mysqli_query($link, $sql_teacher_num);
+    $num_teacher = mysqli_num_rows($result_teacher_num);
+
+    //随意查询一个学生可得答辩时间与地点
+    $sql_time = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'student' ";
+    $result_time = mysqli_query($link, $sql_time);
+    $row_time = mysqli_fetch_array($result_time, MYSQLI_BOTH);
+
+    /* 对于答辩组的学生说明：
+        可以参加一辩的条件：
+            1 论文初稿审核完成
+            2 未申请延期答辩                     
+    */
+
+    $sql_student_num = "SELECT * FROM `reply_schedule`
+    WHERE `group_id` = '{$group_id}' AND `permission` = 'student' AND `reply_delay` = 0 AND `first_paper_flag` = 1";
+    $result_student_num = mysqli_query($link, $sql_student_num);
+    $result_student = mysqli_query($link, $sql_student_num);
+    $num_student = mysqli_num_rows($result_student_num);
+
+    if (isset($row_time['time'])) {
+        echo " <div class='alert alert-info' role='alert'>";
+        echo "第 " . $group_id . " 小组";
+        echo "答辩时间为：";
+        echo $row_time['time'];
+        echo " 答辩地点为：";
+        echo $row_time['place'];
+        echo "</div>";
+    } else {
+        echo "";
+    }
+    echo <<< archemiya
+    
+    <div class="table-responsive">
+        <table data-toggle="table" data-toolbar="#{$group_id}">
+            <thead>
+                <tr>
+                    <th class="col-md-6 th-title-center" colspan="2">导师名单</th>
+                    <th class="col-md-6 th-title-center" colspan="2">学生名单</th>
+                </tr>
+                <tr>
+                    <th class="col-md-3 th-title-center">导师姓名</th>
+                    <th class="col-md-3 th-title-center">导师简介</th>
+                    <th class="col-md-3 th-title-center">学生姓名</th>
+                    <th class="col-md-3 th-title-center">学生选题</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+                <div id="{$group_id}">
+                    <button type="button" class="btn btn-default active" > 
+archemiya;
+    echo "第 " . $group_id . " 小组";
+    echo <<< archemiya
+                </button>
+                </div>
+archemiya;
+    if ($num_student >= $num_teacher) {
+        $num_student = $num_student;
+    } else {
+        $num_student = $num_teacher;
+    }
+    for ($i = 0; $i < $num_student; $i++) {
+        $row_teacher = mysqli_fetch_array($result_teacher_num, MYSQLI_BOTH);
+        $row_student = mysqli_fetch_array($result_student, MYSQLI_BOTH);
+        echo "<tr>";
+
+        echo "<td class=\"td-height th-title-center\">";
+        echo $row_teacher['id'] . $row_teacher['name'];
+        echo "</td>";
+
+        echo "<td class=\"td-height th-title-center\">";
+        if (!$i) {
+            echo "答辩组长";
+        } else if ($i < $num_teacher) {
+            echo "答辩老师";
+        } else {
+            echo "";
+        }
+        echo "</td>";
+        echo "<td class=\"td-height th-title-center\">";
+        echo   $row_student['id'] . $row_student['name'];
+        echo "</td>";
+        $sql_topic = "SELECT * FROM `topic`WHERE `student_id` = '{$row_student['id']}' ";
+        $result_topic = mysqli_query($link, $sql_topic);
+        $row_topic = mysqli_fetch_array($result_topic, MYSQLI_BOTH);
+        echo "<td class=\"td-height th-title-center\">";
+        echo "<a href='secretary.php?func=reply_schedule&id={$row_topic['id']} '>" . $row_topic['name'] . "</a>";
+        echo "</td>";
         echo "</tr>";
     }
     echo <<< archemiya
@@ -224,6 +323,10 @@ archemiya;
     <br />
     <div class="alert alert-danger" role="alert">
         <strong>本页面为答辩组分配页面，请谨慎操作</strong>
+        <br />
+        答辩秘书应在<strong>开题阶段分配好所有的开题答辩小组</strong>，
+        分配好答辩小组后可在<strong>后期添加答辩安排详情</strong>,
+        最后系统会根据学生的<strong>论文初稿审核情况和延期答辩申请情况</strong>确定一辩的最终人员名单
     </div>
     <?php
 
@@ -305,23 +408,15 @@ archemiya;
             echo "</td>";
             echo "</tr>";
         }
-
         echo <<< archemiya
-                                
                             </tbody>
                         </table>
-
                     </td>
-
-                </tr>
-                
-               
+                </tr>               
             </table>
-        </div>
-        
-        
+        </div>        
 archemiya;
-    //以上为输出已完成选题学生和未完成选题学生名单
+        //以上为输出已完成选题学生和未完成选题学生名单
 
     } elseif (!$num_topic) {
         echo <<< archemiya
@@ -335,28 +430,28 @@ archemiya;
             <strong>当前导师课题尚未全部过审</strong>
         </div>
 archemiya;
-    } 
+    }
     //判断是否所有学生已经完成选题
-    elseif ($num_topic == $num_topic_ispass && !$row_control['first_report']) {
-        echo <<< archemiya
-        <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#table">
-        添加答辩小组
-        </button>
+    elseif (
+        $num_topic == $num_topic_ispass
+        && $today <= $row_control['delay_reply_deadline']
+        && $row_control['delay_reply_deadline'] != NULL
+    ) {
+        if ($num_total != $num_schedule) {
+            echo <<< archemiya
+            <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#table">
+            添加答辩小组
+            </button>
 archemiya;
+        }
         for ($i = 0; $i < $group_num; $i++) {
-            echo_reply_schedule_table($i, $link);
+            echo_first_schedule_table($i, $link);
             echo "<br/>";
         }
     }
     /* 
-    $row_control['first_report']为判断学生开题报告流程是否开启：
-    因为其开启条件为答辩小组全部分配完毕，即所有学生都已经有所属答辩组，故此处直接使用这个值判断答辩小组是否分配完毕    
-    */ 
-    /*除了判断“添加答辩安排详情”的开启条件，此处同样应该判断其关闭条件：
-        即判断time字段 = NULL的num数（见开头处 sql_issettime 语句）
-    */
-    elseif ($row_control['first_report']) {
-        if($num_issettime){
+    答辩安排详情应在最终参加一辩的学生名单产生之后 即 当前服务器时间超过延期答辩申请截止时间
+    */ elseif ($today > $row_control['delay_reply_deadline'] && $row_control['delay_reply_deadline'] != NULL) {
         echo <<< archemiya
         <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#detail">
         添加答辩安排详情
@@ -364,13 +459,13 @@ archemiya;
         <p></p>
         <br/>
 archemiya;
-        }
         for ($i = 0; $i < $group_num; $i++) {
             echo_reply_schedule_table($i, $link);
             echo "<br/>";
         }
     }
     ?>
+    <!-- 增加答辩小组modaltable -->
     <div class="modal fade" id="table" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog-alter">
             <div class="modal-content">
@@ -495,6 +590,7 @@ archemiya;
             </div>
         </div>
     </div>
+    <!-- 增加答辩详情modaltable -->
     <div class="modal fade" id="detail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog-alter">
             <div class="modal-content">

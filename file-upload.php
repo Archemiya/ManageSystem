@@ -1,7 +1,13 @@
 <?php
+// linux下输出中文名
+function sbasename($filename) {
+  return preg_replace('/^.+[\\\\\\/]/', '', $filename);
+}
+
 //此php为系统所有上传文件脚本，使用get方式传参，对参数进行判断后选择上传各类别文件
 $uploaddir = './uploaded_files/';
-$uploadfilename = basename($_FILES['file']['name']);
+$uploadfilename = sbasename($_FILES['file']['name']);
+ 
 
 // echo $uploadfilename;
 if ((($_FILES["file"]["type"] == "application/msword")
@@ -89,14 +95,15 @@ if ((($_FILES["file"]["type"] == "application/msword")
         $topic_id = $_POST['topic_id'];
         $student_id = $_POST['student_id'];
         $student_name = $_POST['student_name'];
+        $delay_description = $_POST['delay_description'];
         $sql = "UPDATE `reply_schedule` 
         SET 
         `delay_annex_name` = '{$uploadfilename}',
         `reply_delay` = 2,
-        `delay_description` = '{$_POST['delay_description']}';
+        `delay_description` = '{$delay_description}'
         WHERE  `reply_schedule`.`id`= '{$student_id}'";
         mysqli_query($link, $sql);
-        echo "<script>alert('上传附件成功！');history.go(-1)</script>";
+        echo "<script>alert('提交申请成功！');history.go(-1)</script>";
         mysqli_close($link);
         break;
     }
