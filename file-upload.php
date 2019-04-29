@@ -136,9 +136,9 @@ if ((($_FILES["file"]["type"] == "application/msword")
         '{$student_name}', 
         '{$teacher_id}', 
         '{$teacher_name}', 
-        {$uploadfilename})";
+        '{$uploadfilename}')";
         mysqli_query($link, $sql);
-        //echo "<script>alert('上传附件成功！');history.go(-1)</script>";
+        echo "<script>alert('上传附件成功！');history.go(-1)</script>";
         mysqli_close($link);
         break;
     }

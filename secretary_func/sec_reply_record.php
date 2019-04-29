@@ -35,6 +35,11 @@ archemiya;
         $result_topic = mysqli_query($link, $sql_topic);
         $row_topic = mysqli_fetch_array($result_topic, MYSQLI_BOTH);
 
+        //根据学生id查询学生的答辩记录情况
+        $sql_record = "SELECT * FROM `reply_record` WHERE `student_id` = '{$row_student['id']}' ";
+        $result_record = mysqli_query($link, $sql_record);
+        $row_record = mysqli_fetch_array($result_record, MYSQLI_BOTH);
+
         echo "<td class=\"td-height th-title-center\">";
         echo "<a href='tutor.php?func=reply_grade&id={$row_topic['id']} '>" . $row_topic['name'] . "</a>";
         echo "</td>";
@@ -53,13 +58,20 @@ archemiya;
             echo "<td class=\"td-height th-title-center alert alert-info\" role='alert' >";
             echo "参与一辩";
             echo "</td>";
-
-            echo "<td>";
-            echo "<button class='btn btn-primary' 
-            data-toggle=\"modal\" data-target=\"#{$row_student['id']}\">
-            上传答辩记录
-            </button>";
-            echo "</td>";
+            if(!isset($row_record['reply_record_annex_name'])){
+                echo "<td>";
+                echo "<button class='btn btn-primary' 
+                data-toggle=\"modal\" data-target=\"#{$row_student['id']}\">
+                上传答辩记录
+                </button>";
+                echo "</td>";
+            }else{
+                echo "<td>";
+                echo "<button class='btn btn-primary' disabled>
+                上传答辩记录
+                </button>";
+                echo "</td>";
+            }
         }
         elseif($row_student['reply_delay']==1){
             echo "<td class=\"td-height th-title-center alert alert-warning\" role='alert' >";
@@ -145,8 +157,8 @@ archemiya;
                 <input type="hidden" name="student_name" value="{$row_student['name']}">
                 <input type="hidden" name="topic_id" value="{$row_topic['id']}">
                 <input type="hidden" name="topic_name" value="{$row_topic['name']}">
-                <input type="hidden" name="teacher_id" value="{$row_topic['name']}">
-                <input type="hidden" name="teacher_name" value="{$row_topic['name']}">
+                <input type="hidden" name="teacher_id" value="{$row_topic['teacher_id']}">
+                <input type="hidden" name="teacher_name" value="{$row_topic['teacher_name']}">
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-10">
                                 <button type="submit" class="btn btn-primary">确定上传</button>

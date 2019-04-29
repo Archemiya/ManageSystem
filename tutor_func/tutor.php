@@ -48,15 +48,13 @@ include '../header.php';
                                                                         echo "class=active";
                                                                     } ?>><i class="glyphicon glyphicon-list-alt"> 答辩信息
                         </i><span class="sr-only">(current)</span></a></li>
+
+                <li><a href="./tutor.php?func=reply_grade" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "reply_grade") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
+                                                                echo "class=active";
+                                                            } ?>><i class="glyphicon glyphicon-pencil"> 答辩评分</i> <span class="sr-only">(current)</span></a></li>
                 <?php
-                if ($_SESSION['user_special'] == "reviewer") {
-                    ?>
-                    <li><a href="./tutor.php?func=reply_grade" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "reply_grade") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
-                                                                    echo "class=active";
-                                                                } ?>><i class="glyphicon glyphicon-pencil"> 答辩评分</i> <span class="sr-only">(current)</span></a></li>
-                <?php
-            }
-            ?>
+
+                ?>
                 <li><a href="./tutor.php?func=final_draft" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "final_draft") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
                                                                 echo "class=active";
                                                             } ?>><i class="glyphicon glyphicon-file"> 论文终稿</i> <span class="sr-only">(current)</span></a></li>
@@ -65,13 +63,13 @@ include '../header.php';
 
                 <br />
                 <li><a href="./tutor.php?func=inquiry_result" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "inquiry_result") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
-                                                                echo "class=active";
-                                                            } ?>><i class="glyphicon glyphicon-search"> 成绩查询 </i><span class="sr-only">(current)</span></a></li>
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-search"> 成绩查询 </i><span class="sr-only">(current)</span></a></li>
 
 
                 <li><a href="./tutor.php?func=excellent_paper" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "excellent_paper") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
-                                                                echo "class=active";
-                                                            } ?>><i class="glyphicon glyphicon-thumbs-up"> 优秀论文 </i><span class="sr-only">(current)</span></a></li>
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-thumbs-up"> 优秀论文 </i><span class="sr-only">(current)</span></a></li>
 
 
             </ul>
@@ -128,8 +126,8 @@ include '../header.php';
                         case "answer_information":
                             if (isset($_GET["id"])) {
                                 include "t_topic_detail.php";
-                            } else{
-                            include "t_answer_information.php";
+                            } else {
+                                include "t_answer_information.php";
                             }
                             break;
                         case "reply_record":
@@ -138,11 +136,11 @@ include '../header.php';
                         case "second_reply":
                             break;
                         case "reply_grade":
-                        if (isset($_GET["id"])) {
-                            include "t_topic_detail.php";
-                        } else{
-                            include "t_reply_grade.php";
-                        }
+                            if (isset($_GET["id"])) {
+                                include "t_topic_detail.php";
+                            } else {
+                                include "t_reply_grade.php";
+                            }
                             break;
                         case "final_draft":
                         case "inquiry_result":
