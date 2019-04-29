@@ -15,14 +15,7 @@ switch ($get) {
         break;
 
     case "reply":
-        /* echo $_POST['student_id'];
-    echo $_POST['student_name'];
-    echo $_POST['teacher_id']; 
-    echo $_POST['teacher_name']; 
-    echo $_POST['topic_id'];
-    echo $_POST['reply_grade']; 
-    echo $_POST['reply_grade_description']; */
-        $sql = "INSERT INTO `student_reply_grade_record` 
+    $sql = "INSERT INTO `student_reply_grade_record` 
     (`record_id`, 
     `student_id`,
     `student_name`,
@@ -62,7 +55,8 @@ switch ($get) {
             }
             $final_grade /= $num_search;
             echo $final_grade;
-            $sql_final = "UPDATE `student_grade` 
+
+        $sql_final = "UPDATE `student_grade` 
         SET `reply_grade` = '{$final_grade}'
         where `student_id` = '{$_POST['student_id']}'";
             mysqli_query($link, $sql_final);

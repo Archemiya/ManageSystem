@@ -102,7 +102,7 @@ archemiya;
             </button>";
                 echo "</td>";
             }
-        }elseif(isset($row_fgrade['reply_grade'])){
+        }elseif(($row_fgrade['reply_grade'])!=0){
             echo "<td class='th-title-center alert alert-info' role='alert'>";
             echo "最终成绩：";
             echo $row_fgrade['reply_grade'];
@@ -133,7 +133,7 @@ archemiya;
 archemiya;
 }
 
-//指导学生
+//指导学生 此处查询的为teacher_grade字段
 function echo_student_reply_schedule_table($link)
 {
     //查询所有指导学生学生
@@ -184,12 +184,12 @@ archemiya;
         echo   $row_student['student_id'] . $row_student['student_name'];
         echo "</td>";
 
-        if (!isset($row_grade['reply_grade'])) {
+        if (!isset($row_grade['teacher_grade'])) {
             if (isset($row_record['reply_record_annex_name'])) {
                 echo "<td>";
                 echo "<a class='btn btn-primary' role='button'
             data-toggle=\"modal\" data-target=\"#student_{$row_student['student_id']}\">
-            一辩评分
+            指导教师评分
             </button>";
                 echo "</td>";
                 echo "<td>";
@@ -201,7 +201,7 @@ archemiya;
             } else {
                 echo "<td>";
                 echo "<a class='btn btn-primary' role='button' disabled>
-            一辩评分
+            指导教师评分
             </button>";
                 echo "</td>";
                 echo "<td>";
