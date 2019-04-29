@@ -13,7 +13,8 @@ function echo_reply_schedule_table($row_group, $link)
     $result_teacher_num = mysqli_query($link, $sql_teacher_num);
     $num_teacher = mysqli_num_rows($result_teacher_num);
 
-    $sql_student_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'student' ";
+    $sql_student_num = "SELECT * FROM `reply_schedule` 
+    WHERE `group_id` = '{$group_id}' AND `permission` = 'student' AND `reply_delay` = 0 AND `first_paper_flag` = 1";
     $result_student_num = mysqli_query($link, $sql_student_num);
     $num_student = mysqli_num_rows($result_student_num);
     echo <<< archemiya
@@ -45,16 +46,21 @@ archemiya;
                 </button>
                 </div>
 archemiya;
-if (isset($row_group['time'])) {
-    echo " <div class='alert alert-info' role='alert'>";
-    echo "答辩时间为：";
-    echo $row_group['time'];
-    echo " 答辩地点为：";
-    echo $row_group['place'];
-    echo "</div>";
-} else {
-    echo "";
-}
+    if (isset($row_group['time'])) {
+        echo " <div class='alert alert-info' role='alert'>";
+        echo "答辩时间为：";
+        echo $row_group['time'];
+        echo " 答辩地点为：";
+        echo $row_group['place'];
+        echo "</div>";
+    } else {
+        echo "";
+    }
+    if ($num_student >= $num_teacher) {
+        $num_student = $num_student;
+    } else {
+        $num_student = $num_teacher;
+    }
     for ($i = 0; $i < $num_student; $i++) {
         $row_teacher = mysqli_fetch_array($result_teacher_num, MYSQLI_BOTH);
         $row_student = mysqli_fetch_array($result_student_num, MYSQLI_BOTH);
@@ -80,7 +86,7 @@ if (isset($row_group['time'])) {
         $result_topic = mysqli_query($link, $sql_topic);
         $row_topic = mysqli_fetch_array($result_topic, MYSQLI_BOTH);
         echo "<td class=\"td-height th-title-center\">";
-        echo "<a href='secretary.php?func=reply_schedule&id={$row_topic['id']} '>" . $row_topic['name'] . "</a>";
+        echo "<a href='tutor.php?func=answer_information&id={$row_topic['id']} '>" . $row_topic['name'] . "</a>";
         echo "</td>";
 
         echo "</tr>";

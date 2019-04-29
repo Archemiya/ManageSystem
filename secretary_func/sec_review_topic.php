@@ -1,6 +1,7 @@
 <?php
 include "../link.php";
 include "sec_query_t_control.php";
+
 $sql = "SELECT * FROM `topic`";
 $result = mysqli_query($link, $sql);
 $num = mysqli_num_rows($result);

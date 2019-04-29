@@ -7,8 +7,8 @@ date_default_timezone_set('Asia/Shanghai');
 $today = date('Y-m-d');
 
 /*查询此学生是否具有一次答辩资格:
- - 该学生论文初稿已完成审核
- - 该学生未申请延期答辩或申请延期答辩未成功
+    1 论文初稿审核完成
+    2 未申请延期答辩
 */
 $sql_ispass = "SELECT * from `first_paper_record` where `student_id` = '{$_SESSION['user_id']}' AND `final_flag` = 1 ";
 $result_ispass = mysqli_query($link, $sql_ispass);
@@ -17,11 +17,6 @@ $num_ispass = mysqli_num_rows($result_ispass);
 $sql_delay_1 = "SELECT * from `reply_schedule` where `id` = '{$_SESSION['user_id']}' AND `reply_delay` = 1 "; //为0表示未申请延期 为1表示申请成功 为2表示申请未通过
 $result_delay_1 = mysqli_query($link, $sql_delay_1);
 $num_delay_1 = mysqli_num_rows($result_delay_1);
-
-//查询此学生是否具有二辩资格
-$sql_delay_2 = "SELECT * from `reply_schedule` where `id` = '{$_SESSION['user_id']}' AND `second_reply` = 1 "; //为0表示未申请延期 为1表示申请成功 为2表示申请未通过
-$result_delay_2 = mysqli_query($link, $sql_delay_2);
-$num_delay_2 = mysqli_num_rows($result_delay_2);
 
 //查询此学生所属答辩组
 $sql_group = "SELECT * from `reply_schedule` where `id` = '{$_SESSION['user_id']}'";
@@ -35,7 +30,8 @@ function echo_reply_schedule_table($row_group, $link)
     $result_teacher_num = mysqli_query($link, $sql_teacher_num);
     $num_teacher = mysqli_num_rows($result_teacher_num);
 
-    $sql_student_num = "SELECT * FROM `reply_schedule` WHERE `group_id` = '{$group_id}' AND `permission` = 'student' ";
+    $sql_student_num = "SELECT * FROM `reply_schedule` 
+    WHERE `group_id` = '{$group_id}' AND `permission` = 'student' AND `reply_delay` = 0 AND `first_paper_flag` = 1 ";
     $result_student_num = mysqli_query($link, $sql_student_num);
     $num_student = mysqli_num_rows($result_student_num);
     echo <<< archemiya
@@ -76,6 +72,11 @@ archemiya;
         echo "</div>";
     } else {
         echo "";
+    }
+    if ($num_student >= $num_teacher) {
+        $num_student = $num_student;
+    } else {
+        $num_student = $num_teacher;
     }
     for ($i = 0; $i < $num_student; $i++) {
         $row_teacher = mysqli_fetch_array($result_teacher_num, MYSQLI_BOTH);
@@ -122,7 +123,7 @@ archemiya;
 
     <?php
     //当前论文初稿尚未审核完成且时间未超过截止时间且该学生未申请
-    if (!$num_ispass && $today <= $row_control['first_paper_deadline'] && $row_control['first_paper_deadline']!=NULL ) {
+    if (!$num_ispass  && $today <= $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL) {
         echo <<< archemiya
         <br/>
         <div class='alert alert-danger' role='alert'>
@@ -131,20 +132,20 @@ archemiya;
             前完成
         </div>
 archemiya;
-    } 
+    }
     //当前论文初稿尚未审核完成但时间已超过截止时间
-    elseif(!$num_ispass && $today > $row_control['first_paper_deadline'] && $row_control['first_paper_deadline']!=NULL){
+    elseif (!$num_ispass && !$num_delay_1 && $today > $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL) {
         echo <<< archemiya
         <br/>
         <div class='alert alert-danger' role='alert'>
             <strong>当前已超过论文初稿提交截止时间，您未完成论文初稿审核，将失去参加论文一辩资格</strong>
         </div>
 archemiya;
-    }elseif ($num_delay_1) {
+    } elseif ($num_delay_1) {
         echo <<< archemiya
         <br/>
-        <div class='alert alert-danger' role='alert'>
-            您已申请延期答辩，请等待重新分组
+        <div class='alert alert-info' role='alert'>
+            您已申请延期答辩，请等待重新二辩分组
         </div>
 archemiya;
     } else {

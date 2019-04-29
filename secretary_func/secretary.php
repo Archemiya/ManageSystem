@@ -27,6 +27,10 @@ include '../header.php';
                                                                                     echo "class=active";
                                                                                 } ?>><i class="glyphicon glyphicon-sort-by-alphabet">
                             答辩安排</i><span class="sr-only">(current)</span></a></li>
+                <li><a href="./secretary.php?func=reply_record" method="GET" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "reply_record") {
+                                                                                    echo "class=active";
+                                                                                } ?>><i class="glyphicon glyphicon-pencil">
+                            答辩记录</i><span class="sr-only">(current)</span></a></li>
 
                 <br />
                 <li><a href="./secretary.php?func=stu_func_control" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "stu_func_control")) {
@@ -59,7 +63,7 @@ include '../header.php';
                     case "delay_judge":
                         if (isset($_GET["id"])) {
                             include "sec_review_topic_detail.php";
-                        }elseif(isset($_GET['judge'])){
+                        } elseif (isset($_GET['judge'])) {
                             include "sec_delay_detail.php";
                         } else {
                             include "sec_delay_judge.php";
@@ -78,13 +82,8 @@ include '../header.php';
                     case "t_func_control":
                         include "sec_t_func_control.php";
                         break;
-                    case "answer_information":
-                    case "deferred_reply":
-                    case "second_reply":
                     case "reply_record":
-                    case "final_draft":
-                    case "inquiry_result":
-                    case "excellent_paper":
+                        include "sec_reply_record.php";
                 }
             } else {
                 echo "欢迎";

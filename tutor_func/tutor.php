@@ -126,7 +126,11 @@ include '../header.php';
                             }
                             break;
                         case "answer_information":
+                            if (isset($_GET["id"])) {
+                                include "t_topic_detail.php";
+                            } else{
                             include "t_answer_information.php";
+                            }
                             break;
                         case "reply_record":
                             include "t_reply_record.php";
@@ -134,7 +138,11 @@ include '../header.php';
                         case "second_reply":
                             break;
                         case "reply_grade":
+                        if (isset($_GET["id"])) {
+                            include "t_topic_detail.php";
+                        } else{
                             include "t_reply_grade.php";
+                        }
                             break;
                         case "final_draft":
                         case "inquiry_result":
