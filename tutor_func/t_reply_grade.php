@@ -113,7 +113,7 @@ archemiya;
         } 
         else {
             echo "<td class='th-title-center alert alert-info' role='alert'>";
-            echo "成绩：";
+            echo "您的评分：";
             echo $row_grade['reply_grade'];
             echo "</td>";
             echo "<td>";
@@ -212,8 +212,8 @@ archemiya;
             }
         } else {
             echo "<td class='th-title-center alert alert-info' role='alert'>";
-            echo "最终成绩：";
-            echo $row_grade['reply_grade'];
+            echo "您的评分：";
+            echo $row_grade['teacher_grade'];
             echo "</td>";
             echo "<td>";
             echo "";
@@ -246,6 +246,7 @@ archemiya;
 
     echo_student_reply_schedule_table($link);
 
+    /*由于此页面没法通用一个modalTable，故此处使用for循环输出各个不同id的modalTable */
     //查询当前答辩组一辩学生
     $group_id = $row_group['group_id'];
     $sql_student_num = "SELECT * FROM `reply_schedule` 
@@ -253,6 +254,7 @@ archemiya;
     $result_student_num = mysqli_query($link, $sql_student_num);
     $num_student = mysqli_num_rows($result_student_num);
 
+    //根据学生id循环输出modalTable
     for ($i = 0; $i < $num_student; $i++) {
         $row_student = mysqli_fetch_array($result_student_num, MYSQLI_BOTH);
 
@@ -329,22 +331,22 @@ archemiya;
                 </div>
                 <div class="modal-body">
 archemiya;
-        echo "<form action=\"../score.php?func=reply&id={$row_topic['student_id']}\" method=\"POST\" class=\"form-horizontal\">";
-        echo "<input type=\"hidden\" name=\"topic_id\" value=\"{$row_topic['id']}\">";
-        echo "<input type=\"hidden\" name=\"student_id\" value=\"{$row_topic['student_id']}\">";
-        echo "<input type=\"hidden\" name=\"student_name\" value=\"{$row_topic['student_name']}\">";
+        echo "<form action=\"../score.php?func=teacher_grade&id={$row_student['student_id']}\" method=\"POST\" class=\"form-horizontal\">";
+        echo "<input type=\"hidden\" name=\"topic_id\" value=\"{$row_student['id']}\">";
+        echo "<input type=\"hidden\" name=\"student_id\" value=\"{$row_student['student_id']}\">";
+        echo "<input type=\"hidden\" name=\"student_name\" value=\"{$row_student['student_name']}\">";
 
         echo <<< archemiya
                     <div class="form-group">
                         <label for="inputTopicName" class="col-sm-2 control-label">分数（百分制）</label>
                         <div class="col-sm-3">
-                            <input name="reply_grade" class="form-control" rows="20"></textarea>
+                            <input name="teacher_grade" class="form-control" rows="20"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputTopicName" class="col-sm-2 control-label">说明（点评）</label>
                         <div class="col-sm-8">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-                            <textarea name="reply_grade_description" class="form-control" rows="20"></textarea>
+                            <textarea name="teacher_grade_description" class="form-control" rows="20"></textarea>
                         </div>
                     </div>
 

@@ -1,4 +1,7 @@
 <?php
+//此文件用于显示此学生的答辩信息
+
+/* 此页面需结合延期答辩页面处申请失败的意义来输出信息 */
 include "../link.php";
 include "../secretary_func/sec_query_stu_control.php";
 
@@ -10,13 +13,16 @@ $today = date('Y-m-d');
     1 论文初稿审核完成
     2 未申请延期答辩
 */
+
+//查询此学生是否通过了论文初稿审核
 $sql_ispass = "SELECT * from `first_paper_record` where `student_id` = '{$_SESSION['user_id']}' AND `final_flag` = 1 ";
 $result_ispass = mysqli_query($link, $sql_ispass);
 $num_ispass = mysqli_num_rows($result_ispass);
 
-$sql_delay_1 = "SELECT * from `reply_schedule` where `id` = '{$_SESSION['user_id']}' AND `reply_delay` = 1 "; //为0表示未申请延期 为1表示申请成功 为2表示申请未通过
-$result_delay_1 = mysqli_query($link, $sql_delay_1);
-$num_delay_1 = mysqli_num_rows($result_delay_1);
+//查询此学生的延期答辩申请状态
+$sql_delay = "SELECT * from `reply_schedule` where `id` = '{$_SESSION['user_id']}' "; //为0表示未申请延期 为2表示已申请未审核 为1表示申请成功 为-1表示申请未通过
+$result_delay = mysqli_query($link, $sql_delay);
+$row_delay = mysqli_fetch_array($result_delay, MYSQLI_BOTH);
 
 //查询此学生所属答辩组
 $sql_group = "SELECT * from `reply_schedule` where `id` = '{$_SESSION['user_id']}'";
@@ -122,34 +128,38 @@ archemiya;
 <body>
 
     <?php
-    //当前论文初稿尚未审核完成且时间未超过截止时间且该学生未申请
-    if (!$num_ispass  && $today <= $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL) {
+    /* 对于答辩信息的显示应根据答辩秘书的流程控制来进行显示 */
+    //当前一次答辩流程尚未开启
+    if (!$row_control['first_reply']) {
         echo <<< archemiya
         <br/>
         <div class='alert alert-danger' role='alert'>
-            当前尚未提交论文初稿，请在
-            <strong>{$row_control['first_paper_deadline']}</strong>
-            前完成
+            <strong>当前答辩流程尚未开启，请等待教务处开启</strong>
         </div>
 archemiya;
-    }
-    //当前论文初稿尚未审核完成但时间已超过截止时间
-    elseif (!$num_ispass && !$num_delay_1 && $today > $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL) {
-        echo <<< archemiya
-        <br/>
-        <div class='alert alert-danger' role='alert'>
-            <strong>当前已超过论文初稿提交截止时间，您未完成论文初稿审核，将失去参加论文一辩资格</strong>
-        </div>
-archemiya;
-    } elseif ($num_delay_1) {
-        echo <<< archemiya
+    } elseif ($row_control['first_reply']) {
+        //此学生已完成论文初稿审核且未申请延期答辩
+        if ($num_ispass && $row_delay['reply_delay'] == 0) {
+            echo_reply_schedule_table($row_group, $link);
+        }
+        //此学生 未完成 或 已完成论文初稿审核 但通过延期审核
+        elseif ((!$num_ispass || $num_ispass) && $row_delay['reply_delay'] == 1) {
+            echo <<< archemiya
         <br/>
         <div class='alert alert-info' role='alert'>
-            您已申请延期答辩，请等待重新二辩分组
+            您已申请延期答辩，请注意关注教务处公布的二次答辩信息
         </div>
 archemiya;
-    } else {
-        echo_reply_schedule_table($row_group, $link);
+        }
+        //此学生申请延期答辩但未通过答辩（此处只讨论一种情况，即此学生态度恶劣的情况）
+        elseif ($row_delay['reply_delay'] == -1) {
+            echo <<< archemiya
+        <br/>
+        <div class='alert alert-info' role='alert'>
+            您未通过延期答辩审核，具体安排请查看教务处网站通知
+        </div>
+archemiya;
+        }
     }
     ?>
 </body>

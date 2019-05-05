@@ -15,7 +15,7 @@ switch ($get) {
         break;
 
     case "reply":
-    $sql = "INSERT INTO `student_reply_grade_record` 
+        $sql = "INSERT INTO `student_reply_grade_record` 
     (`record_id`, 
     `student_id`,
     `student_name`,
@@ -56,11 +56,23 @@ switch ($get) {
             $final_grade /= $num_search;
             echo $final_grade;
 
-        $sql_final = "UPDATE `student_grade` 
+            $sql_final = "UPDATE `student_grade` 
         SET `reply_grade` = '{$final_grade}'
         where `student_id` = '{$_POST['student_id']}'";
             mysqli_query($link, $sql_final);
         }
         echo "<script>alert('评分成功！');history.go(-1)</script>";
         break;
+
+    case "teacher_grade":
+        /* echo $_POST['teacher_grade'];
+        echo $_POST['teacher_grade_description'];
+        echo $_POST['student_id']; */
+        $sql = "UPDATE `student_grade`
+        set `teacher_grade` = '{$_POST['teacher_grade']}',
+        `teacher_grade_description` = '{$_POST['teacher_grade_description']}'
+        where `student_id` = '{$_POST['student_id']}' 
+        ";
+        mysqli_query($link,$sql);
+        echo "<script>alert('评分成功！');history.go(-1)</script>";
 }

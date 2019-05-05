@@ -71,7 +71,8 @@ function paper_table_echo($link, $today, $num_first_paper, $row_topic, $row_cont
 archemiya;
 
     //当前是否超过截止时间
-    if ($today <= $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL) {
+    if (($today <= $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL)
+    || $row_control['first_paper_deadline'] == NULL ) {
         //状态1 未提交状态，判断条件：查询最新报告未发现查询结果
         if (!$num_first_paper) {
             echo <<< archemiya
@@ -232,7 +233,8 @@ archemiya;
 
     <?php
     //先判断是否超过截止时间
-    if ($today <= $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL) {
+    if ( ($today <= $row_control['first_paper_deadline'] && $row_control['first_paper_deadline'] != NULL) 
+    || $row_control['first_paper_deadline'] == NULL ) {
         if (!$num_midterm_ispassed && $today <= $row_control['midterm_deadline']) {
             echo <<< archemiya
     <br/>
@@ -252,7 +254,7 @@ archemiya;
     <br/>
     <div class="alert alert-danger" role="alert">
     论文初稿截止时间为<strong>{$row_control['first_paper_deadline']}</strong>，
-    请及时完成论文初稿审核。如需申请延期答辩请在<strong>{$row_control['delay_reply_deadline']}</strong>前申请。(点击左侧
+    请及时完成论文初稿审核。如需申请延期答辩请在<strong>{$row_control['delay_reply_deadline']}</strong>前申请（此处截止时间均指当天零点。请点击左侧
     <span>
     <a href='student.php?func=delay_reply'>延期答辩</a></span>
     功能按钮申请)

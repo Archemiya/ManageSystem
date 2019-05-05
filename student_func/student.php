@@ -38,17 +38,15 @@ include '../header.php';
                                                                 } ?>><i class="glyphicon glyphicon-file"> 论文初稿</i><span class="sr-only">(current)</span></a></li>
                 <br />
 
-                <li><a href="./student.php?func=answer_information"<?php if (isset($_GET["func"]) && ($_GET["func"]) == "answer_information") {
-                                                                    echo "class=active";
-                                                                } ?>><i class="glyphicon glyphicon-list-alt"> 答辩信息
-                        </i><span class="sr-only">(current)</span></a></li>
-
-
                 <li><a href="./student.php?func=delay_reply"<?php if (isset($_GET["func"]) && ($_GET["func"]) == "delay_reply") {
                                                                     echo "class=active";
                                                                 } ?>><i class="glyphicon glyphicon-warning-sign"> 延期答辩
                         </i><span class="sr-only">(current)</span></a></li>
 
+                <li><a href="./student.php?func=answer_information"<?php if (isset($_GET["func"]) && ($_GET["func"]) == "answer_information") {
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-list-alt"> 答辩信息
+                        </i><span class="sr-only">(current)</span></a></li>
 
                 <li><a href="./student.php?func=second_reply" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "second_reply") {
                                                                     echo "class=active";

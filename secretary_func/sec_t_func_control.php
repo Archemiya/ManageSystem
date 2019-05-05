@@ -213,6 +213,52 @@ $today = date('Y-m-d');
 
 
                 </tr>
+                <tr>
+                    <!-- 
+                        一次答辩开启条件：
+                            必须等待所有延期答辩申请审核结束
+
+                            ***注意此处是审核结束，不是到达截止时间，注意区别。
+                            此处实现需要查询时候不存在申请状态码为2的学生，如果存在即表示有学生的申请未完成审核
+                     -->
+                    <td class="col-xs-5 th-title-center">一次答辩</td>
+                    <?php
+                    //查看当前所有申请状态 = 2的学生
+                    $sql_delay = "SELECT * FROM `reply_schedule` where `reply_delay` =2";
+                    $result_delay = mysqli_query($link, $sql_delay);
+                    $num_delay = mysqli_num_rows($result_delay);
+                    
+                    if ($num_delay != 0 && $row_control['first_reply'] == 0) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\" >";
+                        echo "当前延期答辩审核尚未全部完成，不可开启老师一次答辩流程";
+                    } else if ($num_delay == 0 && $row_control['first_reply'] == 0 ) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
+                        echo "当前可以开启老师一次答辩流程，请根据学校要求及时开启";
+                    } else {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\">";
+                        echo "当前老师一次答辩流程已开启";
+                    }
+                    ?>
+                    </td>
+
+                    
+
+                    <td class="col-xs-2 th-title-center">
+                        <?php
+                        if ($num_delay != 0 && $row_control['first_reply'] == 0) {
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                        } else if ($num_delay == 0 && $row_control['first_reply'] == 0 ) {
+                            echo "<a href='sec_chang_t_control_value.php?func=first_reply' 
+                                class='btn btn-primary' role='button'
+                                onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启选题</a>";
+                        } else {
+                            echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
+                        }
+                        ?>
+                    </td>
+
+
+                </tr>
             </tbody>
         </table>
     </div>
