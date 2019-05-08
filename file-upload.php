@@ -123,7 +123,7 @@ if ((($_FILES["file"]["type"] == "application/msword")
 
         $sql = "INSERT INTO `reply_record` 
         (`topic_id`, 
-        `topic_name`, 
+        `topic_name`,
         `student_id`, 
         `student_name`, 
         `teacher_id`, 

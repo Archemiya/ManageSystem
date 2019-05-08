@@ -6,7 +6,7 @@ include "sec_query_t_control.php";
 
 $sql_stu_control = "SELECT * from `stu_func_control` where `id` = 1";
 $result_stu_control = mysqli_query($link, $sql_stu_control);
-$row_stu_control = mysqli_fetch_array($result_stu_control,MYSQLI_BOTH);
+$row_stu_control = mysqli_fetch_array($result_stu_control, MYSQLI_BOTH);
 
 date_default_timezone_set('Asia/Shanghai');
 $today = date('Y-m-d');
@@ -14,8 +14,8 @@ $today = date('Y-m-d');
 
 <body>
     <div class="alert alert-info" role="alert">
-        <span><strong>开题流程</strong></span>表示导师可以对开题报告进行评分（开启条件：所有学生全部上交开题报告最终稿或超过提交截止日期）<br/>
-        <span><strong>中期流程</strong></span>只需设置截止时间，之后的开启条件为是否开启开题流程，此流程无需手动打开<br/>
+        <span><strong>开题流程</strong></span>表示导师可以对开题报告进行评分（开启条件：所有学生全部上交开题报告最终稿或超过提交截止日期）<br />
+        <span><strong>中期流程</strong></span>只需设置截止时间，之后的开启条件为是否开启开题流程，此流程无需手动打开<br />
         <div>
         </div>
     </div>
@@ -227,11 +227,19 @@ $today = date('Y-m-d');
                     $sql_delay = "SELECT * FROM `reply_schedule` where `reply_delay` =2";
                     $result_delay = mysqli_query($link, $sql_delay);
                     $num_delay = mysqli_num_rows($result_delay);
-                    
+
+                    //查看当前所有答辩安排详情
+                    $sql_detail = "SELECT * FROM `reply_schedule` where `reply_schedule`.`place` is NULL";
+                    $result_detail = mysqli_query($link, $sql_detail);
+                    $num_detail = mysqli_num_rows($result_detail);
+
                     if ($num_delay != 0 && $row_control['first_reply'] == 0) {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-warning\" >";
                         echo "当前延期答辩审核尚未全部完成，不可开启老师一次答辩流程";
-                    } else if ($num_delay == 0 && $row_control['first_reply'] == 0 ) {
+                    } elseif ($num_delay == 0 && $row_control['first_reply'] == 0 && $num_detail) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\" >";
+                        echo "当前答辩详情安排尚未全部完成，请及时完善答辩详情信息";
+                    } else if ($num_delay == 0 && $row_control['first_reply'] == 0 && !$num_detail) {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
                         echo "当前可以开启老师一次答辩流程，请根据学校要求及时开启";
                     } else {
@@ -241,16 +249,18 @@ $today = date('Y-m-d');
                     ?>
                     </td>
 
-                    
+
 
                     <td class="col-xs-2 th-title-center">
                         <?php
                         if ($num_delay != 0 && $row_control['first_reply'] == 0) {
                             echo "<button class='btn btn-warning' disabled>不可操作</button>";
-                        } else if ($num_delay == 0 && $row_control['first_reply'] == 0 ) {
+                        } elseif ($num_delay == 0 && $row_control['first_reply'] == 0 && $num_detail) {
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                        } else if ($num_delay == 0 && $row_control['first_reply'] == 0 && !$num_detail) {
                             echo "<a href='sec_chang_t_control_value.php?func=first_reply' 
                                 class='btn btn-primary' role='button'
-                                onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启选题</a>";
+                                onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启一辩</a>";
                         } else {
                             echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
                         }
@@ -258,6 +268,53 @@ $today = date('Y-m-d');
                     </td>
 
 
+                </tr>
+
+                <tr>
+                    <!-- 
+                        一次答辩评分开启条件：
+                            必须等待所有一次答辩结束
+
+                            即答辩秘书已上传所有一辩学生的答辩记录
+                     -->
+                    <td class="col-xs-5 th-title-center">一次答辩评分</td>
+                    <?php
+                    //查看当前所有一辩学生的数量
+                    $sql_first = "SELECT * FROM `reply_schedule` where `permission` = 'student' 
+                    AND `first_paper_flag` = 1 AND `reply_delay`=0 ";
+                    $result_first = mysqli_query($link, $sql_first);
+                    $num_first = mysqli_num_rows($result_first);
+
+                    //查看当前所有答辩安排详情
+                    $sql_record = "SELECT * FROM `reply_record` where 1";
+                    $result_record = mysqli_query($link, $sql_record);
+                    $num_record = mysqli_num_rows($result_record);
+
+                    if ($num_first > $num_record) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\" >";
+                        echo "当前答辩记录尚未全部上传完成，不可开启老师一次答辩评分流程";
+                    } else if ($num_first == $num_record && !$row_control['first_reply_grade']) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
+                        echo "当前可以开启老师一次答辩评分流程，请根据学校要求及时开启";
+                    } else {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\">";
+                        echo "当前老师一次答辩评分流程已开启";
+                    }
+                    ?>
+                    </td>
+                    <td class="col-xs-2 th-title-center">
+                        <?php
+                        if ($num_first > $num_record) {
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                        } elseif ($num_first == $num_record && !$row_control['first_reply_grade']) {
+                            echo "<a href='sec_chang_t_control_value.php?func=first_reply_grade' 
+                                class='btn btn-primary' role='button'
+                                onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启评分</a>";
+                        } else if ($num_delay == 0 && $row_control['first_reply'] == 0 && !$num_detail) { } else {
+                            echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
+                        }
+                        ?>
+                    </td>
                 </tr>
             </tbody>
         </table>

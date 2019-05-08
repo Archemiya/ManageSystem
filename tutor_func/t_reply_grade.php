@@ -1,5 +1,6 @@
 <?php
 include "../link.php";
+include "../secretary_func/sec_query_t_control.php";
 
 //查询此教师所属答辩组
 $sql_group = "SELECT * from `reply_schedule` where `id` = '{$_SESSION['user_id']}'";
@@ -242,7 +243,10 @@ archemiya;
         3.请各组答辩组长为二次答辩同学打分（注：二次答辩组导师成员为各组评阅组组长）<br />
     </div>
     <?php
+    //根据流程控制来判断是否开启
+    if($row_control['first_reply_grade']){
     echo_fisrt_reply_schedule_table($row_group, $link);
+    }
 
     echo_student_reply_schedule_table($link);
 

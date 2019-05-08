@@ -2,16 +2,17 @@
 session_start();
 $user = $_POST['account'];
 $psw = md5($_POST['passwd']);
+
 if (!isset($user) || !isset($psw)) {
     echo "<script>alert('请输入用户名或密码！'); history.go(-1);</script>";
 } else {
     include "link.php";
     $sql = "SELECT * FROM `user` WHERE `id` = \"{$user}\" AND `password` = \"{$psw}\" ";
     $result = mysqli_query($link, $sql);
-    if ($result && mysqli_num_rows($result)) {
-        $row = mysqli_fetch_array($result, MYSQLI_BOTH);
+    $row = mysqli_fetch_array($result, MYSQLI_BOTH);
+    if ($user == $row['id'] && $psw == $row['password']) {
         $_SESSION['user_permission'] = $row['permission'];
-        $_SESSION['user_special']= $row['special'];
+        $_SESSION['user_special'] = $row['special'];
         $_SESSION['user_id'] = $row['id'];
         $_SESSION['user_name'] = $row['name'];
         switch ($row["permission"]) {
@@ -33,4 +34,3 @@ if (!isset($user) || !isset($psw)) {
     }
     mysqli_close($link);
 }
-?>

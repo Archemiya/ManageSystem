@@ -4,8 +4,15 @@ include "../secretary_func/sec_query_t_control.php";
 $sql = "SELECT * FROM `topic`";
 $sql_passed_me_topic = "SELECT * FROM `topic` WHERE `teacher_id`='{$_SESSION['user_id']}' OR `topic_ispass`= 1"; //此处为教师课题展示界面，需要展示的只有自己的课题和其他老师已经过审的课题
 $result = mysqli_query($link, $sql);
+$num = mysqli_num_rows($result);
 $result_passed_me_topic = mysqli_query($link, $sql_passed_me_topic);
 $length = mysqli_num_rows($result_passed_me_topic);
+
+//查询学生人数，在课题显示页面应判断学生人数是否等于课题数
+$sql_student_num = "SELECT * FROM `user` where `permission` = 'student' ";
+$result_student_num = mysqli_query($link,$sql_student_num);
+$num_student = mysqli_num_rows($result_student_num);
+
 function table_echo($result, $result_passed_me_topic, $link, $length)
 {
     for ($i = 0; $i < $length; $i++) {
@@ -92,11 +99,18 @@ archemiya;
                 </tr>
             </thead>
             <tbody>
+archemiya;
+        
+        if($num == $num_student){
+            echo "";
+        }else{
+        echo <<< archemiya
                 <div id="toolbar">
                     <button type="button" class="btn btn-primary" data-toggle="modal"
                         data-target="#topicTable">创建课题</button>
                 </div>
 archemiya;
+        }
         table_echo($result, $result_passed_me_topic, $link, $length);
         echo <<< archemiya
             </tbody>

@@ -1,5 +1,6 @@
 <?php
 include "../link.php";
+include "../secretary_func/sec_query_t_control.php";
 
 //查询此教师所属答辩组
 $sql_group = "SELECT * from `reply_schedule` where `id` = '{$_SESSION['user_id']}'";
@@ -105,6 +106,17 @@ archemiya;
 <body>
 
     <?php
-    echo_reply_schedule_table($row_group, $link);
+    /* 对于答辩信息的显示应根据答辩秘书的流程控制来进行显示 */
+    //当前一次答辩流程尚未开启
+    if (!$row_control['first_reply']) {
+        echo <<< archemiya
+        <br/>
+        <div class='alert alert-danger' role='alert'>
+            <strong>当前答辩流程尚未开启，请等待教务处开启</strong>
+        </div>
+archemiya;
+    }else{
+        echo_reply_schedule_table($row_group, $link);
+    }
     ?>
 </body>

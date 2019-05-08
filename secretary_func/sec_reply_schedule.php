@@ -22,7 +22,7 @@ $sql_topic_ispass = "SELECT * FROM `topic` where `topic_ispass` = 1";
 $result_topic_ispass = mysqli_query($link, $sql_topic_ispass);
 $num_topic_ispass = mysqli_num_rows($result_topic_ispass);
 
-//查看当前所有人数以及已分配答辩组的人数
+//查看当前所有人数以及已分配答辩组的人数以及完善答辩详情的人数
 $sql_total = "SELECT * FROM `user` where `permission` = 'tutor' or `permission` = 'student' ";
 $result_total = mysqli_query($link, $sql_total);
 $num_total = mysqli_num_rows($result_total);
@@ -30,6 +30,15 @@ $num_total = mysqli_num_rows($result_total);
 $sql_schedule = "SELECT * FROM `reply_schedule` where 1";
 $result_schedule = mysqli_query($link, $sql_schedule);
 $num_schedule = mysqli_num_rows($result_schedule);
+
+$sql_detail = "SELECT * FROM `reply_schedule` where `reply_schedule`.`place` is not NULL";
+$result_detail = mysqli_query($link, $sql_detail);
+$num_detail = mysqli_num_rows($result_detail);
+
+//查看当前所有申请状态 = 2的学生 （通过查询所有状态为2的学生来判断是否有学生未完成申请审核）
+$sql_delay = "SELECT * FROM `reply_schedule` where `reply_delay` =2";
+$result_delay = mysqli_query($link, $sql_delay);
+$num_delay = mysqli_num_rows($result_delay);
 
 //此函数输出所有已分配好的答辩小组名单
 function echo_first_schedule_table($i, $link)
@@ -450,8 +459,11 @@ archemiya;
         }
     }
     /* 
-    答辩安排详情应在最终参加一辩的学生名单产生之后 即 当前服务器时间超过延期答辩申请截止时间
-    */ elseif ($today > $row_control['delay_reply_deadline'] && $row_control['delay_reply_deadline'] != NULL) {
+    答辩安排详情应在最终参加一辩的学生名单产生之后 即 所有延期答辩申请审核已结束 
+    && 同时确保所有组还未完善信息，若全部完善，则同样应该关闭
+    */ 
+    elseif ($num_delay == 0
+    && $num_detail < $num_total) {
         echo <<< archemiya
         <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#detail">
         添加答辩安排详情
@@ -459,6 +471,13 @@ archemiya;
         <p></p>
         <br/>
 archemiya;
+        for ($i = 0; $i < $group_num; $i++) {
+            echo_reply_schedule_table($i, $link);
+            echo "<br/>";
+        }
+    }
+    elseif ($num_delay == 0
+    && $num_detail == $num_total) {
         for ($i = 0; $i < $group_num; $i++) {
             echo_reply_schedule_table($i, $link);
             echo "<br/>";
