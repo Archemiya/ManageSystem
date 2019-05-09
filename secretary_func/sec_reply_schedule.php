@@ -35,6 +35,11 @@ $sql_detail = "SELECT * FROM `reply_schedule` where `reply_schedule`.`place` is 
 $result_detail = mysqli_query($link, $sql_detail);
 $num_detail = mysqli_num_rows($result_detail);
 
+//查看当前时候已有学生
+$sql_ishave = "SELECT * FROM `reply_schedule` where `permission` = 'student'";
+$result_ishave = mysqli_query($link, $sql_ishave);
+$num_ishave = mysqli_num_rows($result_ishave);
+
 //查看当前所有申请状态 = 2的学生 （通过查询所有状态为2的学生来判断是否有学生未完成申请审核）
 $sql_delay = "SELECT * FROM `reply_schedule` where `reply_delay` =2";
 $result_delay = mysqli_query($link, $sql_delay);
@@ -443,7 +448,6 @@ archemiya;
     //判断是否所有学生已经完成选题
     elseif (
         $num_topic == $num_topic_ispass
-        && $num_schedule == $num_total
     ) {
         if ($num_total != $num_schedule) {
             echo <<< archemiya
@@ -460,9 +464,11 @@ archemiya;
     /* 
     答辩安排详情应在最终参加一辩的学生名单产生之后 即 所有延期答辩申请审核已结束 
     && 同时确保所有组还未完善信息，若全部完善，则同样应该关闭
-    */ 
-    elseif ($num_delay == 0
-    && $num_detail < $num_total) {
+    */ elseif (
+        $num_ishave != 0
+        && $num_delay == 0
+        && $num_detail < $num_total
+    ) {
         echo <<< archemiya
         <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#detail">
         添加答辩安排详情
@@ -474,9 +480,10 @@ archemiya;
             echo_reply_schedule_table($i, $link);
             echo "<br/>";
         }
-    }
-    elseif ($num_delay == 0
-    && $num_detail == $num_total) {
+    } elseif (
+        $num_delay == 0
+        && $num_detail == $num_total
+    ) {
         for ($i = 0; $i < $group_num; $i++) {
             echo_reply_schedule_table($i, $link);
             echo "<br/>";
