@@ -339,8 +339,8 @@ archemiya;
         <strong>本页面为答辩组分配页面，请谨慎操作</strong>
         <br />
         答辩秘书应在<strong>开题阶段分配好所有的开题答辩小组</strong>，
-        分配好答辩小组后可在<strong>后期添加答辩安排详情</strong>,
-        最后系统会根据学生的<strong>论文初稿审核情况和延期答辩申请情况</strong>确定一辩的最终人员名单
+        最后系统会根据学生的<strong>论文初稿审核情况和延期答辩申请情况</strong>确定一辩的最终人员名单，
+        分配好答辩小组后可在<strong>一辩最终人员名单确定之后</strong>添加答辩安排详情
     </div>
     <?php
 
@@ -446,47 +446,43 @@ archemiya;
 archemiya;
     }
     //判断是否所有学生已经完成选题
-    elseif (
-        $num_topic == $num_topic_ispass
-    ) {
+    elseif ($num_topic == $num_topic_ispass) {
+        //当前所有学生与导师尚未分配完毕
         if ($num_total != $num_schedule) {
             echo <<< archemiya
             <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#table">
             添加答辩小组
             </button>
 archemiya;
+            for ($i = 0; $i < $group_num; $i++) {
+                echo_first_schedule_table($i, $link);
+                echo "<br/>";
+            }
         }
-        for ($i = 0; $i < $group_num; $i++) {
-            echo_first_schedule_table($i, $link);
-            echo "<br/>";
-        }
-    }
-    /* 
-    答辩安排详情应在最终参加一辩的学生名单产生之后 即 所有延期答辩申请审核已结束 
-    && 同时确保所有组还未完善信息，若全部完善，则同样应该关闭
-    */ elseif (
-        $num_ishave != 0
-        && $num_delay == 0
-        && $num_detail < $num_total
-    ) {
-        echo <<< archemiya
+        /* 
+        答辩安排详情应在最终参加一辩的学生名单产生之后 即 所有延期答辩申请审核已结束 
+        && 同时确保所有组还未完善信息，若全部完善，则同样应该关闭
+        */ 
+        //当前答辩组已经分配完成，且所有延期答辩申请已经结束，且当前存在未添加详情的人
+        elseif ($num_total == $num_schedule && $num_delay == 0 && $num_detail < $num_total) {
+            echo <<< archemiya
         <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#detail">
         添加答辩安排详情
         </button>
         <p></p>
         <br/>
 archemiya;
-        for ($i = 0; $i < $group_num; $i++) {
-            echo_reply_schedule_table($i, $link);
-            echo "<br/>";
-        }
-    } elseif (
-        $num_delay == 0
-        && $num_detail == $num_total
-    ) {
-        for ($i = 0; $i < $group_num; $i++) {
-            echo_reply_schedule_table($i, $link);
-            echo "<br/>";
+            for ($i = 0; $i < $group_num; $i++) {
+                echo_reply_schedule_table($i, $link);
+                echo "<br/>";
+            }
+        } 
+        //当前答辩组已经分配完成，且所有延期答辩申请已经结束，但当前所有人已全部添加详情
+        elseif ($num_ishave != 0 && $num_delay == 0 && $num_detail == $num_total) {
+            for ($i = 0; $i < $group_num; $i++) {
+                echo_reply_schedule_table($i, $link);
+                echo "<br/>";
+            }
         }
     }
     ?>
