@@ -270,13 +270,20 @@ $today = date('Y-m-d');
 
                             ***注意此处是审核结束，不是到达截止时间，注意区别。
                             此处实现需要查询时候不存在申请状态码为2的学生，如果存在即表示有学生的申请未完成审核
-
+                            ***此处应判断reply_schedule是否存在学生***
                      -->
                     <td class="col-xs-5 th-title-center">一次答辩</td>
                     <?php
+
+                    //查看当前时候已有学生
+                    $sql_ishave = "SELECT * FROM `reply_schedule` where `permission` = 'student'";
+                    $result_ishave = mysqli_query($link, $sql_ishave);
+                    $num_ishave = mysqli_num_rows($result_ishave);
+
                     //查看当前所有申请状态 = 2的学生 （通过查询所有状态为2的学生来判断是否有学生未完成申请审核）
                     $sql_delay = "SELECT * FROM `reply_schedule` where `reply_delay` =2";
                     $result_delay = mysqli_query($link, $sql_delay);
+                    $row_delay = mysqli_fetch_array($result_delay, MYSQLI_BOTH);
                     $num_delay = mysqli_num_rows($result_delay);
 
                     //查看当前所有答辩安排详情
@@ -284,33 +291,42 @@ $today = date('Y-m-d');
                     $result_detail = mysqli_query($link, $sql_detail);
                     $num_detail = mysqli_num_rows($result_detail);
 
-                    if ($num_delay != 0 && $row_control['reply_delay'] == 0) {
+                    if (!$num_ishave) {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-warning\" >";
                         echo "当前延期答辩审核尚未全部完成，不可开启学生一次答辩流程";
-                    } elseif ($num_delay == 0 && $row_control['first_reply'] == 0 && $num_detail) {
-                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\" >";
-                        echo "当前答辩详情安排尚未全部完成，请及时完善答辩详情信息";
-                    } else if ($num_delay == 0 && $row_control['first_reply'] == 0 && !$num_detail) {
-                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
-                        echo "当前可以开启学生一次答辩流程，请根据学校要求及时开启";
-                    } else {
-                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\">";
-                        echo "当前学生一次答辩流程已开启";
+                    } elseif ($num_ishave) {
+                        if ($num_delay != 0 && $row_control['reply_delay'] == 0) {
+                            echo "<td class=\"col-xs-5 th-title-center alert alert-warning\" >";
+                            echo "当前延期答辩审核尚未全部完成，不可开启学生一次答辩流程";
+                        } elseif ($num_delay == 0 && $row_control['first_reply'] == 0 && $num_detail) {
+                            echo "<td class=\"col-xs-5 th-title-center alert alert-warning\" >";
+                            echo "当前答辩详情安排尚未全部完成，请及时完善答辩详情信息";
+                        } else if ($num_delay == 0 && $row_control['first_reply'] == 0 && !$num_detail) {
+                            echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
+                            echo "当前可以开启学生一次答辩流程，请根据学校要求及时开启";
+                        } else {
+                            echo "<td class=\"col-xs-5 th-title-center alert alert-info\">";
+                            echo "当前学生一次答辩流程已开启";
+                        }
                     }
                     ?>
                     </td>
                     <td class="col-xs-2 th-title-center">
                         <?php
-                        if ($num_delay != 0 && $row_control['reply_delay'] == 0) {
-                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
-                        } elseif ($num_delay == 0 && $row_control['first_reply'] == 0 && $num_detail) {
-                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
-                        } else if ($num_delay == 0 && $row_control['first_reply'] == 0 && !$num_detail) {
-                            echo "<a href='sec_chang_stu_control_value.php?func=first_reply' 
+                        if (!$num_ishave) {
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";                            
+                        } elseif ($num_ishave) {
+                            if ($num_delay != 0 && $row_control['reply_delay'] == 0) {
+                                echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                            } elseif ($num_delay == 0 && $row_control['first_reply'] == 0 && $num_detail) {
+                                echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                            } else if ($num_delay == 0 && $row_control['first_reply'] == 0 && !$num_detail) {
+                                echo "<a href='sec_chang_stu_control_value.php?func=first_reply' 
                                 class='btn btn-primary' role='button'
-                                onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启选题</a>";
-                        } else {
-                            echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
+                                onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启一次答辩</a>";
+                            } else {
+                                echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
+                            }
                         }
                         ?>
                     </td>
@@ -413,7 +429,7 @@ $today = date('Y-m-d');
                     } elseif ((!$row_control['second_reply'])
                         && $num_first == $num_final_grade_num
                     ) {
-                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\">";
                         echo "请根据学校要求及时打开二次答辩流程";
                     } else {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-info\">";

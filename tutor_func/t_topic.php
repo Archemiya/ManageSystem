@@ -131,14 +131,14 @@ archemiya;
 
                     <form action="t_add_topic.php" method="POST" class="form-horizontal">
                         <div class="form-group">
-                            <label for="inputTopicName" class="col-sm-3 control-label">课题名称</label>
+                            <label for="inputTopicName" class="col-sm-3 control-label" required>课题名称</label>
                             <div class="col-sm-8">
                                 <input type="topicName" name="topic_name" class="form-control">
                             </div>
                         </div>
                         <div class="form-group">
 
-                            <label for="inputTopicType" class="col-sm-3 control-label">课题类型</label>
+                            <label for="inputTopicType" class="col-sm-3 control-label" required>课题类型</label>
                             <div class="col-sm-3">
                                 <select type="topicType" name="topic_type" class="form-control">
                                     <option></option>
@@ -146,7 +146,7 @@ archemiya;
                                     <option>毕业论文</option>
                                 </select>
                             </div>
-                            <label for="inputTopicNature" class="col-sm-2 control-label">题目性质</label>
+                            <label for="inputTopicNature" class="col-sm-2 control-label" required>题目性质</label>
                             <div class="col-sm-3">
                                 <select type="topicNature" name="topic_nature" class="form-control">
                                     <option></option>
@@ -155,7 +155,7 @@ archemiya;
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputTopicSource" class="col-sm-3 control-label">题目来源</label>
+                            <label for="inputTopicSource" class="col-sm-3 control-label" required>题目来源</label>
                             <div class="col-sm-3">
                                 <select type="topicSource" name="topic_source" class="form-control">
                                     <option></option>
@@ -164,7 +164,7 @@ archemiya;
                                     <option>与外单位合作工程科研</option>
                                 </select>
                             </div>
-                            <label for="inputTopicEase" class="col-sm-2 control-label">题目预计难易程度</label>
+                            <label for="inputTopicEase" class="col-sm-2 control-label" required>题目预计难易程度</label>
                             <div class="col-sm-3">
                                 <select type="topicEase" name="topic_ease" class="form-control">
                                     <option></option>
@@ -175,29 +175,29 @@ archemiya;
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputTopicIntro" class="col-sm-3 control-label">题目简介</label>
+                            <label for="inputTopicIntro" class="col-sm-3 control-label" required>题目简介</label>
                             <div class="col-sm-8">
                                 <textarea type="topicIntro" name="topic_intro" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputTopicReq" class="col-sm-3 control-label">毕业设计(论文)要求</label>
+                            <label for="inputTopicReq" class="col-sm-3 control-label" required>毕业设计(论文)要求</label>
                             <div class="col-sm-8">
                                 <textarea type="topicReq" name="topic_request" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputTopicRef" class="col-sm-3 control-label">主要参考资料</label>
+                            <label for="inputTopicRef" class="col-sm-3 control-label" required>主要参考资料</label>
                             <div class="col-sm-8">
                                 <textarea type="topicRef" name="topic_ref" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputTopicOth" class="col-sm-3 control-label">其他指导老师【可选】</label>
+                            <label for="inputTopicOth" class="col-sm-3 control-label" required>其他指导老师【可选】</label>
                             <div class="col-sm-3">
                                 <input type="topicOth" name="topic_other" class="form-control">
                             </div>
-                            <label for="inputTopicChoseMode" class="col-sm-2 control-label">课题选择模式</label>
+                            <label for="inputTopicChoseMode" class="col-sm-2 control-label" required>课题选择模式</label>
                             <div class="col-sm-3">
                                 <select type="topicChoseMode" name="topic_chosemode" class="form-control">
                                     <option></option>
@@ -206,14 +206,14 @@ archemiya;
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputTopicApp" class="col-sm-3 control-label">课题适用专业</label>
+                            <label for="inputTopicApp" class="col-sm-3 control-label" required>课题适用专业</label>
                             <div class="col-sm-3">
                                 <select type="topicApp" name="topic_app" class="form-control">
                                     <option></option>
                                     <option>保密管理</option>
                                 </select>
                             </div>
-                            <label for="inputTopicWorkLoad" class="col-sm-2 control-label">工作量大小</label>
+                            <label for="inputTopicWorkLoad" class="col-sm-2 control-label" required>工作量大小</label>
                             <div class="col-sm-3">
                                 <select type="topicWorkLoad" name="topic_workload" class="form-control">
                                     <option></option>
@@ -225,7 +225,7 @@ archemiya;
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-10">
-                                <button type="submit" class="btn btn-primary">上传课题</button>
+                                <button type="submit" class="btn btn-primary" required>上传课题</button>
                             </div>
                         </div>
                     </form>

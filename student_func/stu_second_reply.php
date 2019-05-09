@@ -1,6 +1,7 @@
 <?php
 //此页面为二次答辩安排页面
 include "../link.php";
+include "../secretary_func/sec_query_stu_control.php";
 
 //输出二次答辩安排表
 function echo_second_reply_schedule_table($link)
@@ -98,6 +99,15 @@ archemiya;
        本页面为二次答辩安排详情页面，请牢记自己的答辩时间与地点并按时参加答辩
     </div>
     <?php
-    echo_second_reply_schedule_table($link);
+    if(!$row_control['second_reply'])
+    {
+        echo <<< archemiya
+        <div class="alert alert-danger" role='alert'>
+    当前二次答辩流程尚未开启
+        </div>
+archemiya;
+    }elseif($row_control['second_reply']){
+        echo_second_rely_schedule_table($link);
+    }
     ?>
 </body>
