@@ -285,7 +285,7 @@ $today = date('Y-m-d');
                     $result_first = mysqli_query($link, $sql_first);
                     $num_first = mysqli_num_rows($result_first);
 
-                    //查看当前所有答辩安排详情
+                    //查看当前所有答辩记录数量
                     $sql_record = "SELECT * FROM `reply_record` where 1";
                     $result_record = mysqli_query($link, $sql_record);
                     $num_record = mysqli_num_rows($result_record);

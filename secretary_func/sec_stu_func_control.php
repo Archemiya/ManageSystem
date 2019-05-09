@@ -270,6 +270,7 @@ $today = date('Y-m-d');
 
                             ***注意此处是审核结束，不是到达截止时间，注意区别。
                             此处实现需要查询时候不存在申请状态码为2的学生，如果存在即表示有学生的申请未完成审核
+
                      -->
                     <td class="col-xs-5 th-title-center">一次答辩</td>
                     <?php
@@ -298,9 +299,6 @@ $today = date('Y-m-d');
                     }
                     ?>
                     </td>
-
-
-
                     <td class="col-xs-2 th-title-center">
                         <?php
                         if ($num_delay != 0 && $row_control['reply_delay'] == 0) {
@@ -318,6 +316,128 @@ $today = date('Y-m-d');
                     </td>
 
 
+                </tr>
+                <tr>
+                    <!-- 
+                        论文终稿开启条件：
+                        一次答辩结束即可，之后需要答辩秘书自行判断
+                        此处以一辩学生全部完成一辩评分为节点，全部评分完毕即表示一辩结束
+                     -->
+                    <td class="col-xs-5 th-title-center">论文终稿
+                        <?php
+                        if (!$row_control['final_paper_deadline']) {
+                            echo "<a data-toggle=\"modal\" data-target=\"#final_paper_deadline_setting\">（点此添加提交截止日期）<a>";
+                        } else {
+                            echo "(截止时间为：";
+                            echo $row_control['final_paper_deadline'];
+                            echo "）";
+                        }
+                        ?>
+                    </td>
+                    <?php
+                    //判断一辩是否结束
+                    //判断已完成一辩评分的学生数量
+                    $sql_final_grade_num = "SELECT * FROM `student_grade` 
+                    where `reply_grade_final_flag` = 1 ";
+                    $result_final_grade_num = mysqli_query($link, $sql_final_grade_num);
+                    $num_final_grade_num = mysqli_num_rows($result_final_grade_num);
+
+                    //查看当前所有一辩学生的数量
+                    $sql_first = "SELECT * FROM `reply_schedule` where `permission` = 'student' 
+                    AND `first_paper_flag` = 1 AND `reply_delay`=0 ";
+                    $result_first = mysqli_query($link, $sql_first);
+                    $num_first = mysqli_num_rows($result_first);
+
+                    if ($num_first > $num_final_grade_num) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
+                        echo "当前一辩评分工作尚未完成，请等待导师评分完成";
+                    } elseif ((!$row_control['final_paper'])
+                        && $row_control['final_paper_deadline'] == NULL
+                        && $num_first == $num_final_grade_num
+                    ) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
+                        echo "请根据学校要求及时设置截止日期并打开论文终稿提交流程";
+                    } elseif ((!$row_control['final_paper'])) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
+                        echo "请根据学校要求及时打开论文终稿提交流程";
+                    } else {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\">";
+                        echo "已开启学生论文终稿流程";
+                    }
+                    ?>
+                    </td>
+
+                    <td class="col-xs-2 th-title-center">
+                        <?php
+                        if ($num_first > $num_final_grade_num) {
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                        } elseif ((!$row_control['final_paper'])
+                            && $row_control['final_paper_deadline'] == NULL
+                            && $num_first == $num_final_grade_num
+                        ) {
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                        } elseif ((!$row_control['final_paper'])) {
+                            echo "<a href='sec_chang_stu_control_value.php?func=final_paper' 
+                                class='btn btn-primary' role='button'
+                                onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启论文终稿</a>";
+                        } else {
+                            echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
+                        }
+
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <!-- 
+                        二次答辩开启条件：
+                        所有导师对一辩学生完成评分之后才可开启二辩，即知晓所有一辩未及格学生
+                     -->
+                    <td class="col-xs-5 th-title-center">二次答辩
+                    </td>
+                    <?php
+                    //判断已完成一辩评分的学生数量
+                    $sql_final_grade_num = "SELECT * FROM `student_grade` 
+                    where `reply_grade_final_flag` = 1 ";
+                    $result_final_grade_num = mysqli_query($link, $sql_final_grade_num);
+                    $num_final_grade_num = mysqli_num_rows($result_final_grade_num);
+
+                    //查看当前所有一辩学生的数量
+                    $sql_first = "SELECT * FROM `reply_schedule` where `permission` = 'student' 
+                    AND `first_paper_flag` = 1 AND `reply_delay`=0 ";
+                    $result_first = mysqli_query($link, $sql_first);
+                    $num_first = mysqli_num_rows($result_first);
+
+                    if ($num_first > $num_final_grade_num) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
+                        echo "当前一辩评分工作尚未完成，请等待导师评分完成";
+                    } elseif ((!$row_control['second_reply'])
+                        && $num_first == $num_final_grade_num
+                    ) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\">";
+                        echo "请根据学校要求及时打开二次答辩流程";
+                    } else {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-info\">";
+                        echo "已开启学生二次答辩流程";
+                    }
+                    ?>
+                    </td>
+
+                    <td class="col-xs-2 th-title-center">
+                        <?php
+                        if ($num_first > $num_final_grade_num) {
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                        } elseif ((!$row_control['second_reply'])
+                            && $num_first == $num_final_grade_num
+                        ) {
+                            echo "<a href='sec_chang_stu_control_value.php?func=second_reply' 
+                                class='btn btn-primary' role='button'
+                                onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启二次答辩</a>";
+                        } else {
+                            echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
+                        }
+
+                        ?>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -395,6 +515,36 @@ $today = date('Y-m-d');
                 </div>
                 <div class="modal-body">
                     <form action="../deadline-setting.php?func=first_paper " method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="dtp_input2" class="col-md-4 control-label">选择日期</label>
+                            <div class="input-group date form_date col-md-5" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                <?php
+                                echo "<input name='deadline' class=\"form-control\" size=\"16\" type=\"text\" value=\"{$today}\" readonly>";
+                                ?>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                            <input type="hidden" id="dtp_input2" value="" /><br />
+                            <button type="submit" class="col-sm-offset-4 btn btn-default" onclick="Javascript:return confirm('确定要上传么？此操作不可逆转');">确认截止时间</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="final_paper_deadline_setting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加论文终稿提交截止时间</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="../deadline-setting.php?func=final_paper " method="post" class="form-horizontal">
                         <div class="form-group">
                             <label for="dtp_input2" class="col-md-4 control-label">选择日期</label>
                             <div class="input-group date form_date col-md-5" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">

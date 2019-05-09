@@ -9,6 +9,22 @@ $row = mysqli_fetch_array($result, MYSQLI_BOTH);
 
 <body>
     <div class='alert alert-info' role='alert'>
+        <?php
+        if($row['first_paper_flag']){
+        ?>
+        <strong>论文初稿审核状态：</strong>
+        <span class="text-success"><strong>已通过</strong></span>
+        <br>
+        <?php
+        }
+        else{
+        ?>
+        <strong>论文初稿审核状态：</strong>
+        <span class="text-danger"><strong>未通过</strong></span>
+        <br>
+        <?php
+        }
+        ?>
         <strong>申请说明：</strong>
         <br/>
         <?php 

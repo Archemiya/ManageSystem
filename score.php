@@ -54,12 +54,17 @@ switch ($get) {
                 $final_grade += $row_search2_grade['reply_grade'];
             }
             $final_grade /= $num_search;
-            echo $final_grade;
-
+            //echo $final_grade;
             $sql_final = "UPDATE `student_grade` 
-        SET `reply_grade` = '{$final_grade}'
+        SET `reply_grade` = '{$final_grade}',`reply_grade_final_flag` = 1
         where `student_id` = '{$_POST['student_id']}'";
             mysqli_query($link, $sql_final);
+            if ($final_grade < 60) {
+                $sql_change_to_second = "UPDATE `reply_schedule` 
+        SET `second_reply` = 1
+        where `id` = '{$_POST['student_id']}'";
+                mysqli_query($link, $sql_change_to_second);
+            }
         }
         echo "<script>alert('评分成功！');history.go(-1)</script>";
         break;
@@ -73,6 +78,6 @@ switch ($get) {
         `teacher_grade_description` = '{$_POST['teacher_grade_description']}'
         where `student_id` = '{$_POST['student_id']}' 
         ";
-        mysqli_query($link,$sql);
+        mysqli_query($link, $sql);
         echo "<script>alert('评分成功！');history.go(-1)</script>";
 }

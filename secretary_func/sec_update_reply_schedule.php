@@ -70,9 +70,14 @@ if (isset($_GET['func']) && $_GET['func'] == 'group') {
     } else {
         echo "<script>alert('已存在该组号，请重新分配组号！');history.go(-1)</script>";
     }
-} elseif (isset($_GET['func']) && $_GET['func'] == 'detail') { 
+} elseif (isset($_GET['func']) && $_GET['func'] == 'detail') {
     $sql = "UPDATE `reply_schedule` SET `time` = '{$_POST['time']}',`place`='{$_POST['place']}' where `group_id` = '{$_POST['group_id']}'";
-    mysqli_query($link,$sql);
+    mysqli_query($link, $sql);
+    mysqli_close($link);
+    echo "<script>alert('添加答辩安排详情成功！');history.go(-1)</script>";
+} elseif (isset($_GET['func']) && $_GET['func'] == 'second_detail') {
+    $sql = "UPDATE `second_reply_schedule` SET `time` = '{$_POST['time']}',`place`='{$_POST['place']}' where 1";
+    mysqli_query($link, $sql);
     mysqli_close($link);
     echo "<script>alert('添加答辩安排详情成功！');history.go(-1)</script>";
 }

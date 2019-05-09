@@ -22,5 +22,14 @@ switch ($get) {
         mysqli_query($link, $sql);
         echo "<script>alert('开启学生一次答辩流程成功！');history.go(-1);</script>";
         break;
-    
+    case "final_paper":
+        $sql = "UPDATE `stu_func_control` SET `final_paper` = 1 WHERE `id` = 1";
+        mysqli_query($link, $sql);
+        echo "<script>alert('开启学生论文终稿流程成功！');history.go(-1);</script>";
+        break;
+    case "second_reply":
+        $sql = "UPDATE `stu_func_control` SET `second_reply` = 1 WHERE `id` = 1";
+        mysqli_query($link, $sql);
+        echo "<script>alert('开启学生二次答辩流程成功！');history.go(-1);</script>";
+        break;
 }

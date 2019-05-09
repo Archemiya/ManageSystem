@@ -1,11 +1,24 @@
 <?php
+include "../link.php";
 session_start();
-if (!isset($_SESSION['user_id']) || ($_SESSION['user_permission'] != 'student')) {
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_passwd']) || ($_SESSION['user_permission'] != 'student')) {
     // 不存在session用户id，退出
     echo "<script>alert('请先登录'); window.location.href=\"../login.html\";</script>";
     exit;
+} else {
+    $sql = "SELECT * FROM `user` WHERE `id` = \"{$_SESSION['user_id']}\" AND `password` = \"{$_SESSION['user_passwd']}\" ";
+    $result = mysqli_query($link, $sql);
+    $row = mysqli_fetch_array($result, MYSQLI_BOTH);
+    if (!$row) {
+        echo "<script>alert('请先登录'); window.location.href=\"../login.html\";</script>";
+    }
 }
 include '../header.php';
+
+//查询当前学生状态并设置其答辩状态
+$sql_student = "SELECT * FROM `reply_schedule` WHERE `id` = '{$_SESSION['user_id']}' ";
+$result_student = mysqli_query($link, $sql_student);
+$row_student = mysqli_fetch_array($result_student, MYSQLI_BOTH);
 ?>
 
 <!--主体-->
@@ -38,35 +51,54 @@ include '../header.php';
                                                                 } ?>><i class="glyphicon glyphicon-file"> 论文初稿</i><span class="sr-only">(current)</span></a></li>
                 <br />
 
-                <li><a href="./student.php?func=delay_reply"<?php if (isset($_GET["func"]) && ($_GET["func"]) == "delay_reply") {
+                <li><a href="./student.php?func=delay_reply" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "delay_reply") {
                                                                     echo "class=active";
                                                                 } ?>><i class="glyphicon glyphicon-warning-sign"> 延期答辩
                         </i><span class="sr-only">(current)</span></a></li>
 
-                <li><a href="./student.php?func=answer_information"<?php if (isset($_GET["func"]) && ($_GET["func"]) == "answer_information") {
-                                                                    echo "class=active";
-                                                                } ?>><i class="glyphicon glyphicon-list-alt"> 答辩信息
+                <li><a href="./student.php?func=answer_information" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "answer_information") {
+                                                                        echo "class=active";
+                                                                    } ?>><i class="glyphicon glyphicon-list-alt"> 答辩信息
                         </i><span class="sr-only">(current)</span></a></li>
 
-                <li><a href="./student.php?func=second_reply" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "second_reply") {
-                                                                    echo "class=active";
-                                                                } ?>><i class="glyphicon glyphicon-warning-sign"> 二次答辩</i>
-                        <span class="sr-only">(current)</span></a></li>
-
-                <li><a href="./student.php?func=final_draft" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "final_draft") {
-                                                                    echo "class=active";
-                                                                } ?>><i class="glyphicon glyphicon-file"> 论文终稿</i> <span class="sr-only">(current)</span></a></li>
-                <br />
+                <?php
+                if ($row_student['second_reply'] == 0) {
+                    ?>
+                    <li><a href="./student.php?func=final_paper" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "final_paper") {
+                                                                        echo "class=active";
+                                                                    } ?>><i class="glyphicon glyphicon-file"> 论文终稿</i> <span class="sr-only">(current)</span></a></li>
+                    <br />
+                <?php
+            } elseif ($row_student['second_reply'] == 1) {
+                ?>
+                    <li><a href="./student.php?func=second_reply" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "second_reply") {
+                                                                        echo "class=active";
+                                                                    } ?>><i class="glyphicon glyphicon-warning-sign"> 二次答辩</i> <span class="sr-only">(current)</span></a></li>
+                    <li><a href="./student.php?func=final_paper" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "final_paper") {
+                                                                        echo "class=active";
+                                                                    } ?>><i class="glyphicon glyphicon-file"> 论文终稿</i> <span class="sr-only">(current)</span></a></li>
+                    <br/>
+                <?php
+            } elseif ($row_student['second_reply'] == -1) {
+                echo "<br>";
+            }
+            ?>
 
                 <li><a href="./student.php?func=inquiry_result" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "inquiry_result") {
                                                                     echo "class=active";
                                                                 } ?>><i class="glyphicon glyphicon-search"> 成绩查询 </i><span class="sr-only">(current)</span></a></li>
 
+                <?php
+                if ($row_student['second_reply'] == 0) {
+                    ?>
+                    <li><a href="./student.php?func=excellent_paper" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "excellent_paper") {
+                                                                            echo "class=active";
+                                                                        } ?>><i class="glyphicon glyphicon-thumbs-up"> 优秀论文 </i><span class="sr-only">(current)</span></a></li>
+                    <br />
+                <?php
+            }
+            ?>
 
-                <li><a href="./student.php?func=excellent_paper" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "excellent_paper") {
-                                                                    echo "class=active";
-                                                                } ?>><i class="glyphicon glyphicon-thumbs-up"> 优秀论文
-                        </i><span class="sr-only">(current)</span></a></li>
             </ul>
         </div>
         <div class="col-sm-sidebar-right col-sm-offset-right main">
@@ -120,13 +152,37 @@ include '../header.php';
                             include "stu_delay_reply.php";
                             break;
                         case "second_reply":
-                        case "reply_record":
-                        case "final_draft":
+                        if (isset($_GET["id"])) {
+                            include "../tutor_func/t_topic_detail.php";
+                        } else {
+                            include "stu_second_reply.php";
+                        }
+                            break;
+                        case "final_paper":
+                            include "stu_final_paper.php";
+                            break;
                         case "inquiry_result":
                         case "excellent_paper":
                     }
                 } else {
                     echo "欢迎";
+
+                    if ($row_student['first_paper_flag'] == 1 && $row_student['reply_delay'] == 0) {
+                        echo "";
+                    } elseif (($row_student['first_paper_flag'] == 1 && $row_student['reply_delay'] == 1)
+                        || ($row_student['first_paper_flag'] == 0 && $row_student['reply_delay'] == 1)
+                    ) {
+                        $sql_second_reply_1 = "UPDATE `reply_schedule` 
+                        SET `second_reply` = 1
+                        WHERE `id` = '{$_SESSION['user_id']}'";
+                        mysqli_query($link, $sql_second_reply_1);
+                    } elseif (($row_student['first_paper_flag'] == 0 && $row_student['reply_delay'] == 0)
+                        || ($row_student['first_paper_flag'] == 0 && $row_student['reply_delay'] == -1)
+                    ) {
+                        $sql_gg = "UPDATE `reply_schedule` set `second_reply` = -1
+                    WHERE `id` = '{$_SESSION['user_id']}' ";
+                        mysqli_query($link, $sql_gg);
+                    }
                 }
                 ?>
             </div>

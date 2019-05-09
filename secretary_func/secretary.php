@@ -27,6 +27,10 @@ include '../header.php';
                                                                                     echo "class=active";
                                                                                 } ?>><i class="glyphicon glyphicon-sort-by-alphabet">
                             答辩安排</i><span class="sr-only">(current)</span></a></li>
+                <li><a href="./secretary.php?func=second_reply_schedule" method="GET" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "second_reply_schedule") {
+                                                                                            echo "class=active";
+                                                                                        } ?>><i class="glyphicon glyphicon-sort-by-alphabet">
+                            二辩安排</i><span class="sr-only">(current)</span></a></li>
                 <li><a href="./secretary.php?func=reply_record" method="GET" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "reply_record") {
                                                                                     echo "class=active";
                                                                                 } ?>><i class="glyphicon glyphicon-pencil">
@@ -76,6 +80,13 @@ include '../header.php';
                             include "sec_reply_schedule.php";
                         }
                         break;
+                    case "second_reply_schedule":
+                        if (isset($_GET['id'])) {
+                            include "sec_review_topic_detail.php";
+                        } else {
+                            include "sec_second_reply_schedule.php";
+                        }
+                        break;
                     case "stu_func_control":
                         include "sec_stu_func_control.php";
                         break;
@@ -84,6 +95,7 @@ include '../header.php';
                         break;
                     case "reply_record":
                         include "sec_reply_record.php";
+                        break;
                 }
             } else {
                 echo "欢迎";

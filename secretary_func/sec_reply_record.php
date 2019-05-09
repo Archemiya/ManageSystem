@@ -1,8 +1,9 @@
 <?php
 //此页面为答辩秘书汇总所有学生的答辩记录，整理并上传的功能展示页面
 include "../link.php";
+include "sec_query_stu_control.php";
 
-function table_echo($link)
+function table_echo($link, $row_control)
 {
     //查询所有答辩学生及其答辩状态
     $sql_student = "SELECT * FROM `reply_schedule` WHERE `permission` = 'student' ";
@@ -14,7 +15,7 @@ function table_echo($link)
     <table data-toggle="table" data-toolbar="#toolbar" data-pagination="true"
         data-page-list="[10, 25, 50, 100, 200, All]" 
         data-sort-name="name" data-sort-order="asc"
-        data-show-refresh="true">
+        >
         <thead>
             <tr>
                 <th class="col-md-4 th-title-center th-title-topic-stu">课题名称</th>
@@ -47,71 +48,164 @@ archemiya;
         echo   $row_topic['teacher_id'] . $row_topic['teacher_name'];
         echo "</td>";
 
-        //根据学生处于一辩、延期答辩或是二辩来显示状态
-        //一辩显示蓝色，延期显示黄色，二辩显示红色
-        //此处延期与二辩通过second_reply来区别，状态码为1时表示延期，状态码为2时表示二辩
-        if ($row_student['first_paper_flag']==1 && $row_student['reply_delay']==0) {
-            echo "<td class=\"td-height th-title-center alert alert-info\" role='alert' >";
-            echo   $row_student['id'] . $row_student['name'];
-            echo "</td>";
+        /*
+        应根据所处的答辩阶段来进行答辩状态显示 
+        此处应显示出学生的三种状态，即一辩，二辩与延期毕业状态
+            应注意的几个地方：
+                1 论文初稿与延期申请状态是第一次判断一辩与二辩状态的节点
+                2 一辩结束之后应该再次判断是否存在二辩的同学
+                3 延期毕业状态同样也存在着两次判定，第一次是在论文初稿和延期申请结束时，第二次是在二辩结束之后
+        */
+        //使用second_reply来表示状态，0表示一辩 1表示二辩 -1表示延期毕业
+        //先判断当前所处阶段
 
-            echo "<td class=\"td-height th-title-center alert alert-info\" role='alert' >";
-            echo "参与一辩";
-            echo "</td>";
-            if(!isset($row_record['reply_record_annex_name'])){
-                echo "<td>";
-                echo "<button class='btn btn-primary' 
-                data-toggle=\"modal\" data-target=\"#{$row_student['id']}\">
-                上传答辩记录
-                </button>";
+        //处于一辩阶段
+        if ($row_control['first_reply'] && !$row_control['second_reply']) {
+            //判断当前学生是否为当前阶段一辩学生
+            if ($row_student['first_paper_flag'] == 1 && $row_student['reply_delay'] == 0) {
+                echo "<td class=\"td-height th-title-center alert alert-info\" role='alert' >";
+                echo   $row_student['id'] . $row_student['name'];
                 echo "</td>";
-            }else{
+
+                echo "<td class=\"td-height th-title-center alert alert-info\" role='alert' >";
+                echo "参与一辩";
+                echo "</td>";
+                if (!isset($row_record['reply_record_annex_name'])) {
+                    echo "<td>";
+                    echo "<button class='btn btn-primary' 
+                    data-toggle=\"modal\" data-target=\"#{$row_student['id']}\">
+                    上传答辩记录
+                    </button>";
+                    echo "</td>";
+                } else {
+                    echo "<td>";
+                    echo "<button class='btn btn-success' disabled>
+                    已上传答辩记录
+                    </button>";
+                    echo "</td>";
+                }
+            }
+            //判断当前学生是否为当前阶段二辩学生
+            elseif (($row_student['first_paper_flag'] == 1 && $row_student['reply_delay'] == 1)
+                || ($row_student['first_paper_flag'] == 0 && $row_student['reply_delay'] == 1)
+            ) {
+                $sql_second_reply_1 = "UPDATE `reply_schedule` set `second_reply` = 1
+                WHERE `id` = '{$row_student['id']}' ";
+                mysqli_query($link, $sql_second_reply_1);
+                echo "<td class=\"td-height th-title-center alert alert-warning\" role='alert' >";
+                echo   $row_student['id'] . $row_student['name'];
+                echo "</td>";
+
+                echo "<td class=\"td-height th-title-center alert alert-warning\" role='alert' >";
+                echo "参与二辩";
+                echo "</td>";
+
                 echo "<td>";
-                echo "<button class='btn btn-primary' disabled>
-                上传答辩记录
+                echo "<button class='btn btn-warning' disabled>
+                    不可上传
+                    </button>";
+                echo "</td>";
+            } elseif (($row_student['first_paper_flag'] == 0 && $row_student['reply_delay'] == 0)
+                || ($row_student['first_paper_flag'] == 0 && $row_student['reply_delay'] == -1)
+            ) {
+                $sql_gg = "UPDATE `reply_schedule` set `second_reply` = -1
+                WHERE `id` = '{$row_student['id']}' ";
+                mysqli_query($link, $sql_gg);
+                echo "<td class=\"td-height th-title-center alert alert-danger\" role='alert' >";
+                echo   $row_student['id'] . $row_student['name'];
+                echo "</td>";
+
+                echo "<td class=\"td-height th-title-center alert alert-danger\" role='alert' >";
+                echo "延迟毕业";
+                echo "</td>";
+
+                echo "<td>";
+                echo "<button class='btn btn-danger' disabled>
+                不可上传
                 </button>";
                 echo "</td>";
             }
         }
-        elseif($row_student['reply_delay']==1){
-            echo "<td class=\"td-height th-title-center alert alert-warning\" role='alert' >";
-            echo   $row_student['id'] . $row_student['name'];
-            echo "</td>";
+        //处于二辩阶段
+        elseif ($row_control['second_reply']) {
+            //判断当前学生是否为当前阶段一辩学生
+            if ($row_student['first_paper_flag'] == 1 && $row_student['reply_delay'] == 0) {
+                echo "<td class=\"td-height th-title-center alert alert-info\" role='alert' >";
+                echo   $row_student['id'] . $row_student['name'];
+                echo "</td>";
 
-            echo "<td class=\"td-height th-title-center alert alert-warning\" role='alert' >";
-            echo "延期答辩";
-            echo "</td>";
+                echo "<td class=\"td-height th-title-center alert alert-info\" role='alert' >";
+                echo "参与一辩";
+                echo "</td>";
+                if (!isset($row_record['reply_record_annex_name'])) {
+                    echo "<td>";
+                    echo "<button class='btn btn-primary' 
+                    data-toggle=\"modal\" data-target=\"#{$row_student['id']}\">
+                    上传答辩记录
+                    </button>";
+                    echo "</td>";
+                } else {
+                    echo "<td>";
+                    echo "<button class='btn btn-success' disabled>
+                    已上传答辩记录
+                    </button>";
+                    echo "</td>";
+                }
+            }
+            //判断当前学生是否为当前阶段二辩学生
+            elseif (($row_student['first_paper_flag'] == 1 && $row_student['reply_delay'] == 1)
+                || ($row_student['first_paper_flag'] == 0 && $row_student['reply_delay'] == 1)
+            ) {
+                $sql_second_reply_1 = "UPDATE `reply_schedule` set `second_reply` = 1
+                WHERE `id` = '{$row_student['id']}' ";
+                mysqli_query($link, $sql_second_reply_1);
+                echo "<td class=\"td-height th-title-center alert alert-warning\" role='alert' >";
+                echo   $row_student['id'] . $row_student['name'];
+                echo "</td>";
 
-            echo "<td>";
-            echo "<button class='btn btn-primary' 
-            data-toggle=\"modal\" data-target=\"#{$row_student['id']}\">
-            上传答辩记录
-            </button>";
-            echo "</td>";
-        }
-        else{
-            echo "<td class=\"td-height th-title-center alert alert-danger\" role='alert' >";
-            echo   $row_student['id'] . $row_student['name'];
-            echo "</td>";
+                echo "<td class=\"td-height th-title-center alert alert-warning\" role='alert' >";
+                echo "参与二辩";
+                echo "</td>";
 
-            echo "<td class=\"td-height th-title-center alert alert-danger\" role='alert' >";
-            echo "参与二辩";
-            echo "</td>";
+                if (!isset($row_record['reply_record_annex_name'])) {
+                    echo "<td>";
+                    echo "<button class='btn btn-warning' 
+                    data-toggle=\"modal\" data-target=\"#{$row_student['id']}\">
+                    上传答辩记录
+                    </button>";
+                    echo "</td>";
+                } else {
+                    echo "<td>";
+                    echo "<button class='btn btn-success' disabled>
+                    已上传答辩记录
+                    </button>";
+                    echo "</td>";
+                }
+            } elseif (($row_student['first_paper_flag'] == 0 && $row_student['reply_delay'] == 0)
+                || ($row_student['first_paper_flag'] == 0 && $row_student['reply_delay'] == -1)
+            ) {
+                $sql_gg = "UPDATE `reply_schedule` set `second_reply` = -1
+                WHERE `id` = '{$row_student['id']}' ";
+                mysqli_query($link, $sql_gg);
+                echo "<td class=\"td-height th-title-center alert alert-danger\" role='alert' >";
+                echo   $row_student['id'] . $row_student['name'];
+                echo "</td>";
 
-            echo "<td>";
-            echo "<button class='btn btn-primary' 
-            data-toggle=\"modal\" data-target=\"#{$row_student['id']}\">
-            上传答辩记录
-            </button>";
-            echo "</td>";
+                echo "<td class=\"td-height th-title-center alert alert-danger\" role='alert' >";
+                echo "延迟毕业";
+                echo "</td>";
+
+                echo "<td>";
+                echo "<button class='btn btn-danger' disabled>
+                不可上传
+                </button>";
+                echo "</td>";
+            }
         }
         echo "</tr>";
     }
     echo <<< archemiya
         </tbody>
-
-
-
     </table>
     </div>
 archemiya;
@@ -120,7 +214,20 @@ archemiya;
 
 <body>
     <?php
-    table_echo($link);
+    if (!$row_control['first_reply']) {
+        echo <<< archemiya
+        <div class="alert alert-danger" role="alert">
+        当前一次答辩流程尚未开启！
+        </div>
+archemiya;
+    } elseif ($row_control['first_reply'] && !$row_control['second_reply']) {
+        echo <<< archemiya
+        <div class="alert alert-info" role="alert">
+        当前为一次答辩阶段，只可上传一辩学生答辩记录
+        </div>
+archemiya;
+        table_echo($link, $row_control);
+    }
 
     //查询所有答辩学生及其答辩状态（此处用于输出多个modalTable）
     $sql_student = "SELECT * FROM `reply_schedule` WHERE `permission` = 'student' ";
@@ -176,5 +283,5 @@ archemiya;
 archemiya;
     }
     ?>
-    
+
 </body>

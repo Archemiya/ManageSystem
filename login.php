@@ -14,6 +14,7 @@ if (!isset($user) || !isset($psw)) {
         $_SESSION['user_permission'] = $row['permission'];
         $_SESSION['user_special'] = $row['special'];
         $_SESSION['user_id'] = $row['id'];
+        $_SESSION['user_passwd'] = $row['password'];
         $_SESSION['user_name'] = $row['name'];
         switch ($row["permission"]) {
             case "student":

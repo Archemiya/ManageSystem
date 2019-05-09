@@ -24,5 +24,10 @@ switch ($get){
     mysqli_query($link,$sql);
     echo "<script>alert('设置论文初稿截止时间成功！');history.go(-1)</script>";
     break;
+    case "final_paper":
+    $sql = "UPDATE `stu_func_control` set `final_paper_deadline` = '{$_POST['deadline']}' ";
+    mysqli_query($link,$sql);
+    echo "<script>alert('设置论文终稿截止时间成功！');history.go(-1)</script>";
+    break;
 }
 ?>
