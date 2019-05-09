@@ -444,7 +444,7 @@ archemiya;
     elseif (
         $num_topic == $num_topic_ispass
         && $today <= $row_control['delay_reply_deadline']
-        && $row_control['delay_reply_deadline'] != NULL
+        && $row_control['delay_reply_deadline'] == NULL
     ) {
         if ($num_total != $num_schedule) {
             echo <<< archemiya
