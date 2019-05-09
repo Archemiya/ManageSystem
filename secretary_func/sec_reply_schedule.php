@@ -443,8 +443,7 @@ archemiya;
     //判断是否所有学生已经完成选题
     elseif (
         $num_topic == $num_topic_ispass
-        && $today <= $row_control['delay_reply_deadline']
-        && $row_control['delay_reply_deadline'] == NULL
+        && $num_schedule == $num_total
     ) {
         if ($num_total != $num_schedule) {
             echo <<< archemiya
