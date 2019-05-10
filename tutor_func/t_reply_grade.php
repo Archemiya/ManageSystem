@@ -80,7 +80,7 @@ archemiya;
         echo   $row_student['id'] . $row_student['name'];
         echo "</td>";
 
-        if (!isset($row_grade['reply_grade'])) {
+        if (($row_grade['reply_grade'])==NULL) {
             if (isset($row_record['reply_record_annex_name'])) {
                 echo "<td>";
                 echo "<a class='btn btn-primary' role='button'
@@ -106,7 +106,7 @@ archemiya;
             </button>";
                 echo "</td>";
             }
-        } elseif (($row_fgrade['reply_grade']) != 0) {
+        } elseif (($row_fgrade['reply_grade']) != NULL) {
             echo "<td class='th-title-center alert alert-info' role='alert'>";
             echo "最终成绩：";
             echo $row_fgrade['reply_grade'];
