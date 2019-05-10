@@ -2,8 +2,10 @@
 session_start();
 $user = $_POST['account'];
 $psw = md5($_POST['passwd']);
-
-if (!isset($user) || !isset($psw)) {
+$pattern = "/[^\d]/";
+if (preg_match($pattern,$user)) {
+    echo "<script>alert('输入内容存在非法字符！'); history.go(-1);</script>";
+} else if(!isset($user) || !isset($psw)){
     echo "<script>alert('请输入用户名或密码！'); history.go(-1);</script>";
 } else {
     include "link.php";
@@ -35,3 +37,4 @@ if (!isset($user) || !isset($psw)) {
     }
     mysqli_close($link);
 }
+
