@@ -62,7 +62,7 @@
                     <h4 class="modal-title login-title">密码修改</h4>
                 </div>
                 <div class="modal-body ">
-                    <form action="chpasswd.php" method="POST" class="form-signin row">
+                    <form action="../chpasswd.php" method="POST" class="form-signin row">
                         <label for="inputAccountnumber" class="sr-only">账号</label>
                         <input type="account" name="account" id="inputAccountnumber" class="form-control" placeholder="账号" autocomplete="off" required="">
                         <br />

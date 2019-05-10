@@ -1,9 +1,9 @@
 <?php
 session_start();
 $user_id = $_POST['account'];
-$user_oldpasswd = $_POST['oldpasswd'];
-$user_newpasswd = $_POST['newpasswd'];
-$user_newpasswd2 = $_POST['newpasswd2'];
+$user_oldpasswd = md5($_POST['oldpasswd']);
+$user_newpasswd = md5($_POST['newpasswd']);
+$user_newpasswd2 = md5($_POST['newpasswd2']);
 include "link.php";
 $sql = "SELECT * FROM `user` WHERE `id` = \"{$user_id}\" AND `password` = \"{$user_oldpasswd}\" ";
 $result = mysqli_query($link, $sql);
