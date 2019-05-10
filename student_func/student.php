@@ -89,7 +89,7 @@ $row_student = mysqli_fetch_array($result_student, MYSQLI_BOTH);
                                                                 } ?>><i class="glyphicon glyphicon-search"> 成绩查询 </i><span class="sr-only">(current)</span></a></li>
 
                 <?php
-                if ($row_student['second_reply'] == 0) {
+                if (0) {
                     ?>
                     <li><a href="./student.php?func=excellent_paper" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "excellent_paper") {
                                                                             echo "class=active";
@@ -125,7 +125,6 @@ $row_student = mysqli_fetch_array($result_student, MYSQLI_BOTH);
                             } else {
                                 include "stu_first_report.php";
                             }
-
                             break;
                         case "midterm_report":
                             if (isset($_GET["id"])) {
@@ -159,9 +158,20 @@ $row_student = mysqli_fetch_array($result_student, MYSQLI_BOTH);
                         }
                             break;
                         case "final_paper":
+                        if (isset($_GET["id"])) {
+                            include "stu_final_paper_suggestion_detail.php";
+                        } elseif (isset($_GET["fid"])) {
+                            include "stu_final_paper_detail.php";
+                        } else {
                             include "stu_final_paper.php";
+                        }
                             break;
                         case "inquiry_result":
+                        if (isset($_GET["id"])) {
+                            include "../tutor_func/t_topic_detail.php";
+                        } else {
+                            include "stu_inquiry_result.php";
+                        }
                         case "excellent_paper":
                     }
                 } else {

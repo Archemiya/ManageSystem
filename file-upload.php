@@ -86,6 +86,25 @@ if ((($_FILES["file"]["type"] == "application/msword")
         echo "<script>alert('上传附件成功！');history.go(-1)</script>";
         mysqli_close($link);
         break;
+        
+      case "final_paper":
+        $sql_id = "SELECT max(`record_id`) from `final_paper_record` 
+        where `topic_id` = '{$_POST['topic_id']}' order by `record_id` desc";
+        $result_id = mysqli_query($link, $sql_id);
+        $row_id = mysqli_fetch_array($result_id, MYSQLI_BOTH);
+
+        $newdir = "./uploaded_files/final_paper_files/" . $_POST['student_id'] . '_' . $row_id['max(`record_id`)'];
+        mkdir("{$newdir}");
+
+        $uploadfile = $newdir . "/" . $uploadfilename;
+        move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);
+        $topic_id = $_POST['topic_id'];
+        $sql = "UPDATE `final_paper_record` SET `final_paper_annex_name` = '{$uploadfilename}',`annex_flag` = 1
+        WHERE  `final_paper_record`.`topic_id`= '{$topic_id}' AND `record_id` = '{$row_id['max(`record_id`)']}'";
+        mysqli_query($link, $sql);
+        echo "<script>alert('上传附件成功！');history.go(-1)</script>";
+        mysqli_close($link);
+        break;
 
       case "delay_reply":
         $newdir = "./uploaded_files/delay_report_files/" . $_POST['student_id'];
@@ -137,6 +156,27 @@ if ((($_FILES["file"]["type"] == "application/msword")
         '{$teacher_id}', 
         '{$teacher_name}', 
         '{$uploadfilename}')";
+        mysqli_query($link, $sql);
+        echo "<script>alert('上传附件成功！');history.go(-1)</script>";
+        mysqli_close($link);
+        break;
+
+      case "second_reply_record":
+        $newdir = "./uploaded_files/reply_record_files/" . $_POST['student_id'];
+        mkdir("{$newdir}");
+
+        $uploadfile = $newdir . "/" . $uploadfilename;
+        move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);
+        $topic_id = $_POST['topic_id'];
+        $topic_name = $_POST['topic_name'];
+        $student_id = $_POST['student_id'];
+        $student_name = $_POST['student_name'];
+        $teacher_id = $_POST['teacher_id'];
+        $teacher_name = $_POST['teacher_name'];
+
+        $sql = "UPDATE `reply_record` 
+        set `reply_record_annex_name`= '{$uploadfilename}'
+        where `student_id` = '{$student_id}' ";
         mysqli_query($link, $sql);
         echo "<script>alert('上传附件成功！');history.go(-1)</script>";
         mysqli_close($link);

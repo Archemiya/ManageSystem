@@ -263,7 +263,7 @@ $today = date('Y-m-d');
                     <td class="col-xs-2 th-title-center">
                         <?php
                         if (!$num_ishave) {
-                            echo "<button class='btn btn-warning' disabled>不可操作</button>";                            
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
                         } elseif ($num_ishave) {
                             if ($num_delay != 0 && $row_control['first_reply'] == 0) {
                                 echo "<button class='btn btn-warning' disabled>不可操作</button>";
@@ -309,7 +309,7 @@ $today = date('Y-m-d');
                     $num_record = mysqli_num_rows($result_record);
                     if (!$num_ishave) {
                         echo "<td class=\"col-xs-5 th-title-center alert alert-warning\" >";
-                        echo "当前一辩评分工作尚未完成，请等待导师评分完成";
+                        echo "当前答辩记录尚未全部上传完成，不可开启老师一次答辩评分流程";
                     } elseif ($num_ishave) {
                         if ($num_first > $num_record) {
                             echo "<td class=\"col-xs-5 th-title-center alert alert-warning\" >";
@@ -335,7 +335,67 @@ $today = date('Y-m-d');
                                 echo "<a href='sec_chang_t_control_value.php?func=first_reply_grade' 
                                 class='btn btn-primary' role='button'
                                 onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启评分</a>";
-                            } else if ($num_delay == 0 && $row_control['first_reply'] == 0 && !$num_detail) { } else {
+                            } else {
+                                echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
+                            }
+                        }
+                        ?>
+                    </td>
+                </tr>
+
+                <tr>
+                    <!-- 
+                        二次答辩评分开启条件：
+                            必须等待所有二次答辩结束
+
+                            即答辩秘书已上传所有二辩学生的答辩记录
+                     -->
+                    <td class="col-xs-5 th-title-center">二次答辩评分</td>
+                    <?php
+                    //查看当前时候已有学生
+                    $sql_ishave = "SELECT * FROM `second_reply_schedule` where `permission` = 'student'";
+                    $result_ishave = mysqli_query($link, $sql_ishave);
+                    $num_ishave = mysqli_num_rows($result_ishave);
+
+                    //查看当前所有二辩学生的数量
+                    $sql_second = "SELECT * FROM `second_reply_schedule` where `permission` = 'student'";
+                    $result_second = mysqli_query($link, $sql_second);
+                    $num_second = mysqli_num_rows($result_second);
+
+                    //查看当前所有答辩记录数量
+                    $sql_record = "SELECT * FROM `reply_record` where `reply_record_annex_name` is NULL ";
+                    $result_record = mysqli_query($link, $sql_record);
+                    $num_no_record = mysqli_num_rows($result_record);
+
+                    if (!$num_ishave) {
+                        echo "<td class=\"col-xs-5 th-title-center alert alert-warning\" >";
+                        echo "当前二次答辩记录尚未全部上传完成，不可开启老师一次答辩评分流程";
+                    } elseif ($num_ishave) {
+                        if ($num_no_record!=0) {
+                            echo "<td class=\"col-xs-5 th-title-center alert alert-warning\" >";
+                            echo "当前二次答辩记录尚未全部上传完成，不可开启老师一次答辩评分流程";
+                        } else if ($num_no_record == 0 && !$row_control['second_reply_grade']) {
+                            echo "<td class=\"col-xs-5 th-title-center alert alert-info\" >";
+                            echo "当前可以开启老师二次答辩评分流程，请根据学校要求及时开启";
+                        } else {
+                            echo "<td class=\"col-xs-5 th-title-center alert alert-info\">";
+                            echo "当前老师二次答辩评分流程已开启";
+                        }
+                    }
+                    ?>
+                    </td>
+                    <td class="col-xs-2 th-title-center">
+                        <?php
+                        if (!$num_ishave) {
+                            echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                        } elseif ($num_ishave) {
+                            if ($num_no_record!=0) {
+                                echo "<button class='btn btn-warning' disabled>不可操作</button>";
+                            } elseif ($num_no_record == 0 && !$row_control['second_reply_grade']) {
+                                echo "<a href='sec_chang_t_control_value.php?func=second_reply_grade' 
+                                class='btn btn-primary' role='button'
+                                onclick=\"Javascript:return confirm('确定开启么？此操作不可逆转')\">开启评分</a>";
+                            } else {
                                 echo "<a class='btn btn-primary' role='button' disabled>已开启</a>";
                             }
                         }

@@ -5,7 +5,10 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['user_permission'] != 'tutor')) {
     echo "<script>alert('请先登录'); window.location.href=\"../login.html\";</script>";
     exit;
 }
+include "../link.php";
 include '../header.php';
+include "../secretary_func/sec_query_stu_control.php";
+
 ?>
 
 <!--主体-->
@@ -48,14 +51,22 @@ include '../header.php';
                                                                         echo "class=active";
                                                                     } ?>><i class="glyphicon glyphicon-list-alt"> 答辩信息
                         </i><span class="sr-only">(current)</span></a></li>
-
+                <?php
+                if ($_SESSION['user_special'] == 'reviewer' && $row_control['second_reply'] == 1) {
+                    ?>
+                    <li><a href="./tutor.php?func=second_reply" <?php if (isset($_GET["func"]) && ($_GET["func"]) == "second_reply") {
+                                                                    echo "class=active";
+                                                                } ?>><i class="glyphicon glyphicon-warning-sign"> 二次答辩</i> <span class="sr-only">(current)</span></a></li>
+                <?php
+            }
+            ?>
                 <li><a href="./tutor.php?func=reply_grade" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "reply_grade") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
                                                                 echo "class=active";
                                                             } ?>><i class="glyphicon glyphicon-pencil"> 答辩评分</i> <span class="sr-only">(current)</span></a></li>
                 <?php
 
                 ?>
-                <li><a href="./tutor.php?func=final_draft" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "final_draft") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
+                <li><a href="./tutor.php?func=final_paper" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "final_paper") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
                                                                 echo "class=active";
                                                             } ?>><i class="glyphicon glyphicon-file"> 论文终稿</i> <span class="sr-only">(current)</span></a></li>
 
@@ -67,9 +78,9 @@ include '../header.php';
                                                                 } ?>><i class="glyphicon glyphicon-search"> 成绩查询 </i><span class="sr-only">(current)</span></a></li>
 
 
-                <li><a href="./tutor.php?func=excellent_paper" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "excellent_paper") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
+                <!-- <li><a href="./tutor.php?func=excellent_paper" <?php if ((isset($_GET["func"]) && ($_GET["func"]) == "excellent_paper") || (isset($_GET["func"]) && ($_GET["func"]) == "a")) {
                                                                     echo "class=active";
-                                                                } ?>><i class="glyphicon glyphicon-thumbs-up"> 优秀论文 </i><span class="sr-only">(current)</span></a></li>
+                                                                } ?>><i class="glyphicon glyphicon-thumbs-up"> 优秀论文 </i><span class="sr-only">(current)</span></a></li> -->
 
 
             </ul>
@@ -134,6 +145,11 @@ include '../header.php';
                             include "t_reply_record.php";
                             break;
                         case "second_reply":
+                            if (isset($_GET["id"])) {
+                                include "t_topic_detail.php";
+                            } else {
+                                include "t_second_reply.php";
+                            }
                             break;
                         case "reply_grade":
                             if (isset($_GET["id"])) {
@@ -142,8 +158,15 @@ include '../header.php';
                                 include "t_reply_grade.php";
                             }
                             break;
-                        case "final_draft":
+                        case "final_paper":
+                            if (isset($_GET["id"])) {
+                                include "../student_func/stu_final_paper_detail.php";
+                            } else {
+                                include "t_final_paper.php";
+                            }
+                            break;
                         case "inquiry_result":
+                            include "t_inquiry_result.php";
                         case "excellent_paper":
                     }
                 } else {

@@ -94,7 +94,11 @@ include '../header.php';
                         include "sec_t_func_control.php";
                         break;
                     case "reply_record":
-                        include "sec_reply_record.php";
+                        if (isset($_GET['id'])) {
+                            include "sec_review_topic_detail.php";
+                        } else {
+                            include "sec_reply_record.php";
+                        }
                         break;
                 }
             } else {

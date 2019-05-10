@@ -78,7 +78,7 @@ archemiya;
         $result_topic = mysqli_query($link, $sql_topic);
         $row_topic = mysqli_fetch_array($result_topic, MYSQLI_BOTH);
         echo "<td class=\"td-height th-title-center\">";
-        echo "<a href='student.php?func=second_reply&id={$row_topic['id']} '>" . $row_topic['name'] . "</a>";
+        echo "<a href='tutor.php?func=second_reply&id={$row_topic['id']} '>" . $row_topic['name'] . "</a>";
         echo "</td>";
         echo "</tr>";
     }
@@ -96,7 +96,7 @@ archemiya;
 <body>
     <br />
     <div class="alert alert-info" role="alert">
-       本页面为二次答辩安排详情页面，请牢记自己的答辩时间与地点并按时参加答辩
+       您是评阅组长，已自动为您分配至二辩评阅组，请牢记自己的答辩时间与地点并按时参加答辩
     </div>
     <?php
     if(!$row_control['second_reply'])

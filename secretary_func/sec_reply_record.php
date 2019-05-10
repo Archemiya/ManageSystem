@@ -42,7 +42,7 @@ archemiya;
         $row_record = mysqli_fetch_array($result_record, MYSQLI_BOTH);
 
         echo "<td class=\"td-height th-title-center\">";
-        echo "<a href='tutor.php?func=reply_grade&id={$row_topic['id']} '>" . $row_topic['name'] . "</a>";
+        echo "<a href='secretary.php?func=reply_record&id={$row_topic['id']} '>" . $row_topic['name'] . "</a>";
         echo "</td>";
         echo "<td class=\"td-height th-title-center \" >";
         echo   $row_topic['teacher_id'] . $row_topic['teacher_name'];
@@ -129,7 +129,7 @@ archemiya;
         //处于二辩阶段
         elseif ($row_control['second_reply']) {
             //判断当前学生是否为当前阶段一辩学生
-            if ($row_student['first_paper_flag'] == 1 && $row_student['reply_delay'] == 0) {
+            if ($row_student['second_reply'] == 0) {
                 echo "<td class=\"td-height th-title-center alert alert-info\" role='alert' >";
                 echo   $row_student['id'] . $row_student['name'];
                 echo "</td>";
@@ -153,9 +153,7 @@ archemiya;
                 }
             }
             //判断当前学生是否为当前阶段二辩学生
-            elseif (($row_student['first_paper_flag'] == 1 && $row_student['reply_delay'] == 1)
-                || ($row_student['first_paper_flag'] == 0 && $row_student['reply_delay'] == 1)
-            ) {
+            elseif ($row_student['second_reply'] == 1) {
                 $sql_second_reply_1 = "UPDATE `reply_schedule` set `second_reply` = 1
                 WHERE `id` = '{$row_student['id']}' ";
                 mysqli_query($link, $sql_second_reply_1);
@@ -170,7 +168,7 @@ archemiya;
                 if (!isset($row_record['reply_record_annex_name'])) {
                     echo "<td>";
                     echo "<button class='btn btn-warning' 
-                    data-toggle=\"modal\" data-target=\"#{$row_student['id']}\">
+                    data-toggle=\"modal\" data-target=\"#second{$row_student['id']}\">
                     上传答辩记录
                     </button>";
                     echo "</td>";
@@ -227,9 +225,16 @@ archemiya;
         </div>
 archemiya;
         table_echo($link, $row_control);
+    } elseif ($row_control['second_reply']) {
+        echo <<< archemiya
+        <div class="alert alert-info" role="alert">
+        当前为二次答辩阶段，可上传二辩学生答辩记录
+        </div>
+archemiya;
+        table_echo($link, $row_control);
     }
 
-    //查询所有答辩学生及其答辩状态（此处用于输出多个modalTable）
+    //一辩 查询所有答辩学生及其答辩状态（此处用于输出多个modalTable）
     $sql_student = "SELECT * FROM `reply_schedule` WHERE `permission` = 'student' ";
     $result_student = mysqli_query($link, $sql_student);
     $num_student = mysqli_num_rows($result_student);
@@ -266,6 +271,60 @@ archemiya;
                 <input type="hidden" name="topic_name" value="{$row_topic['name']}">
                 <input type="hidden" name="teacher_id" value="{$row_topic['teacher_id']}">
                 <input type="hidden" name="teacher_name" value="{$row_topic['teacher_name']}">
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-10">
+                                <button type="submit" class="btn btn-primary">确定上传</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+archemiya;
+    }
+
+    //二辩 查询所有答辩学生及其答辩状态（此处用于输出多个modalTable）
+    $sql_second_student = "SELECT * FROM `second_reply_schedule` WHERE `permission` = 'student' ";
+    $result_second_student = mysqli_query($link, $sql_second_student);
+    $num_second_student = mysqli_num_rows($result_second_student);
+
+    for ($i = 0; $i < $num_second_student; $i++) {
+        $row_second_student = mysqli_fetch_array($result_second_student, MYSQLI_BOTH);
+
+        //根据学生id查询学生的课题详情
+        $sql_topic_2 = "SELECT * FROM `topic`WHERE `student_id` = '{$row_second_student['id']}' ";
+        $result_topic_2 = mysqli_query($link, $sql_topic_2);
+        $row_topic_2 = mysqli_fetch_array($result_topic_2, MYSQLI_BOTH);
+
+        echo <<< archemiya
+        <div class="modal fade " id="second{$row_second_student['id']}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="chose-student-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title login-title">上传附件</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="../file-upload.php?func=second_reply_record" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="inputTopicRef" class="col-sm-3 control-label">上传答辩记录附件</label>
+                            <div class="col-sm-8">
+                                <input name="file" type="file" class="input-file" />
+                                <p class="help-block">上传文件格式仅限doc/docx/pdf，文件大小限制为10MB</p>
+                            </div>
+                        </div>
+                <input type="hidden" name="student_id" value="{$row_second_student['id']}">
+                <input type="hidden" name="student_name" value="{$row_second_student['name']}">
+                <input type="hidden" name="topic_id" value="{$row_topic_2['id']}">
+                <input type="hidden" name="topic_name" value="{$row_topic_2['name']}">
+                <input type="hidden" name="teacher_id" value="{$row_topic_2['teacher_id']}">
+                <input type="hidden" name="teacher_name" value="{$row_topic_2['teacher_name']}">
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-10">
                                 <button type="submit" class="btn btn-primary">确定上传</button>

@@ -27,4 +27,9 @@ switch ($get) {
         mysqli_query($link, $sql);
         echo "<script>alert('开启老师一次答辩评分流程成功！');history.go(-1);</script>";
         break;
+    case "second_reply_grade":
+        $sql= "UPDATE `t_func_control` SET `second_reply_grade` = 1 WHERE `id` = 1";
+        mysqli_query($link, $sql);
+        echo "<script>alert('开启老师二次答辩评分流程成功！');history.go(-1);</script>";
+        break;
 }

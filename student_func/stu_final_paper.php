@@ -2,13 +2,13 @@
 <?php
 /*
 思路:
-和论文终稿完全相同，此处同样采用记录表的形式，故使用 0 1 2 三种状态码：
+和论文初稿完全相同，此处同样采用记录表的形式，故使用 0 1 2 三种状态码：
  - 0 导师未审核状态 
  - 2 导师已审核，学生未修改状态
  - 1 最终审核完成状态
 
  两个重要条件：
- 1 中期报告是否完成审核
+ 1 是否开启终稿流程
  2 服务器时间是否超过截止时间
 */
 
@@ -24,12 +24,6 @@ $sql_topic = "SELECT * from `topic`
 where `student_id` =  '{$_SESSION['user_id']}'";
 $result_topic = mysqli_query($link, $sql_topic);
 $row_topic = mysqli_fetch_array($result_topic, MYSQLI_BOTH);
-
-//查询论文终稿开启条件，即此学生是否完成中期报告
-$sql_midterm_ispassed = "SELECT * from `midterm_report` 
-where `student_id` = '{$_SESSION['user_id']}' and `final_flag` = 1";
-$result_midterm_ispassed = mysqli_query($link, $sql_midterm_ispassed);
-$num_midterm_ispassed = mysqli_fetch_array($result_midterm_ispassed);
 
 //查询此学生提交的最新的论文终稿
 $sql_id = "SELECT max(`record_id`) from `final_paper_record` 
@@ -47,6 +41,11 @@ $sql_num = "SELECT * FROM `final_paper_record` WHERE `final_paper_record`.`stude
 $result_num = mysqli_query($link, $sql_num);
 $num = mysqli_num_rows($result_num);
 
+//查询此学生的答辩成绩
+$sql_fgrade = "SELECT * FROM `student_grade` 
+        WHERE `student_id` = '{$_SESSION['user_id']}'";
+$result_fgrade = mysqli_query($link, $sql_fgrade);
+$row_fgrade = mysqli_fetch_array($result_fgrade, MYSQLI_BOTH);
 
 function paper_table_echo($link, $today, $num_final_paper, $row_topic, $row_control, $row_final_paper, $row_id, $num)
 {
@@ -84,7 +83,7 @@ archemiya;
             </td>
             <td>
             <button class="btn btn-default" data-toggle="modal" 
-            data-target="#firstPaperTable" >上传论文终稿</button>
+            data-target="#finalPaperTable" >上传论文终稿</button>
             </td>
             <td>
             <button class="btn btn-default" disabled >上传附件</button>
@@ -110,7 +109,7 @@ archemiya;
             </td>
             <td>
             <button class="btn btn-default" data-toggle="modal" 
-            data-target="#firstPaperAnnexTable" >上传附件</button>
+            data-target="#finalPaperAnnexTable" >上传附件</button>
             </td>
 archemiya;
                 //第二次提交时显示
@@ -126,7 +125,7 @@ archemiya;
             </td>
             <td>
             <button class="btn btn-primary" data-toggle="modal" 
-            data-target="#firstPaperAnnexTable" >重新上传附件</button>
+            data-target="#finalPaperAnnexTable" >重新上传附件</button>
             </td>
 archemiya;
             }
@@ -244,35 +243,60 @@ archemiya;
         <strong>当前论文终稿流程尚未开启，请等待教务处开启！</strong>
         </div>
 archemiya;
-        } else {
+        }
+        /* 此处应判断当前所处阶段，由于论文终稿必须在一辩评分工作完成之后才能开启，即在开启论文终稿之后，所有学生的答辩状态已经完全确定
+        那么对于一辩阶段，只有一辩学生可以提交，二辩阶段则均可提交
+         */ else {
             //判断此学生当前的答辩状态
-            //依旧为一辩状态则可以提交
             $sql_student = "SELECT * FROM `reply_schedule` WHERE `id` = '{$_SESSION['user_id']}' ";
             $result_student = mysqli_query($link, $sql_student);
             $row_student = mysqli_fetch_array($result_student, MYSQLI_BOTH);
             $num_student = mysqli_num_rows($result_student);
-            if ($row_student['second_reply'] == 0) {
-                echo <<< archemiya
-    <br/>
-    <div class="alert alert-danger" role="alert">
-    论文终稿截止时间为<strong>{$row_control['final_paper_deadline']}</strong>，
-    请及时完成论文终稿审核</div>
-    <div class="alert alert-info" role="alert">
-    <strong>提示：</strong>请先上传终稿内容摘要，再上传附件
-    </div>
-archemiya;
-                paper_table_echo($link, $today, $num_final_paper, $row_topic, $row_control, $row_final_paper, $row_id, $num);
-            } elseif ($row_student['second_reply'] == 1) {
-                if ($row_control['second_reply']) {
+
+            //当前阶段为一辩阶段（即尚未开启二辩阶段）
+            if ($row_control['second_reply'] == 0) {
+                //当前阶段为一辩状态的学生
+                if ($row_student['second_reply'] == 0) {
                     echo <<< archemiya
-    <br/>
-    <div class="alert alert-danger" role="alert">
-    论文终稿截止时间为<strong>{$row_control['final_paper_deadline']}</strong>，
-    请及时完成论文终稿审核</div>
-    <div class="alert alert-info" role="alert">
-    <strong>提示：</strong>请先上传终稿内容摘要，再上传附件
-    </div>
+        <br/>
+        <div class="alert alert-danger" role="alert">
+        论文终稿截止时间为<strong>{$row_control['final_paper_deadline']}</strong>，
+        请及时完成论文终稿审核</div>
+        <div class="alert alert-info" role="alert">
+        <strong>提示：</strong>请先上传终稿内容摘要，再上传附件
+        </div>
 archemiya;
+                    paper_table_echo($link, $today, $num_final_paper, $row_topic, $row_control, $row_final_paper, $row_id, $num);
+                } elseif ($row_student['second_reply']) {
+                    echo <<< archemiya
+        <br/>
+        <div class="alert alert-danger" role="alert">
+        您尚未完成二次答辩，请先准备二次答辩
+        </div>
+archemiya;
+                }
+            }
+            //当前阶段为二辩阶段（即已开启二辩阶段）            
+            elseif ($row_control['second_reply'] == 1) {
+                if ($row_fgrade['reply_grade'] < 60 &&$row_fgrade['second_grade'] < 60) {
+                        echo <<< archemiya
+        <br/>
+        <div class="alert alert-danger" role="alert">
+        您二次答辩成绩不及格，毕业答辩不通过
+        </div>
+archemiya;
+                    
+                } else {
+                    echo <<< archemiya
+                    <br/>
+                    <div class="alert alert-danger" role="alert">
+                    论文终稿截止时间为<strong>{$row_control['final_paper_deadline']}</strong>，
+                    请及时完成论文终稿审核</div>
+                    <div class="alert alert-info" role="alert">
+                    <strong>提示：</strong>请先上传终稿内容摘要，再上传附件
+                    </div>
+archemiya;
+                    paper_table_echo($link, $today, $num_final_paper, $row_topic, $row_control, $row_final_paper, $row_id, $num);
                 }
             }
         }
@@ -285,7 +309,7 @@ archemiya;
             echo <<< archemiya
     <br/>
     <div class="alert alert-danger" role="alert">
-    <strong>当前已超过截止时间，您未完成论文终稿的线上审核，失去参加论文一辩资格</strong>
+    <strong>当前已超过截止时间，您未完成论文终稿的线上审核</strong>
     </div>
 archemiya;
         }
@@ -293,7 +317,7 @@ archemiya;
     }
     ?>
     <!-- 此处的两个modeltable为该学生上传开题报告和附件所用 -->
-    <div class="modal fade " id="firstPaperTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade " id="finalPaperTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="chose-student-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -332,7 +356,7 @@ archemiya;
         </div>
     </div>
 
-    <div class="modal fade " id="firstPaperAnnexTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade " id="finalPaperAnnexTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="chose-student-dialog">
             <div class="modal-content">
                 <div class="modal-header">
